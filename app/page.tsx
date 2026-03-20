@@ -26,13 +26,11 @@ export default function Page() {
       {/* Main Layout: Flow layout */}
       <div className="relative isolate z-10 flex h-full w-full flex-col justify-between gap-6 pt-6 pb-6 md:gap-10 md:pt-10 md:pb-10">
         {/* Centered header — glass pill */}
-        <section className="flex flex-col text-center gap-4 shrink-0 justify-center px-4 md:px-8">
-          <div className="flex flex-col items-center gap-1.5 rounded-2xl px-6 py-2.5 text-center  md:px-10 md:py-3">
-          </div>
-            <h2 className="text-2xl font-bold tracking-tight text-blue-900 uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl">
-              BÍ THƯ ĐOÀN TRƯỜNG HCM-UTE CÁC THỜI KỲ
-            </h2>
-
+        <section className="flex shrink-0 flex-col justify-center gap-4 px-4 text-center md:px-8">
+          <div className="flex flex-col items-center gap-1.5 rounded-2xl px-6 py-2.5 text-center md:px-10 md:py-3"></div>
+          <h2 className="text-lg font-bold tracking-tight text-blue-900 uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl">
+            BÍ THƯ ĐOÀN TRƯỜNG HCM-UTE CÁC THỜI KỲ
+          </h2>
         </section>
 
         {/* Top: Full Width Slideshow */}
@@ -42,9 +40,8 @@ export default function Page() {
 
         {/* Bottom: Real-time Check-in List */}
         <section className="mx-auto flex min-h-0 w-full max-w-[1920px] flex-1 flex-col px-4 md:px-8">
-          <div className="mb-1 border-border border-blue-400/70 shadow-lg shadow-blue-400/10 p-2 rounded-xl  flex shrink-0 items-center justify-center md:mb-1">
-            <h2 className="text-2xl font-bold tracking-tight text-blue-900 uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl">
-
+          <div className="border-border mb-1 flex shrink-0 items-center justify-center rounded-xl border-blue-400/70 p-2 shadow-lg shadow-blue-400/10 md:mb-1">
+            <h2 className="!text-xl font-bold tracking-tight text-blue-900 uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl">
               CHÀO MỪNG CÁN BỘ ĐOÀN HCM-UTE CÁC THỜI KỲ VỀ THAM DỰ CHƯƠNG TRÌNH
             </h2>
           </div>
