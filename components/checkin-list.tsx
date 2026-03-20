@@ -95,7 +95,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
   }
 
   return (
-    <div className={`flex h-full w-full flex-col ${containerClass}`}>
+    <div className={`flex  h-full w-full flex-col ${containerClass}`}>
       <div className="relative flex w-full flex-1 items-center justify-center">
         {checkins.length === 0 ? (
           <div className="py-10 text-center font-medium text-slate-500 italic">
