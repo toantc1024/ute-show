@@ -1,32 +1,772 @@
 [
-  { "name": "Nguyễn Phước Trọng", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Huỳnh Trọng Chương", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Nguyễn Thị Phương Hoa", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Đinh Thành Ngân", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Nguyễn Nam Thắng", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Nguyễn Lâm Toàn", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Phạm Hữu Thái", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Lê Xuân Thân", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Nguyễn Thanh Liêm", "chuc_vu": "Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Trần Văn Minh", "chuc_vu": "Phó Bí thư Đoàn trường", "don_vi": "Đoàn trường" },
-  { "name": "Lê Thị Hồng Nhung", "chuc_vu": "Uỷ viên Ban Thường vụ", "don_vi": "Đoàn trường" },
-  { "name": "Phạm Quốc Huy", "chuc_vu": "Chủ tịch Hội SV", "don_vi": "Hội Sinh viên" },
-  { "name": "Nguyễn Hoàng Long", "chuc_vu": "Phó Chủ tịch Hội SV", "don_vi": "Hội Sinh viên" },
-  { "name": "Võ Thị Thanh Trúc", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa CNTT" },
-  { "name": "Đặng Minh Tuấn", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa Cơ khí" },
-  { "name": "Trần Thị Bích Ngọc", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa Điện - Điện tử" },
-  { "name": "Huỳnh Đức Duy", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa Kinh tế" },
-  { "name": "Lý Ngọc Hân", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa Ngoại ngữ" },
-  { "name": "Ngô Quang Vinh", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa Xây dựng" },
-  { "name": "Phan Thị Mỹ Linh", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa Công nghệ May" },
-  { "name": "Trương Hoàng Khải", "chuc_vu": "Bí thư Liên Chi Đoàn", "don_vi": "Khoa In và Truyền thông" },
-  { "name": "Bùi Văn Tâm", "chuc_vu": "Trưởng CLB Học thuật", "don_vi": "CLB Học thuật" },
-  { "name": "Đỗ Thùy Dương", "chuc_vu": "Trưởng CLB Tình nguyện", "don_vi": "CLB Tình nguyện" },
-  { "name": "Hoàng Anh Tuấn", "chuc_vu": "Trưởng CLB Văn nghệ", "don_vi": "CLB Văn nghệ" },
-  { "name": "Mai Thị Thu Hà", "chuc_vu": "Trưởng CLB Thể thao", "don_vi": "CLB Thể thao" },
-  { "name": "Lê Quốc Bảo", "chuc_vu": "Đoàn viên tiêu biểu", "don_vi": "Khoa CNTT" },
-  { "name": "Nguyễn Thị Kiều Oanh", "chuc_vu": "Đoàn viên tiêu biểu", "don_vi": "Khoa Điện - Điện tử" },
-  { "name": "Trần Đình Phúc", "chuc_vu": "Đoàn viên tiêu biểu", "don_vi": "Khoa Cơ khí" },
-  { "name": "Vũ Thị Hạnh", "chuc_vu": "Đoàn viên tiêu biểu", "don_vi": "Khoa Kinh tế" },
-  { "name": "Cao Minh Đức", "chuc_vu": "Đoàn viên tiêu biểu", "don_vi": "Khoa Xây dựng" }
+  {
+    "name": "PGS. TS. Châu Đình Thành",
+    "chuc_vu": "UV BTV Đảng Ủy - Phó Hiệu trưởng Nhà trường",
+    "don_vi": "HCM-UTE"
+  },
+  {
+    "name": "PGS. TS. Trương Nguyễn Luân Vũ",
+    "chuc_vu": "UV BTV Đảng Ủy, Trường Khoa Cơ khí Chế tạo máy",
+    "don_vi": "HCM-UTE"
+  },
+  {
+    "name": "Đ/c Trần Thành Hải",
+    "chuc_vu": "Tổ phó Tổ tuyên giáo, đối ngoại Thành Đoàn",
+    "don_vi": "HCM-UTE"
+  },
+  {
+    "name": "Đ/c Nguyễn Anh Đức",
+    "chuc_vu": "Phó Chủ tịch Hội Cựu giáo chức, Nguyên Chủ tịch Hội Cựu chiến binh trường",
+    "don_vi": "HCM-UTE"
+  },
+  {
+    "name": "Đ/c Hồ Thành Công",
+    "chuc_vu": "Chủ tịch Hội Cựu chiến binh trường",
+    "don_vi": "HCM-UTE"
+  },
+  {
+    "name": "Đ/c Nguyễn Anh Tuấn",
+    "chuc_vu": "Nguyên UV BTV - Chủ tịch HSV giai đoạn 2003-2007",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Lâm Toàn",
+    "chuc_vu": "Nguyên Bí thư Đoàn trường -  Chủ tịch HSV giai đoạn 2007-2011",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Thái Hoàng Long",
+    "chuc_vu": "Nguyên Phó Chủ tịch HSV trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Đ/c Phạm Ngọc Quý",
+    "chuc_vu": "Nguyên UV BTV - Chủ tịch HSV",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Phạm Viết Khang",
+    "chuc_vu": "Nguyên UV BTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Bá Cường",
+    "chuc_vu": "Nguyên Bí thư Đoàn trường, Trưởng BVĐ HSV giai đoạn 1997-1998",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Khánh Huy",
+    "chuc_vu": "Nguyên UV BTV - Chủ tịch HSV",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Phú Bình",
+    "chuc_vu": "Nguyên UV BTV - Chủ tịch HSV giai đoạn 2002-2003",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trương Thành Công",
+    "chuc_vu": "Nguyên Chủ tịch Hội Sinh viên trường giai đoạn 1998-1999",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Đ/c Cao Thị Hồng Liên",
+    "chuc_vu": "Nguyên UV BTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Phạm Tải Diễm My",
+    "chuc_vu": "Nguyên UV BTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Thị Ngọc Bình",
+    "chuc_vu": "Nguyên UV BTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Thị Phương Hoa",
+    "chuc_vu": "Nguyên Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Đinh Thành Ngân",
+    "chuc_vu": "Nguyên Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Hà Tài Sáu",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Huỳnh Trọng Chương",
+    "chuc_vu": "Nguyên Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Nam Thắng",
+    "chuc_vu": "Nguyên Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Phạm Hữu Thái",
+    "chuc_vu": "Nguyên Bí Thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Đặng Thiện Ngôn",
+    "chuc_vu": "Nguyên Phó Bí Thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Văn Long Giang",
+    "chuc_vu": "Nguyên Phó Bí Thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Đức Lợi",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trương Ngọc Anh",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Kế Thuận",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Lê Quang Bình",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn trường, Nguyên Chủ tịch Hội Sinh viên",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Đặng Bá Ngoạn",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Hoàng Thư",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Thị Tuyết Nga",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Võ Hoàng Thủy Tiên",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Vũ Đình Huấn",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Thành Tuyên",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Phan Đoàn Tiến Bình",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trần Mạnh Khang",
+    "chuc_vu": "Nguyên ủy viên Ban thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Hoàng Đình Thọ",
+    "chuc_vu": "Nguyên Trưởng Phòng Hỗ  trợ sinh viên , Văn phòng việc làm",
+    "don_vi": ""
+  },
+  {
+    "name": "Đ/c Phạm Vũ Bảo",
+    "chuc_vu": "Nguyên Trưởng Phòng Hỗ  trợ sinh viên , Văn phòng việc làm",
+    "don_vi": ""
+  },
+  {
+    "name": "Đ/c Nguyễn Thanh Hiền",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội sinh viên",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Đ/c Trần Thị Kim Luyến",
+    "chuc_vu": "Nguyên UV BTV Đoàn trường - Phó Chủ tịch Hội Sinh viên",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Đỗ Vũ Đình Nam",
+    "chuc_vu": "Nguyên UV BTV Đoàn trường - Phó Chủ tịch Hội Sinh viên",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Trọng Trung",
+    "chuc_vu": "Nguyên Ủy viên BTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Vũ Đình Thoan",
+    "chuc_vu": "Nguyên Ủy viên BCH Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Thị Minh Giang",
+    "chuc_vu": "Nguyên Ủy viên BCH Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Võ Viết Cường",
+    "chuc_vu": "Nguyên Ủy viên BCH Đoàn trường, Trưởng Ban Văn thể, Bí thư Đoàn Khoa Điện",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Bùi Vũ Huy",
+    "chuc_vu": "Nguyên Ủy viên BCH Đoàn trường, Bí thư đoàn Khoa Kỹ thuật Cơ sở",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Thị Anh Thư",
+    "chuc_vu": "Nguyên Ủy viên BTV Đoàn trường - Phó Chủ tịch Hội Sinh viên",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Trịnh Hòai Ân",
+    "chuc_vu": "Nguyên UV BCH Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Đ/c Nguyễn Vĩnh Hiệp",
+    "chuc_vu": "Nguyên UV BTV, Chánh Văn phòng Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Trần Đông Cal",
+    "chuc_vu": "Nguyên Phó Giám đốc",
+    "don_vi": "Trung tâm Truyền thông và Sự kiện"
+  },
+  {
+    "name": "Hoàng Trọng Mai Sương",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Nguyễn Thế Bảo",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Lê Việt Tiên",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Hàng Long Nhựt",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Đỗ Thị Ngọc Dung",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Lê Hữu Phúc",
+    "chuc_vu": "Ủy viên BCH Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Trần Lê Trúc Quỳnh",
+    "chuc_vu": "Ủy viên BCH Đoàn cơ sở",
+    "don_vi": "Đoàn Cán bộ Viên chức"
+  },
+  {
+    "name": "Võ Gia Khương",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Tống Quỳnh Châu",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Trần Ngọc Thắng",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Phan Cao Vinh",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Nguyễn Văn Cường",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở, Trưởng/Phó các đơn vị chức năng, CLB, Đội nhóm trực thuộc Đoàn trường",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Phạm Quốc Khánh",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Trần Ngọc Thiện",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Võ Thị Tâm Đan",
+    "chuc_vu": "UVBCH Đoàn trường, Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Cơ khí Chế tạo máy"
+  },
+  {
+    "name": "Nguyễn Minh Hiếu",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Hóa học và Thực phẩm"
+  },
+  {
+    "name": "Lý Chánh Bình",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Hóa học và Thực phẩm"
+  },
+  {
+    "name": "Trần Thị Ngọc Trâm",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Hóa học và Thực phẩm"
+  },
+  {
+    "name": "Nguyễn Thị Hồng Gặp",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Hóa học và Thực phẩm"
+  },
+  {
+    "name": "Thái Duy Khang",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Hóa học và Thực phẩm"
+  },
+  {
+    "name": "Diệp Tấn Luân",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Thông tin"
+  },
+  {
+    "name": "Lê Vũ Xuân An",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Thông tin"
+  },
+  {
+    "name": "Nguyễn Như Tú",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Thông tin"
+  },
+  {
+    "name": "Trần Ngọc Minh Thiện",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Thông tin"
+  },
+  {
+    "name": "Diệp Tấn Luân",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Thông tin"
+  },
+  {
+    "name": "Đặng Cửu Dương",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Công nghệ Thông tin"
+  },
+  {
+    "name": "Châu Thanh Tùng",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Đào tạo Chất lượng cao"
+  },
+  {
+    "name": "Nguyễn Thị Minh Thư",
+    "chuc_vu": "Nguyên Ủy viên Ban Thường vụ Đoàn trường, Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Lê Đình Tịnh",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Đào tạo Chất lượng cao"
+  },
+  {
+    "name": "Lê Nhật Tường",
+    "chuc_vu": "Trưởng/Phó các đơn vị chức năng, CLB, Đội nhóm trực thuộc Đoàn trường",
+    "don_vi": "Đoàn khoa Đào tạo Chất lượng cao"
+  },
+  {
+    "name": "Nguyễn Văn Nguyên",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Đào tạo Chất lượng cao"
+  },
+  {
+    "name": "Trương Sỹ Thuỳ Vy",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Đào tạo tiên tiến (trước đây là Đào tạo Quốc tế)"
+  },
+  {
+    "name": "Lâm Nguyễn Huy Hoàng",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Đào tạo tiên tiến (trước đây là Đào tạo Quốc tế)"
+  },
+  {
+    "name": "Dương Nguyễn Hắc Lân",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Đào tạo tiên tiến (trước đây là Đào tạo Quốc tế)"
+  },
+  {
+    "name": "Nguyễn Thới",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Võ Trần Chương",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Giang Phi Hùng",
+    "chuc_vu": "Nguyên UVBCH Đoàn trường, Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Trần Đức Thiện",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Trương Sùng Thái Hàng",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Huỳnh Hoàng Hà",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Trần Văn Khá",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Phạm Hoài Linh",
+    "chuc_vu": "UVBCH Đoàn trường, Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Điện - Điện tử"
+  },
+  {
+    "name": "Lê Thành Đạt",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Giao thông và Năng lượng (trước đây là Cơ khí Động lực)"
+  },
+  {
+    "name": "Phạm Nguyễn Quang Thoại",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Giao thông và Năng lượng (trước đây là Cơ khí Động lực)"
+  },
+  {
+    "name": "Nguyễn Hoàng Tuấn",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Giao thông và Năng lượng (trước đây là Cơ khí Động lực)"
+  },
+  {
+    "name": "Nguyễn Văn Nhật",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa In và Truyền thông"
+  },
+  {
+    "name": "Nguyễn Trương Trường Hào",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa In và Truyền thông"
+  },
+  {
+    "name": "Bùi Văn Minh",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa In và Truyền thông"
+  },
+  {
+    "name": "Nguyễn Bùi Anh Duy",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Khoa học Ứng dụng"
+  },
+  {
+    "name": "Hoàng Nguyễn Quỳnh Anh",
+    "chuc_vu": "UV BCH Đoàn trường, Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Khoa học Ứng dụng"
+  },
+  {
+    "name": "Võ Thuỳ Dương",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Khoa học Ứng dụng"
+  },
+  {
+    "name": "Lê Văn Phiên",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Kinh tế"
+  },
+  {
+    "name": "TÔN NỮ DIỆU NHƯ",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Kinh tế"
+  },
+  {
+    "name": "Hoà Thị Thu Giang",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Kinh tế"
+  },
+  {
+    "name": "Trần Đình Năm",
+    "chuc_vu": "UVBCH Đoàn trường, Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Kinh tế"
+  },
+  {
+    "name": "Cao Xuân Thân",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Ngoại ngữ"
+  },
+  {
+    "name": "Nguyễn Thị Hòa",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Ngoại ngữ"
+  },
+  {
+    "name": "Phạm Kiều Huy",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Ngoại ngữ"
+  },
+  {
+    "name": "Võ Minh Anh Đô",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Bí thư Đoàn cơ sở, Trưởng/Phó các đơn vị chức năng, CLB, Đội nhóm trực thuộc Đoàn trường",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  },
+  {
+    "name": "Tạ Vũ Thục Oanh",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  },
+  {
+    "name": "Mai Quỳnh Trang",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  },
+  {
+    "name": "Phạm Thị Thảo Phương",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  },
+  {
+    "name": "Đỗ Cao Trọng",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  },
+  {
+    "name": "Nguyễn Thị Thu Thảo",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  },
+  {
+    "name": "Phùng Phạm Duy Tuân",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Đào Nguyên An",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Phạm Tấn Tài",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Nguyễn Thị Thư",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Trương Thị Ngọc Thuận",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Lê Văn Chương",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Trương Công Lĩnh",
+    "chuc_vu": "Nguyên Ủy viên Ban Chấp hành Đoàn trường, Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "PHAN HUỲNH HỮU TUYẾN",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Trần Văn Thiên",
+    "chuc_vu": "Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Xây dựng"
+  },
+  {
+    "name": "Phạm Ngọc Qúy",
+    "chuc_vu": "Nguyên Chủ tịch Hội Sinh viên trường, Nguyên Ủy viên Ban Thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Trần Thị Ngọc Bình",
+    "chuc_vu": "Nguyên Ủy viên Ban Thường vụ Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Lê Xuân Thân",
+    "chuc_vu": "Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Nguyễn Đoàn Xuân Trường",
+    "chuc_vu": "Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Nguyễn Thanh Tân",
+    "chuc_vu": "Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Phan Công Đức",
+    "chuc_vu": "Phó Bí thư Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Phạm Thị Như Quỳnh",
+    "chuc_vu": "UVBTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Võ Minh Hòa",
+    "chuc_vu": "UVBTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Nguyễn Thái An",
+    "chuc_vu": "UVBTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Phan Tuấn Kiệt",
+    "chuc_vu": "UVBTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Phan Thị Mỹ Duyên",
+    "chuc_vu": "UVBTV Đoàn trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Phạm Thị Thuý Nga",
+    "chuc_vu": "Nguyên Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn Viện Sư phạm Kỹ thuật"
+  },
+  {
+    "name": "Trần Hà Nhân Hòa",
+    "chuc_vu": "Nguyên Đội phó",
+    "don_vi": "Đội Thanh niên Xung kích"
+  },
+  {
+    "name": "Bùi Thị Mộng Tiền",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Lê Hồng Xuân",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Đoàn Thanh niên Trường"
+  },
+  {
+    "name": "Văn Thị Mười Ngọc",
+    "chuc_vu": "Nguyên Phó giám đốc",
+    "don_vi": "Trung tâm Truyền thông và Sự kiện"
+  },
+  {
+    "name": "Lê Trần Văn Quí",
+    "chuc_vu": "Nguyên Phó giám đốc",
+    "don_vi": "Trung tâm Truyền thông và Sự kiện"
+  },
+  {
+    "name": "Vương Lập Quế",
+    "chuc_vu": "Giám đốc đương nhiệm",
+    "don_vi": "Trung tâm Tư vấn và Hỗ trợ sinh viên"
+  },
+  {
+    "name": "Nguyễn Văn Thọ",
+    "chuc_vu": "Phó Chánh Văn phòng",
+    "don_vi": "Văn phòng Đoàn trường"
+  },
+  {
+    "name": "Nguyễn Quỳnh Thanh Diệu",
+    "chuc_vu": "Phó Chủ tịch HSV Trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Cao Hải Đăng",
+    "chuc_vu": "Phó Chủ tịch HSV Trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Nguyễn Thị Minh Hiếu",
+    "chuc_vu": "UV BTK HSV trường, Chánh VP HSV Trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Ngô Thiên Cát",
+    "chuc_vu": "UV BTK HSV trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Phạm Tuấn Hải",
+    "chuc_vu": "Nguyên Phó giám đốc",
+    "don_vi": "Trung tâm Truyền thông và Sự kiện"
+  },
+  {
+    "name": "Dương Thiện Quí",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Trịnh Ngọc Yến",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Nguyễn Chí Tâm",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Lê Văn Ngời",
+    "chuc_vu": "ỦY viên BKT Đoàn trường, Đội phó Đội Cờ đỏ",
+    "don_vi": "Đội Cờ đỏ"
+  },
+  {
+    "name": "Nguyễn Thái Ninh",
+    "chuc_vu": "Nguyên Phó Chủ tịch Hội Sinh viên trường",
+    "don_vi": "Hội Sinh viên Trường"
+  },
+  {
+    "name": "Phan Minh Bằng",
+    "chuc_vu": "Nguyên Phó Bí thư Đoàn cơ sở",
+    "don_vi": "Đoàn khoa Thời trang và Du lịch"
+  }
 ]
