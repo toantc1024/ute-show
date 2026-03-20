@@ -2,6 +2,7 @@
 
 import { CheckinList } from "@/components/checkin-list"
 import { EventLogo } from "@/components/event-logo"
+import { FlyingHearts } from "@/components/flying-hearts"
 import { Slideshow } from "@/components/slideshow"
 
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern"
@@ -10,6 +11,7 @@ import { cn } from "@/lib/utils"
 export default function Page() {
   return (
     <main className="relative flex h-screen w-screen flex-col overflow-hidden bg-white text-slate-900 selection:bg-blue-200">
+      <FlyingHearts />
       <AnimatedGridPattern
         numSquares={30}
         maxOpacity={0.1}

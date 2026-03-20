@@ -76,15 +76,4 @@ body {
         }
     }
     
-    --animate-fly-up: flyUp var(--duration) linear forwards;
-    @keyframes flyUp {
-      0% {
-        transform: translateY(10vh) scale(0.5);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) scale(1.5);
-        opacity: 0;
-      }
-    }
 }
