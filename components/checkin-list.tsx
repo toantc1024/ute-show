@@ -171,7 +171,8 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
                     >
                       <div className="relative z-10 w-full">
                         <div>
-                          <div className="mb-3 flex items-baseline gap-2">
+                          <div className="mb-3 flex items-center gap-2.5">
+                            <img src="/assets/LOGO.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" />
                             <h3 className="line-clamp-2 text-lg leading-tight font-bold tracking-tight text-blue-950">
                               {item.name}
                             </h3>

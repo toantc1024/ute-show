@@ -216,12 +216,17 @@ export function CheckinForm() {
                       )}
                     >
                       <div className="flex flex-col gap-0.5">
-                        <span className={cn(
-                          "font-bold transition-colors",
-                          c.isCheckedIn ? "text-green-700" : "text-slate-800"
-                        )}>
-                          {c.name}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          {c.isCheckedIn && (
+                            <img src="/assets/LOGO.png" alt="Logo" className="w-5 h-5 object-contain shrink-0" />
+                          )}
+                          <span className={cn(
+                            "font-bold transition-colors",
+                            c.isCheckedIn ? "text-green-700" : "text-slate-800"
+                          )}>
+                            {c.name}
+                          </span>
+                        </div>
                         <span className="text-xs text-slate-500 font-medium tracking-tight">
                           {c.chuc_vu} — {c.don_vi}
                         </span>
