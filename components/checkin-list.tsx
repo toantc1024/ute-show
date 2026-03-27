@@ -8,7 +8,7 @@ import type { Database } from "@/lib/database.types"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { AnimatePresence, motion } from "framer-motion"
-import { Trash2 } from "lucide-react"
+import { Trash2, CheckCircle2 } from "lucide-react"
 
 import {
   Carousel,
@@ -173,8 +173,9 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
                         <div>
                           <div className="mb-3 flex items-center gap-2.5">
                             <img src="/assets/LOGO.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" />
-                            <h3 className="line-clamp-2 text-lg leading-tight font-bold tracking-tight text-blue-950">
+                            <h3 className="line-clamp-2 text-lg leading-tight font-bold tracking-tight text-green-700 flex items-center gap-1.5">
                               {item.name}
+                              <CheckCircle2 className="h-5 w-5 shrink-0" />
                             </h3>
                           </div>
                           <div className="mt-2 flex flex-col gap-2">
