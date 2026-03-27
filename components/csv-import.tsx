@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Upload, FileText, Loader2, CheckCircle2 } from "lucide-react"
+import * as XLSX from "xlsx"
 
 type Candidate = {
   name: string
@@ -58,13 +59,40 @@ export function CSVImport() {
 
     const reader = new FileReader()
     reader.onload = (ev) => {
-      const text = ev.target?.result as string
-      setCsvText(text)
-      const candidates = parseCSV(text)
-      setParsed(candidates)
-      setStatus("preview")
+      try {
+        const data = ev.target?.result
+        const workbook = XLSX.read(data, { type: "binary" })
+        const sheetName = workbook.SheetNames[0]
+        const sheet = workbook.Sheets[sheetName]
+        
+        // Convert to array of arrays (header: 1)
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][]
+        
+        const candidates: Candidate[] = []
+        for (const row of rows) {
+          if (!row || row.length < 1) continue
+          
+          // Simple heuristic: if first row looks like header, skip
+          const firstVal = String(row[0]).toLowerCase()
+          if (firstVal === "name" || firstVal === "tên" || firstVal === "họ tên") continue
+          
+          const name = String(row[0] || "").trim()
+          const chuc_vu = String(row[1] || "").trim()
+          const don_vi = String(row[2] || "").trim()
+          
+          if (name) {
+            candidates.push({ name, chuc_vu, don_vi })
+          }
+        }
+        
+        setParsed(candidates)
+        setCsvText(candidates.map(c => `${c.name}, ${c.chuc_vu}, ${c.don_vi}`).join("\n"))
+        setStatus("preview")
+      } catch (err) {
+        alert("Lỗi đọc file: " + err)
+      }
     }
-    reader.readAsText(file, "utf-8")
+    reader.readAsBinaryString(file)
   }
 
   const handleParse = () => {
@@ -73,12 +101,15 @@ export function CSVImport() {
     setStatus("preview")
   }
 
+  const [mode, setMode] = useState<"checkins" | "guests">("checkins")
+
   const handleSave = async () => {
     if (parsed.length === 0) return
     setStatus("saving")
 
     try {
-      const res = await fetch("/api/checkin/import", {
+      const endpoint = mode === "checkins" ? "/api/checkin/import" : "/api/guests/import"
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ candidates: parsed }),
@@ -121,7 +152,7 @@ export function CSVImport() {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".csv,.txt"
+          accept=".csv,.txt,.xlsx,.xls"
           className="hidden"
           onChange={handleFileUpload}
         />
@@ -135,6 +166,31 @@ export function CSVImport() {
           <Upload className="mr-2 h-4 w-4" />
           Chọn file CSV
         </Button>
+
+        <div className="flex flex-col gap-2 rounded-lg bg-blue-50/50 p-3 border border-blue-100">
+          <p className="text-[10px] font-bold text-blue-700 uppercase tracking-tighter">Đích đến (Nhập vào đâu?)</p>
+          <div className="flex gap-2">
+            <Button 
+              size="sm" 
+              variant={mode === "guests" ? "default" : "outline"}
+              className="flex-1 text-[11px] h-8"
+              onClick={() => setMode("guests")}
+            >
+              📊 Danh sách khách mời (Hàng chờ)
+            </Button>
+            <Button 
+              size="sm" 
+              variant={mode === "checkins" ? "default" : "outline"}
+              className="flex-1 text-[11px] h-8"
+              onClick={() => setMode("checkins")}
+            >
+              🚀 HIỂN THỊ NGAY (Màn hình chính)
+            </Button>
+          </div>
+          {mode === "guests" && (
+            <p className="text-[10px] text-blue-600">Dùng để nạp danh sách khách mời có sẵn. Khi khách đến, bạn chỉ cần gõ tên để check-in.</p>
+          )}
+        </div>
 
         <Textarea
           placeholder={`Nguyễn Văn A, Bí thư Đoàn trường, Đoàn trường\nTrần Thị B, Phó Bí thư, Khoa CNTT`}

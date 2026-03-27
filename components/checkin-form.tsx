@@ -5,16 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  Loader2,
-  CheckCircle2,
-  UserCheck,
-  RotateCcw,
-  Search,
-  UserPlus,
-} from "lucide-react"
+import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import initCandidates from "@/data/init-candidates.json"
+import { useSupabase } from "@/components/supabase-provider"
 
 type Candidate = {
   name: string
@@ -29,6 +22,7 @@ const EMPTY_FORM: Candidate = {
 }
 
 export function CheckinForm() {
+  const { supabase } = useSupabase()
   const [form, setForm] = useState(EMPTY_FORM)
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">(
     "idle"
@@ -37,21 +31,37 @@ export function CheckinForm() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showDropdown, setShowDropdown] = useState(false)
   const [resetting, setResetting] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
+  const [candidates, setCandidates] = useState<Candidate[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Filter candidates by search query
-  const filteredCandidates = useMemo(() => {
-    if (!searchQuery.trim()) return []
-    const q = searchQuery.toLowerCase()
-    return (initCandidates as Candidate[])
-      .filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.chuc_vu.toLowerCase().includes(q) ||
-          c.don_vi.toLowerCase().includes(q)
-      )
-      .slice(0, 8)
-  }, [searchQuery])
+  // Search from guests table
+  useEffect(() => {
+    const search = async () => {
+      if (!searchQuery.trim()) {
+        setCandidates([])
+        return
+      }
+      setIsSearching(true)
+      const q = searchQuery.toLowerCase()
+      
+      const { data, error } = await supabase
+        .from("guests")
+        .select("name, chuc_vu, don_vi")
+        .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%`)
+        .limit(8)
+
+      if (!error && data) {
+        setCandidates(data as Candidate[])
+      }
+      setIsSearching(false)
+    }
+
+    const timer = setTimeout(search, 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery, supabase])
+
+  const filteredCandidates = candidates;
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -158,8 +168,13 @@ export function CheckinForm() {
                 setShowDropdown(true)
               }}
               onFocus={() => setShowDropdown(true)}
-              className="border-slate-300 bg-white focus:border-blue-500"
+              className="border-slate-300 bg-white pr-10 focus:border-blue-500"
             />
+            {isSearching && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+              </div>
+            )}
 
             {/* Dropdown results */}
             <AnimatePresence>
