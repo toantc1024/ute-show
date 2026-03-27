@@ -167,13 +167,17 @@ export function CSVImport() {
           Chọn file CSV
         </Button>
 
-        <div className="flex flex-col gap-2 rounded-lg bg-blue-50/50 p-3 border border-blue-100">
-          <p className="text-[10px] font-bold text-blue-700 uppercase tracking-tighter">Đích đến (Nhập vào đâu?)</p>
+        <div className="flex flex-col gap-2 rounded-lg bg-green-50/50 p-3 border border-green-100">
+          <p className="text-[10px] font-bold text-green-700 uppercase tracking-tighter">Đích đến (Nhập vào đâu?)</p>
           <div className="flex gap-2">
             <Button 
               size="sm" 
               variant={mode === "guests" ? "default" : "outline"}
-              className="flex-1 text-[11px] h-8"
+              className={`flex-1 text-[11px] h-8 transition-colors ${
+                mode === "guests" 
+                  ? "bg-green-600 hover:bg-green-700 text-white" 
+                  : "border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
+              }`}
               onClick={() => setMode("guests")}
             >
               📊 Danh sách khách mời (Hàng chờ)
@@ -181,14 +185,32 @@ export function CSVImport() {
             <Button 
               size="sm" 
               variant={mode === "checkins" ? "default" : "outline"}
-              className="flex-1 text-[11px] h-8"
+              className={`flex-1 text-[11px] h-8 transition-colors ${
+                mode === "checkins" 
+                  ? "bg-green-600 hover:bg-green-700 text-white" 
+                  : "border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
+              }`}
               onClick={() => setMode("checkins")}
             >
               🚀 HIỂN THỊ NGAY (Màn hình chính)
             </Button>
           </div>
           {mode === "guests" && (
-            <p className="text-[10px] text-blue-600">Dùng để nạp danh sách khách mời có sẵn. Khi khách đến, bạn chỉ cần gõ tên để check-in.</p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[10px] text-green-600">Nạp danh sách khách mời để tìm kiếm khi check-in.</p>
+              <Button
+                variant="ghost"
+                className="h-6 px-2 text-[10px] text-red-500 hover:bg-red-50 hover:text-red-700 font-bold underline"
+                onClick={async () => {
+                  if (confirm("Bạn có chắc chắn muốn XÓA SẠCH danh sách khách mời (hàng chờ)?")) {
+                    await fetch("/api/guests/reset", { method: "POST" });
+                    alert("Đã xóa sạch danh sách khách mời.");
+                  }
+                }}
+              >
+                Xóa danh sách hàng chờ
+              </Button>
+            </div>
           )}
         </div>
 
