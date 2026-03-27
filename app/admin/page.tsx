@@ -56,6 +56,7 @@ export default function AdminPage() {
               {/* Sidebar Left: Input Form + Search */}
               <div className="space-y-4 lg:col-span-4">
                 <CheckinForm />
+                <CSVImport />
               </div>
 
               {/* Main Area Right: Live List */}
