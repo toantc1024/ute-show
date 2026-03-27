@@ -1,10 +1,9 @@
-"use client"
-
 import { useState, useRef } from "react"
+import { useEvent } from "@/components/event-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, FileText, Loader2, CheckCircle2, Users, Zap } from "lucide-react"
+import { Upload, FileText, Loader2, CheckCircle2, Users, Zap, AlertCircle } from "lucide-react"
 import * as XLSX from "xlsx"
 import { cn } from "@/lib/utils"
 
@@ -12,6 +11,7 @@ type Candidate = {
   name: string
   chuc_vu: string
   don_vi: string
+  event_id?: string
 }
 
 function parseCSV(text: string): Candidate[] {
@@ -23,14 +23,12 @@ function parseCSV(text: string): Candidate[] {
   const results: Candidate[] = []
 
   for (const line of lines) {
-    // Skip header row
     if (
       line.toLowerCase().startsWith("name,") ||
       line.toLowerCase().startsWith("name\t")
     )
       continue
 
-    // Support both comma and tab delimiters
     const parts = line.includes("\t") ? line.split("\t") : line.split(",")
 
     if (parts.length >= 3) {
@@ -47,6 +45,7 @@ function parseCSV(text: string): Candidate[] {
 }
 
 export function CSVImport() {
+  const { selectedEventId } = useEvent()
   const [csvText, setCsvText] = useState("")
   const [parsed, setParsed] = useState<Candidate[]>([])
   const [status, setStatus] = useState<
@@ -66,14 +65,12 @@ export function CSVImport() {
         const sheetName = workbook.SheetNames[0]
         const sheet = workbook.Sheets[sheetName]
         
-        // Convert to array of arrays (header: 1)
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][]
         
         const candidates: Candidate[] = []
         for (const row of rows) {
           if (!row || row.length < 1) continue
           
-          // Simple heuristic: if first row looks like header, skip
           const firstVal = String(row[0]).toLowerCase()
           if (firstVal === "name" || firstVal === "tên" || firstVal === "họ tên") continue
           
@@ -105,15 +102,20 @@ export function CSVImport() {
   const [mode, setMode] = useState<"checkins" | "guests">("checkins")
 
   const handleSave = async () => {
-    if (parsed.length === 0) return
+    if (parsed.length === 0 || !selectedEventId) return
     setStatus("saving")
+
+    const candidatesWithEvent = parsed.map(c => ({
+      ...c,
+      event_id: selectedEventId
+    }))
 
     try {
       const endpoint = mode === "checkins" ? "/api/checkin/import" : "/api/guests/import"
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ candidates: parsed }),
+        body: JSON.stringify({ candidates: candidatesWithEvent }),
       })
       const result = await res.json()
       if (!res.ok) {
@@ -131,6 +133,18 @@ export function CSVImport() {
       alert("Lỗi kết nối")
       setStatus("preview")
     }
+  }
+
+  if (!selectedEventId) {
+    return (
+      <Card className="border-amber-200 bg-amber-50 shadow-sm">
+        <CardContent className="pt-6 text-center">
+          <AlertCircle className="mx-auto h-8 w-8 text-amber-500 mb-2" />
+          <p className="text-sm font-bold text-amber-800 uppercase">Chưa chọn chương trình</p>
+          <p className="text-xs text-amber-600 mt-1">Vui lòng chọn một chương trình ở phía trên để nạp dữ liệu XLSX.</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -192,8 +206,12 @@ export function CSVImport() {
               variant="ghost"
               className="h-6 px-2 text-[10px] text-red-500 hover:bg-red-50 hover:text-red-700 font-bold underline"
               onClick={async () => {
-                if (confirm("XÓA SẠCH danh sách khách mời (hàng chờ)?")) {
-                  await fetch("/api/guests/reset", { method: "POST" });
+                if (confirm("XÓA SẠCH danh sách khách mời của chương trình này?")) {
+                  await fetch("/api/guests/reset", { 
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ event_id: selectedEventId })
+                  });
                   alert("Đã xóa sạch.");
                 }
               }}

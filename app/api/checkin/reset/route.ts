@@ -6,12 +6,19 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    const body = await request.json()
+    const { event_id } = body
+
+    if (!event_id) {
+      return NextResponse.json({ error: "Missing event_id" }, { status: 400 })
+    }
+
     const { error } = await supabaseAdmin
       .from("checkins")
       .delete()
-      .neq("id", "00000000-0000-0000-0000-000000000000")
+      .eq("event_id", event_id)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })

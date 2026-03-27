@@ -1,6 +1,6 @@
 "use client"
+
 import { useState } from "react"
-import Link from "next/link"
 import { AdminProvider, AdminAuthGate, useAdmin } from "@/components/admin-auth"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
@@ -8,11 +8,14 @@ import { NotCheckedInList } from "@/components/not-checkedin-list"
 import { StatsBar } from "@/components/stats-bar"
 import { CSVImport } from "@/components/csv-import"
 import { DashboardChart } from "@/components/dashboard-chart"
-import { LayoutDashboard, UserCheck, ShieldCheck, LogOut, XCircle, Home, Settings2 } from "lucide-react"
+import { LayoutDashboard, UserCheck, ShieldCheck, LogOut, XCircle, Home, Settings2, CalendarDays } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 import { GridPattern } from "@/components/ui/grid-pattern"
 import { DotPattern } from "@/components/ui/dot-pattern"
+import { EventSwitcher } from "@/components/event-switcher"
+import { EventManager } from "@/components/event-manager"
 import { cn } from "@/lib/utils"
 
 export default function AdminPage() {
@@ -24,7 +27,7 @@ export default function AdminPage() {
 }
 
 function AdminContent() {
-  const [activeTab, setActiveTab] = useState<"checkin" | "not-checkedin" | "dashboard">("checkin")
+  const [activeTab, setActiveTab] = useState<"checkin" | "not-checkedin" | "dashboard" | "events">("checkin")
   const { isAdmin, logout } = useAdmin()
 
   return (
@@ -57,16 +60,25 @@ function AdminContent() {
       <header className="relative sticky top-0 z-50 border-b border-slate-200 bg-white/80 transition-all backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Left: Branding */}
-          <h1 className="flex items-center gap-2.5 text-lg font-bold text-slate-800">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 shadow-sm transition-transform hover:scale-105">
-              <ShieldCheck className="h-5 w-5" />
+          <div className="flex items-center gap-4">
+            <h1 className="flex items-center gap-2.5 text-lg font-bold text-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 shadow-sm transition-transform hover:scale-105">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <span className="hidden sm:inline">Ute Check-In</span>
+            </h1>
+            
+            <div className="hidden h-6 w-px bg-slate-200 sm:block mx-1" />
+            
+            {/* Event Switcher inside Header */}
+            <div className="hidden lg:block scale-90 origin-left">
+              <EventSwitcher />
             </div>
-            <span className="hidden sm:inline">Ute Check-In</span>
-          </h1>
+          </div>
 
           {/* Middle: Integrated Tabs (Visible when logged in) */}
           {isAdmin && (
-            <div className="absolute left-1/2 flex -translate-x-1/2 rounded-lg bg-slate-100/80 p-1">
+            <div className="absolute left-1/2 flex -translate-x-1/2 rounded-lg bg-slate-100/80 p-1 shadow-sm border border-slate-200">
               <button
                 onClick={() => setActiveTab("checkin")}
                 className={cn(
@@ -89,7 +101,8 @@ function AdminContent() {
                 )}
               >
                 <XCircle className="h-3.5 w-3.5" />
-                Chưa Check-in
+                <span className="hidden md:inline">Chưa Check-in</span>
+                <span className="md:hidden">Sót</span>
               </button>
               <button
                 onClick={() => setActiveTab("dashboard")}
@@ -101,14 +114,26 @@ function AdminContent() {
                 )}
               >
                 <LayoutDashboard className="h-3.5 w-3.5" />
-                Dashboard
+                D-Board
+              </button>
+              <button
+                onClick={() => setActiveTab("events")}
+                className={cn(
+                  "flex items-center gap-2 rounded-md px-4 py-1.5 text-xs font-bold transition-all",
+                  activeTab === "events"
+                    ? "bg-white text-blue-700 shadow-sm"
+                    : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
+                )}
+              >
+                <CalendarDays className="h-3.5 w-3.5" />
+                <span className="hidden md:inline">Chương trình</span>
+                <span className="md:hidden">CT</span>
               </button>
             </div>
           )}
 
           {/* Right: Nav icons + Exit */}
           <div className="flex items-center gap-1.5">
-            {/* Home link */}
             <Link
               href="/"
               title="Trang chủ"
@@ -116,7 +141,6 @@ function AdminContent() {
             >
               <Home className="h-4 w-4" />
             </Link>
-            {/* Admin link (current page) */}
             <Link
               href="/admin"
               title="Trang Admin"
@@ -141,57 +165,68 @@ function AdminContent() {
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         <AdminAuthGate>
+          {/* Mobile Event Switcher */}
+          <div className="mb-6 block lg:hidden">
+            <EventSwitcher />
+          </div>
+
           {/* Stats Bar — always visible */}
-          <div className="mb-6">
+          <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
             <StatsBar />
           </div>
 
           {/* Tab Content */}
-          {activeTab === "checkin" && (
-            <div className="grid gap-8 lg:grid-cols-12">
-              {/* Sidebar Left: Input Form + Search */}
-              <div className="space-y-4 lg:col-span-4">
-                <CheckinForm />
-                <CSVImport />
-              </div>
-
-              {/* Main Area Right: Live List */}
-              <div className="lg:col-span-8">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base font-bold tracking-wide text-slate-700 uppercase">
-                    Danh sách hiện tại
-                  </h2>
+          <div className="transition-all duration-300">
+            {activeTab === "checkin" && (
+              <div className="grid gap-8 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="space-y-6 lg:col-span-4">
+                  <CheckinForm />
+                  <CSVImport />
                 </div>
 
-                <div className="min-h-[320px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                  <div className="h-full p-4">
-                    <CheckinList showDelete maxItems={50} />
+                <div className="lg:col-span-8">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-sm font-black tracking-widest text-slate-400 uppercase">
+                      Lịch sử Check-in gần đây
+                    </h2>
+                  </div>
+
+                  <div className="min-h-[400px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100">
+                    <div className="h-full p-4">
+                      <CheckinList showDelete maxItems={50} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === "not-checkedin" && (
-            <div className="mx-auto max-w-5xl">
-              <div className="mb-4 flex items-center gap-2">
-                <h2 className="text-base font-bold tracking-wide text-red-600 uppercase">
-                  Danh sách chưa check-in
-                </h2>
-              </div>
-              <div className="min-h-[320px] overflow-hidden rounded-xl border border-red-200 bg-white shadow-sm">
-                <div className="h-full p-4">
-                  <NotCheckedInList />
+            {activeTab === "not-checkedin" && (
+              <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="mb-4 flex items-center gap-2">
+                  <h2 className="text-sm font-black tracking-widest text-red-500 uppercase">
+                    Danh sách chưa check-in
+                  </h2>
+                </div>
+                <div className="min-h-[400px] overflow-hidden rounded-2xl border border-red-100 bg-white shadow-sm ring-1 ring-red-50">
+                  <div className="h-full p-4">
+                    <NotCheckedInList />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === "dashboard" && (
-            <div className="mx-auto max-w-5xl">
-              <DashboardChart />
-            </div>
-          )}
+            {activeTab === "dashboard" && (
+              <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <DashboardChart />
+              </div>
+            )}
+
+            {activeTab === "events" && (
+              <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <EventManager />
+              </div>
+            )}
+          </div>
         </AdminAuthGate>
       </div>
     </main>

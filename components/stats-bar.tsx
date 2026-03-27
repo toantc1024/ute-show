@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useSupabase } from "@/components/supabase-provider"
+import { useEvent } from "@/components/event-context"
 import { Users, CheckCircle2, XCircle, UserPlus } from "lucide-react"
 
 interface Stats {
@@ -13,14 +14,22 @@ interface Stats {
 
 export function StatsBar() {
   const { supabase } = useSupabase()
+  const { selectedEventId } = useEvent()
   const [stats, setStats] = useState<Stats>({ total: 0, checkedIn: 0, notCheckedIn: 0, newGuests: 0 })
   const [loading, setLoading] = useState(true)
 
   const fetchStats = async () => {
-    // Fetch all guests and checkins
+    if (!selectedEventId) {
+      setStats({ total: 0, checkedIn: 0, notCheckedIn: 0, newGuests: 0 })
+      setLoading(false)
+      return
+    }
+
+    setLoading(true)
+    // Fetch all guests and checkins for the SELETED event
     const [{ data: guestData }, { data: checkinData }] = await Promise.all([
-      supabase.from("guests").select("name"),
-      supabase.from("checkins").select("name"),
+      supabase.from("guests").select("name").eq("event_id", selectedEventId),
+      supabase.from("checkins").select("name").eq("event_id", selectedEventId),
     ])
 
     const guestNames = new Set(
@@ -49,15 +58,17 @@ export function StatsBar() {
   useEffect(() => {
     fetchStats()
 
+    if (!selectedEventId) return
+
     const sub = supabase
       .channel("stats_realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, fetchStats)
-      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchStats)
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests", filter: `event_id=eq.${selectedEventId}` }, fetchStats)
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` }, fetchStats)
       .subscribe()
 
     return () => { supabase.removeChannel(sub) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supabase])
+  }, [supabase, selectedEventId])
 
   const cards = [
     {

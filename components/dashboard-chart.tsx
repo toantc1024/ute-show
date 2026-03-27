@@ -1,7 +1,6 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { useSupabase } from "@/components/supabase-provider"
+import { useEvent } from "@/components/event-context"
 import {
   AreaChart,
   Area,
@@ -15,15 +14,22 @@ import { Loader2, Calendar } from "lucide-react"
 
 export function DashboardChart() {
   const { supabase } = useSupabase()
+  const { selectedEventId, activeEvent } = useEvent()
   const [data, setData] = useState<{ time: string; "Số lượng": number }[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchData() {
+      if (!selectedEventId) {
+        setData([])
+        setLoading(false)
+        return
+      }
       setLoading(true)
       const { data: checkins } = await supabase
         .from("checkins")
         .select("created_at")
+        .eq("event_id", selectedEventId)
         .order("created_at", { ascending: true })
 
       if (checkins) {
@@ -48,12 +54,14 @@ export function DashboardChart() {
 
     fetchData()
 
-    // Realtime updates
+    if (!selectedEventId) return
+
+    // Realtime updates for THIS event
     const subscription = supabase
       .channel("checkins_dashboard")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "checkins" },
+        { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` },
         () => fetchData()
       )
       .subscribe()
@@ -61,7 +69,7 @@ export function DashboardChart() {
     return () => {
       supabase.removeChannel(subscription)
     }
-  }, [supabase])
+  }, [supabase, selectedEventId])
 
   if (loading && data.length === 0) {
     return (
@@ -80,10 +88,10 @@ export function DashboardChart() {
           <h2 className="text-xl font-bold text-slate-900">Thống kê check-in</h2>
           <div className="mt-1 flex items-center gap-2">
             <span className="text-sm font-medium text-slate-600">
-              Phân tích chi tiết cho sự kiện
+              Phân tích chi tiết cho chương trình
             </span>
-            <span className="rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-semibold text-white">
-              /ute-show
+            <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white uppercase">
+              {activeEvent?.title || "Ute Check-In"}
             </span>
           </div>
         </div>

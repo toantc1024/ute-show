@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus } from "lucide-react"
+import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus, AlertCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSupabase } from "@/components/supabase-provider"
+import { useEvent } from "@/components/event-context"
 import { cn } from "@/lib/utils"
 
 type Candidate = {
@@ -25,6 +26,7 @@ const EMPTY_FORM: Candidate = {
 
 export function CheckinForm() {
   const { supabase } = useSupabase()
+  const { selectedEventId } = useEvent()
   const [form, setForm] = useState(EMPTY_FORM)
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">(
     "idle"
@@ -37,28 +39,30 @@ export function CheckinForm() {
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Search from guests table
+  // Search from guests table for SELETED event
   useEffect(() => {
     const search = async () => {
-      if (!searchQuery.trim()) {
+      if (!searchQuery.trim() || !selectedEventId) {
         setCandidates([])
         return
       }
       setIsSearching(true)
       const q = searchQuery.toLowerCase()
 
-      // 1. Get potential guests
+      // 1. Get potential guests (filtered by event_id)
       const { data: guestData, error: guestError } = await supabase
         .from("guests")
         .select("name, chuc_vu, don_vi")
+        .eq("event_id", selectedEventId)
         .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%`)
         .limit(8)
 
       if (!guestError && guestData) {
-        // 2. Fetch recent checkins to check status locally (more robust than 'in' for small sets)
+        // 2. Fetch recent checkins for THIS event
         const { data: checkinData } = await supabase
           .from("checkins")
           .select("name")
+          .eq("event_id", selectedEventId)
           .order("created_at", { ascending: false })
           .limit(1000)
 
@@ -79,7 +83,7 @@ export function CheckinForm() {
 
     const timer = setTimeout(search, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, supabase])
+  }, [searchQuery, supabase, selectedEventId])
 
   const filteredCandidates = candidates;
 
@@ -112,13 +116,20 @@ export function CheckinForm() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (!selectedEventId) {
+      setError("Vui lòng chọn chương trình trước khi check-in.")
+      setStatus("error")
+      return
+    }
+
     setStatus("saving")
     setError(null)
 
-    const trimmed: Candidate = {
+    const trimmed = {
       name: form.name.trim(),
       chuc_vu: form.chuc_vu.trim(),
       don_vi: form.don_vi.trim(),
+      event_id: selectedEventId
     }
 
     if (!trimmed.name || !trimmed.chuc_vu || !trimmed.don_vi) {
@@ -149,15 +160,20 @@ export function CheckinForm() {
     }
   }
 
-  // Reset: delete all checkins
+  // Reset FOR THIS EVENT
   const handleReset = async () => {
+    if (!selectedEventId) return
     if (
-      !confirm("Bạn có chắc chắn muốn xoá toàn bộ danh sách check-in hiện tại?")
+      !confirm("Bạn có chắc chắn muốn xoá toàn bộ danh sách check-in của chương trình này?")
     )
       return
     setResetting(true)
     try {
-      const res = await fetch("/api/checkin/reset", { method: "POST" })
+      const res = await fetch("/api/checkin/reset", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event_id: selectedEventId }) 
+      })
       const result = await res.json()
       if (!res.ok) {
         alert("Lỗi khi reset: " + result.error)
@@ -165,6 +181,18 @@ export function CheckinForm() {
     } finally {
       setResetting(false)
     }
+  }
+
+  if (!selectedEventId) {
+    return (
+      <Card className="border-amber-200 bg-amber-50">
+        <CardContent className="pt-6 text-center">
+          <AlertCircle className="mx-auto h-8 w-8 text-amber-500 mb-2" />
+          <p className="text-sm font-bold text-amber-800 uppercase text-center">Chưa chọn chương trình</p>
+          <p className="text-xs text-amber-600 mt-1">Vui lòng chọn hoặc tạo chương trình ở phía trên để bắt đầu.</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (

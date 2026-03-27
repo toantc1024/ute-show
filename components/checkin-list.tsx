@@ -1,8 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-
-"use client"
-
 import { useSupabase } from "@/components/supabase-provider"
+import { useEvent } from "@/components/event-context"
 import { useEffect, useMemo, useState, useRef } from "react"
 import type { Database } from "@/lib/database.types"
 import { Button } from "@/components/ui/button"
@@ -28,6 +25,7 @@ interface CheckinListProps {
 
 export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
   const { supabase, session } = useSupabase()
+  const { selectedEventId } = useEvent()
   const [checkins, setCheckins] = useState<CheckinRow[]>([])
   const [loading, setLoading] = useState(true)
   const autoplayPlugin = useRef(
@@ -38,11 +36,17 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
 
   useEffect(() => {
     async function fetchCheckins() {
+      if (!selectedEventId) {
+        setCheckins([])
+        setLoading(false)
+        return
+      }
       setLoading(true)
       try {
         const { data, error } = await supabase
           .from("checkins")
           .select("*")
+          .eq("event_id", selectedEventId)
           .order("created_at", { ascending: false })
           .limit(maxItems)
 
@@ -56,11 +60,13 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
 
     fetchCheckins()
 
+    if (!selectedEventId) return
+
     const subscription = supabase
       .channel("checkins_changes")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "checkins" },
+        { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` },
         () => fetchCheckins()
       )
       .subscribe()
@@ -68,7 +74,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
     return () => {
       supabase.removeChannel(subscription)
     }
-  }, [supabase, maxItems])
+  }, [supabase, maxItems, selectedEventId])
 
   const handleDelete = async (id: string) => {
     if (confirm("Bạn có chắc chắn muốn xóa khách mời này?")) {
