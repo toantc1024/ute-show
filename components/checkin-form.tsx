@@ -64,11 +64,11 @@ export function CheckinForm() {
           .select("name")
           .in("name", names)
         
-        const checkedInNames = new Set((checkinData as { name: string }[])?.map(c => c.name) || [])
+        const checkedInNames = new Set((checkinData as { name: string }[])?.map(c => c.name.trim().toLowerCase()) || [])
         
         const results = guestList.map(g => ({
           ...g,
-          isCheckedIn: checkedInNames.has(g.name)
+          isCheckedIn: checkedInNames.has(g.name.trim().toLowerCase())
         }))
         
         setCandidates(results)
