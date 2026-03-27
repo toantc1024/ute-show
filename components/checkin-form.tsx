@@ -55,20 +55,21 @@ export function CheckinForm() {
         .limit(8)
 
       if (!guestError && guestData) {
-        // 2. Check which of these are already checked in
-        const guestList = guestData as Candidate[]
-        const names = guestList.map(g => g.name)
-        
+        // 2. Fetch recent checkins to check status locally (more robust than 'in' for small sets)
         const { data: checkinData } = await supabase
           .from("checkins")
           .select("name")
-          .in("name", names)
+          .order("created_at", { ascending: false })
+          .limit(1000)
         
-        const checkedInNames = new Set((checkinData as { name: string }[])?.map(c => c.name.trim().toLowerCase()) || [])
+        const checkedInSet = new Set(
+          (checkinData as { name: string }[] || []).map(c => c.name.trim().toLowerCase())
+        )
         
+        const guestList = guestData as Candidate[]
         const results = guestList.map(g => ({
           ...g,
-          isCheckedIn: checkedInNames.has(g.name.trim().toLowerCase())
+          isCheckedIn: checkedInSet.has(g.name.trim().toLowerCase())
         }))
         
         setCandidates(results)
