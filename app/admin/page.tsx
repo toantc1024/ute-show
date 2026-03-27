@@ -1,23 +1,30 @@
-"use client"
-
 import { useState } from "react"
-import { AdminProvider, AdminAuthGate } from "@/components/admin-auth"
+import { AdminProvider, AdminAuthGate, useAdmin } from "@/components/admin-auth"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
 import { CSVImport } from "@/components/csv-import"
 import { DashboardChart } from "@/components/dashboard-chart"
-import { LayoutDashboard, UserCheck, ShieldCheck } from "lucide-react"
+import { LayoutDashboard, UserCheck, ShieldCheck, LogOut } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 import { GridPattern } from "@/components/ui/grid-pattern"
 import { DotPattern } from "@/components/ui/dot-pattern"
 import { cn } from "@/lib/utils"
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"checkin" | "dashboard">("checkin")
-
   return (
     <AdminProvider>
-      <main className="relative min-h-screen bg-slate-50 pb-10 text-slate-900">
+      <AdminContent />
+    </AdminProvider>
+  )
+}
+
+function AdminContent() {
+  const [activeTab, setActiveTab] = useState<"checkin" | "dashboard">("checkin")
+  const { isAdmin, logout } = useAdmin()
+
+  return (
+    <main className="relative min-h-screen bg-slate-50 pb-10 text-slate-900">
         {/* Subtle modern pattern */}
         <div className="absolute inset-0 z-0 overflow-hidden bg-white">
           <DotPattern
@@ -42,53 +49,71 @@ export default function AdminPage() {
           />
         </div>
 
-        {/* Header */}
-        <header className="relative sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-md">
-          <div className="container mx-auto flex items-center justify-between px-4 py-4">
-            <h1 className="flex items-center gap-2 text-xl font-bold text-slate-800">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100/80 text-blue-600 shadow-sm">
+        {/* Integrated Header & Navigation */}
+        <header className="relative sticky top-0 z-50 border-b border-slate-200 bg-white/80 transition-all backdrop-blur-md">
+          <div className="container mx-auto flex h-16 items-center justify-between px-4">
+            {/* Left: Branding */}
+            <h1 className="flex items-center gap-2.5 text-lg font-bold text-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 shadow-sm transition-transform hover:scale-105">
                 <ShieldCheck className="h-5 w-5" />
               </div>
-              Trang Quản Trị
+              <span className="hidden sm:inline">Trang Quản Trị</span>
             </h1>
-            <div className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
-              UTE Check-in System
+
+            {/* Middle: Integrated Tabs (Visible when logged in) */}
+            {isAdmin && (
+              <div className="absolute left-1/2 flex -translate-x-1/2 rounded-lg bg-slate-100/80 p-1">
+                <button
+                  onClick={() => setActiveTab("checkin")}
+                  className={cn(
+                    "flex items-center gap-2 rounded-md px-4 py-1.5 text-xs font-bold transition-all",
+                    activeTab === "checkin"
+                      ? "bg-white text-blue-700 shadow-sm"
+                      : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
+                  )}
+                >
+                  <UserCheck className="h-3.5 w-3.5" />
+                  Check-in
+                </button>
+                <button
+                  onClick={() => setActiveTab("dashboard")}
+                  className={cn(
+                    "flex items-center gap-2 rounded-md px-4 py-1.5 text-xs font-bold transition-all",
+                    activeTab === "dashboard"
+                      ? "bg-white text-blue-700 shadow-sm"
+                      : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
+                  )}
+                >
+                  <LayoutDashboard className="h-3.5 w-3.5" />
+                  Dashboard
+                </button>
+              </div>
+            )}
+
+            {/* Right: Status & Exit */}
+            <div className="flex items-center gap-3">
+              <div className="hidden text-right lg:block">
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+                  Ute Check-In
+                </div>
+              </div>
+              {isAdmin && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="group h-8 rounded-lg px-2.5 text-xs font-bold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all"
+                >
+                  <LogOut className="mr-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  Thoát
+                </Button>
+              )}
             </div>
           </div>
         </header>
 
         <div className="relative z-10 container mx-auto px-4 py-8">
           <AdminAuthGate>
-            {/* Tabs Navigation */}
-            <div className="mb-8 flex justify-center">
-              <div className="flex rounded-lg bg-slate-200 p-1 shadow-inner">
-                <button
-                  onClick={() => setActiveTab("checkin")}
-                  className={cn(
-                    "flex items-center gap-2 rounded-md px-6 py-2 text-sm font-semibold transition-all",
-                    activeTab === "checkin"
-                      ? "bg-white text-blue-700 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
-                  )}
-                >
-                  <UserCheck className="h-4 w-4" />
-                  Check-in
-                </button>
-                <button
-                  onClick={() => setActiveTab("dashboard")}
-                  className={cn(
-                    "flex items-center gap-2 rounded-md px-6 py-2 text-sm font-semibold transition-all",
-                    activeTab === "dashboard"
-                      ? "bg-white text-blue-700 shadow-sm"
-                      : "text-slate-600 hover:text-slate-900"
-                  )}
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
-                </button>
-              </div>
-            </div>
-
             {/* Tab Content */}
             {activeTab === "checkin" && (
               <div className="grid gap-8 lg:grid-cols-12">
@@ -123,6 +148,5 @@ export default function AdminPage() {
           </AdminAuthGate>
         </div>
       </main>
-    </AdminProvider>
   )
 }

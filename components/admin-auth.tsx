@@ -72,27 +72,7 @@ export function AdminAuthGate({ children }: { children: React.ReactNode }) {
   }
 
   if (isAdmin) {
-    return (
-      <div>
-        {/* Admin status bar */}
-        <div className="mb-6 flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-3">
-          <div className="flex items-center gap-2 text-sm font-semibold text-green-700">
-            <ShieldCheck className="h-4 w-4" />
-            Đã xác thực Admin
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={logout}
-            className="text-red-500 hover:bg-red-50 hover:text-red-700"
-          >
-            <LogOut className="mr-1 h-4 w-4" />
-            Thoát
-          </Button>
-        </div>
-        {children}
-      </div>
-    )
+    return <>{children}</>
   }
 
   return (
