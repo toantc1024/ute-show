@@ -4,6 +4,7 @@ import { AdminProvider, AdminAuthGate, useAdmin } from "@/components/admin-auth"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
 import { NotCheckedInList } from "@/components/not-checkedin-list"
+import { StatsBar } from "@/components/stats-bar"
 import { CSVImport } from "@/components/csv-import"
 import { DashboardChart } from "@/components/dashboard-chart"
 import { LayoutDashboard, UserCheck, ShieldCheck, LogOut, XCircle } from "lucide-react"
@@ -128,6 +129,11 @@ function AdminContent() {
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         <AdminAuthGate>
+          {/* Stats Bar — always visible */}
+          <div className="mb-6">
+            <StatsBar />
+          </div>
+
           {/* Tab Content */}
           {activeTab === "checkin" && (
             <div className="grid gap-8 lg:grid-cols-12">
