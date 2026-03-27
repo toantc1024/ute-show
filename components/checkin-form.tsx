@@ -8,11 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSupabase } from "@/components/supabase-provider"
+import { cn } from "@/lib/utils"
 
 type Candidate = {
   name: string
   chuc_vu: string
   don_vi: string
+  isCheckedIn?: boolean
 }
 
 const EMPTY_FORM: Candidate = {
@@ -45,14 +47,31 @@ export function CheckinForm() {
       setIsSearching(true)
       const q = searchQuery.toLowerCase()
       
-      const { data, error } = await supabase
+      // 1. Get potential guests
+      const { data: guestData, error: guestError } = await supabase
         .from("guests")
         .select("name, chuc_vu, don_vi")
         .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%`)
         .limit(8)
 
-      if (!error && data) {
-        setCandidates(data as Candidate[])
+      if (!guestError && guestData) {
+        // 2. Check which of these are already checked in
+        const guestList = guestData as Candidate[]
+        const names = guestList.map(g => g.name)
+        
+        const { data: checkinData } = await supabase
+          .from("checkins")
+          .select("name")
+          .in("name", names)
+        
+        const checkedInNames = new Set((checkinData as { name: string }[])?.map(c => c.name) || [])
+        
+        const results = guestList.map(g => ({
+          ...g,
+          isCheckedIn: checkedInNames.has(g.name)
+        }))
+        
+        setCandidates(results)
       }
       setIsSearching(false)
     }
@@ -190,14 +209,29 @@ export function CheckinForm() {
                       key={i}
                       type="button"
                       onClick={() => selectCandidate(c)}
-                      className="flex w-full flex-col items-start gap-0.5 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-blue-50"
+                      className={cn(
+                        "flex w-full items-center justify-between border-b border-slate-100 px-4 py-3 text-left transition-all last:border-0 hover:bg-blue-50",
+                        c.isCheckedIn ? "bg-green-50/50" : "bg-white"
+                      )}
                     >
-                      <span className="font-semibold text-slate-800">
-                        {c.name}
-                      </span>
-                      <span className="text-xs text-slate-500">
-                        {c.chuc_vu} — {c.don_vi}
-                      </span>
+                      <div className="flex flex-col gap-0.5">
+                        <span className={cn(
+                          "font-bold transition-colors",
+                          c.isCheckedIn ? "text-green-700" : "text-slate-800"
+                        )}>
+                          {c.name}
+                        </span>
+                        <span className="text-xs text-slate-500 font-medium tracking-tight">
+                          {c.chuc_vu} — {c.don_vi}
+                        </span>
+                      </div>
+                      
+                      {c.isCheckedIn && (
+                        <div className="flex items-center gap-1.5 rounded-full bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700">
+                          <CheckCircle2 className="h-3 w-3" />
+                          <span className="hidden sm:inline">ĐÃ CHECK-IN</span>
+                        </div>
+                      )}
                     </button>
                   ))}
                 </motion.div>
