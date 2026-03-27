@@ -6,6 +6,7 @@ import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
 import { CSVImport } from "@/components/csv-import"
 import { DashboardChart } from "@/components/dashboard-chart"
+import { LayoutDashboard, UserCheck, ShieldCheck } from "lucide-react"
 
 import { GridPattern } from "@/components/ui/grid-pattern"
 import { DotPattern } from "@/components/ui/dot-pattern"
@@ -45,7 +46,9 @@ export default function AdminPage() {
         <header className="relative sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-md">
           <div className="container mx-auto flex items-center justify-between px-4 py-4">
             <h1 className="flex items-center gap-2 text-xl font-bold text-slate-800">
-              <span className="rounded-md bg-blue-100 p-1.5 text-sm">🛠️</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100/80 text-blue-600 shadow-sm">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
               Trang Quản Trị
             </h1>
             <div className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
@@ -62,24 +65,26 @@ export default function AdminPage() {
                 <button
                   onClick={() => setActiveTab("checkin")}
                   className={cn(
-                    "rounded-md px-6 py-2 text-sm font-semibold transition-all",
+                    "flex items-center gap-2 rounded-md px-6 py-2 text-sm font-semibold transition-all",
                     activeTab === "checkin"
                       ? "bg-white text-blue-700 shadow-sm"
                       : "text-slate-600 hover:text-slate-900"
                   )}
                 >
-                  📝 Check-in
+                  <UserCheck className="h-4 w-4" />
+                  Check-in
                 </button>
                 <button
                   onClick={() => setActiveTab("dashboard")}
                   className={cn(
-                    "rounded-md px-6 py-2 text-sm font-semibold transition-all",
+                    "flex items-center gap-2 rounded-md px-6 py-2 text-sm font-semibold transition-all",
                     activeTab === "dashboard"
                       ? "bg-white text-blue-700 shadow-sm"
                       : "text-slate-600 hover:text-slate-900"
                   )}
                 >
-                  📊 Dashboard
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
                 </button>
               </div>
             </div>

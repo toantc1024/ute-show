@@ -4,7 +4,7 @@ import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, FileText, Loader2, CheckCircle2 } from "lucide-react"
+import { Upload, FileText, Loader2, CheckCircle2, Users, Zap } from "lucide-react"
 import * as XLSX from "xlsx"
 
 type Candidate = {
@@ -173,26 +173,28 @@ export function CSVImport() {
             <Button 
               size="sm" 
               variant={mode === "guests" ? "default" : "outline"}
-              className={`flex-1 text-[11px] h-8 transition-colors ${
+              className={`flex-1 text-[11px] h-9 transition-colors flex items-center gap-2 ${
                 mode === "guests" 
-                  ? "bg-green-600 hover:bg-green-700 text-white" 
+                  ? "bg-green-600 hover:bg-green-700 text-white shadow-sm" 
                   : "border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
               }`}
               onClick={() => setMode("guests")}
             >
-              📊 Danh sách khách mời (Hàng chờ)
+              <Users className="h-3.5 w-3.5" />
+              Danh sách khách mời (Hàng chờ)
             </Button>
             <Button 
               size="sm" 
               variant={mode === "checkins" ? "default" : "outline"}
-              className={`flex-1 text-[11px] h-8 transition-colors ${
+              className={`flex-1 text-[11px] h-9 transition-colors flex items-center gap-2 ${
                 mode === "checkins" 
-                  ? "bg-green-600 hover:bg-green-700 text-white" 
+                  ? "bg-green-600 hover:bg-green-700 text-white shadow-sm" 
                   : "border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
               }`}
               onClick={() => setMode("checkins")}
             >
-              🚀 HIỂN THỊ NGAY (Màn hình chính)
+              <Zap className="h-3.5 w-3.5 fill-current" />
+              HIỂN THỊ NGAY (Màn hình chính)
             </Button>
           </div>
           {mode === "guests" && (
