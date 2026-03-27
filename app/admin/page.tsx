@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react"
+import Link from "next/link"
 import { AdminProvider, AdminAuthGate, useAdmin } from "@/components/admin-auth"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
@@ -7,7 +8,7 @@ import { NotCheckedInList } from "@/components/not-checkedin-list"
 import { StatsBar } from "@/components/stats-bar"
 import { CSVImport } from "@/components/csv-import"
 import { DashboardChart } from "@/components/dashboard-chart"
-import { LayoutDashboard, UserCheck, ShieldCheck, LogOut, XCircle } from "lucide-react"
+import { LayoutDashboard, UserCheck, ShieldCheck, LogOut, XCircle, Home, Settings2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 import { GridPattern } from "@/components/ui/grid-pattern"
@@ -60,7 +61,7 @@ function AdminContent() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 shadow-sm transition-transform hover:scale-105">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <span className="hidden sm:inline">Trang Quản Trị</span>
+            <span className="hidden sm:inline">Ute Check-In</span>
           </h1>
 
           {/* Middle: Integrated Tabs (Visible when logged in) */}
@@ -105,19 +106,30 @@ function AdminContent() {
             </div>
           )}
 
-          {/* Right: Status & Exit */}
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right lg:block">
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-                Ute Check-In
-              </div>
-            </div>
+          {/* Right: Nav icons + Exit */}
+          <div className="flex items-center gap-1.5">
+            {/* Home link */}
+            <Link
+              href="/"
+              title="Trang chủ"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-all hover:bg-slate-100 hover:text-blue-600"
+            >
+              <Home className="h-4 w-4" />
+            </Link>
+            {/* Admin link (current page) */}
+            <Link
+              href="/admin"
+              title="Trang Admin"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-all hover:bg-blue-100"
+            >
+              <Settings2 className="h-4 w-4" />
+            </Link>
             {isAdmin && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={logout}
-                className="group h-8 rounded-lg px-2.5 text-xs font-bold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all"
+                className="group ml-1 h-8 rounded-lg px-2.5 text-xs font-bold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all"
               >
                 <LogOut className="mr-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 Thoát
