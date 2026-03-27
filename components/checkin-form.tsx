@@ -46,7 +46,7 @@ export function CheckinForm() {
       }
       setIsSearching(true)
       const q = searchQuery.toLowerCase()
-      
+
       // 1. Get potential guests
       const { data: guestData, error: guestError } = await supabase
         .from("guests")
@@ -61,17 +61,17 @@ export function CheckinForm() {
           .select("name")
           .order("created_at", { ascending: false })
           .limit(1000)
-        
+
         const checkedInSet = new Set(
           (checkinData as { name: string }[] || []).map(c => c.name.trim().toLowerCase())
         )
-        
+
         const guestList = guestData as Candidate[]
         const results = guestList.map(g => ({
           ...g,
           isCheckedIn: checkedInSet.has(g.name.trim().toLowerCase())
         }))
-        
+
         setCandidates(results)
       }
       setIsSearching(false)
@@ -105,10 +105,10 @@ export function CheckinForm() {
 
   const handleChange =
     (field: keyof Candidate) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, [field]: event.target.value }))
-      if (status !== "idle") setStatus("idle")
-    }
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        setForm((prev) => ({ ...prev, [field]: event.target.value }))
+        if (status !== "idle") setStatus("idle")
+      }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -236,7 +236,7 @@ export function CheckinForm() {
                           {c.chuc_vu} — {c.don_vi}
                         </span>
                       </div>
-                      
+
                       {c.isCheckedIn && (
                         <div className="flex items-center gap-1.5 rounded-full bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700">
                           <CheckCircle2 className="h-3 w-3" />
