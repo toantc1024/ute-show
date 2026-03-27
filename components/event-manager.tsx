@@ -28,7 +28,7 @@ export function EventManager() {
     if (!title) return
     
     setLoading(true)
-    const { error } = await supabase.from("events").insert({
+    const { error } = await (supabase.from("events") as any).insert({
       title,
       event_date: eventDate || null,
       checkin_start: checkinStart || null,
@@ -50,7 +50,7 @@ export function EventManager() {
   const handleDelete = async (id: string) => {
     if (!confirm("Xác nhận xóa chương trình này? Toàn bộ dữ liệu check-in đính kèm cũng sẽ bị xóa.")) return
     
-    const { error } = await supabase.from("events").delete().eq("id", id)
+    const { error } = await (supabase.from("events") as any).delete().eq("id", id)
     if (!error) {
       if (selectedEventId === id) setSelectedEventId(null)
       await refreshEvents()
@@ -59,9 +59,9 @@ export function EventManager() {
 
   const toggleActive = async (id: string, current: boolean) => {
     // First deactivate all
-    await supabase.from("events").update({ is_active: false }).neq("id", id)
+    await (supabase.from("events") as any).update({ is_active: false }).neq("id", id)
     // Then activate this one
-    await supabase.from("events").update({ is_active: !current }).eq("id", id)
+    await (supabase.from("events") as any).update({ is_active: !current }).eq("id", id)
     await refreshEvents()
   }
 
