@@ -13,7 +13,7 @@ const fontMono = Geist_Mono({
 
 export const metadata = {
   title:
-    "BÍ THƯ ĐOÀN TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP. HỒ CHÍ MINH CÁC THỜI KỲ - UTE Check-in",
+    "BAN GIÁM ĐỐC TRUNG TÂM CÁC THỜI KỲ - UTE Check-in",
   description: "Hệ thống CHÀO MỪNG CÁN BỘ ĐOÀN HCM-UTE CÁC THỜI KỲ VỀ THAM DỰ CHƯƠNG TRÌNH thời gian thực",
 }
 

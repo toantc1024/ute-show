@@ -30,8 +30,8 @@ export default function Page() {
         {/* Centered header — glass pill */}
         <section className="flex shrink-0 flex-col justify-center gap-4 px-4 text-center md:px-8">
           <div className="flex flex-col items-center gap-1.5 rounded-2xl px-6 py-2.5 text-center md:px-10 md:py-3"></div>
-          <h2 className="text-lg font-bold tracking-tight text-blue-900 uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl">
-            BÍ THƯ ĐOÀN TRƯỜNG HCM-UTE CÁC THỜI KỲ
+          <h2 className="text-lg font-bold tracking-tight text-red-700 uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl">
+            BAN GIÁM ĐỐC TRUNG TÂM CÁC THỜI KỲ
           </h2>
         </section>
 
