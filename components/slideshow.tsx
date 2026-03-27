@@ -9,10 +9,17 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 
-const IMAGES = Array.from(
-  { length: 13 },
-  (_, i) => `/assets/bithu/1 (${i + 1}).png`
-)
+const IMAGES = [
+  "16-17-01.png", "16-17-02.png", "16-17-03.png", "16-17-04.png",
+  "17-18-01.png", "17-18-02.png", "17-18-03.png", "17-18-04.png",
+  "18-19-01.png", "18-19-02.png", "18-19-03.png", "18-19-04.png",
+  "19-21-01.png", "19-21-02.png", "19-21-03.png", "19-21-04.png",
+  "21-22-01.png", "21-22-02.png", "21-22-03.png", "21-22-04.png",
+  "22-23-01.png", "22-23-02.png", "22-23-03.png", "22-23-04.png",
+  "23-24-01.png", "23-24-02.png", "23-24-03.png", "23-24-04.png",
+  "24-25-01.png", "24-25-02.png", "24-25-03.png", "24-25-04.png",
+  "25-26-01.png", "25-26-02.png", "25-26-03.png", "25-26-04.png"
+].map(file => `/assets/BGD/${file}`)
 
 export function Slideshow({ className }: { className?: string }) {
   const plugin = useRef(Autoplay({ delay: 1500, stopOnInteraction: false }))
@@ -36,7 +43,7 @@ export function Slideshow({ className }: { className?: string }) {
             >
               <img
                 src={src}
-                alt="Bí thư Đoàn trường"
+                alt="Ban Giám Đốc Trung Tâm"
                 className="aspect-square w-full rounded-2xl object-cover shadow-lg transition-transform duration-500 hover:scale-[1.04]"
               />
             </CarouselItem>
