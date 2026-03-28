@@ -8,9 +8,9 @@ const supabaseAdmin = createClient(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params
+  const { id } = await params
   if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 })
 
   const { error } = await supabaseAdmin
@@ -24,9 +24,9 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params
+  const { id } = await params
   if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 })
 
   try {
