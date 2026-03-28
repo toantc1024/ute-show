@@ -14,8 +14,6 @@ import Link from "next/link"
 
 import { GridPattern } from "@/components/ui/grid-pattern"
 import { DotPattern } from "@/components/ui/dot-pattern"
-import { EventSwitcher } from "@/components/event-switcher"
-import { EventManager } from "@/components/event-manager"
 import { cn } from "@/lib/utils"
 
 export default function AdminPage() {
@@ -27,7 +25,7 @@ export default function AdminPage() {
 }
 
 function AdminContent() {
-  const [activeTab, setActiveTab] = useState<"checkin" | "not-checkedin" | "dashboard" | "events">("checkin")
+  const [activeTab, setActiveTab] = useState<"checkin" | "not-checkedin" | "dashboard">("checkin")
   const { isAdmin, logout } = useAdmin()
 
   return (
@@ -69,11 +67,6 @@ function AdminContent() {
             </h1>
             
             <div className="hidden h-6 w-px bg-slate-200 sm:block mx-1" />
-            
-            {/* Event Switcher inside Header */}
-            <div className="hidden lg:block scale-90 origin-left">
-              <EventSwitcher />
-            </div>
           </div>
 
           {/* Middle: Integrated Tabs (Visible when logged in) */}
@@ -116,19 +109,6 @@ function AdminContent() {
                 <LayoutDashboard className="h-3.5 w-3.5" />
                 D-Board
               </button>
-              <button
-                onClick={() => setActiveTab("events")}
-                className={cn(
-                  "flex items-center gap-2 rounded-md px-4 py-1.5 text-xs font-bold transition-all",
-                  activeTab === "events"
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
-                )}
-              >
-                <CalendarDays className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">Chương trình</span>
-                <span className="md:hidden">CT</span>
-              </button>
             </div>
           )}
 
@@ -165,11 +145,6 @@ function AdminContent() {
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         <AdminAuthGate>
-          {/* Mobile Event Switcher */}
-          <div className="mb-6 block lg:hidden">
-            <EventSwitcher />
-          </div>
-
           {/* Stats Bar — always visible */}
           <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
             <StatsBar />
@@ -218,12 +193,6 @@ function AdminContent() {
             {activeTab === "dashboard" && (
               <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <DashboardChart />
-              </div>
-            )}
-
-            {activeTab === "events" && (
-              <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <EventManager />
               </div>
             )}
           </div>

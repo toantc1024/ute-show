@@ -1,182 +1,121 @@
-import { useEffect, useState } from "react"
-import { useSupabase } from "@/components/supabase-provider"
-import { useEvent } from "@/components/event-context"
+import React from "react"
+import { useState, useEffect } from "react"
+import { useSupabase } from "./supabase-provider"
 import {
   AreaChart,
   Area,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid,
 } from "recharts"
-import { Loader2, Calendar } from "lucide-react"
+import { format } from "date-fns"
 
 export function DashboardChart() {
   const { supabase } = useSupabase()
-  const { selectedEventId, activeEvent } = useEvent()
   const [data, setData] = useState<{ time: string; "Số lượng": number }[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    async function fetchData() {
-      if (!selectedEventId) {
-        setData([])
-        setLoading(false)
-        return
-      }
-      setLoading(true)
-      const { data: checkins } = await supabase
-        .from("checkins")
-        .select("created_at")
-        .eq("event_id", selectedEventId)
-        .order("created_at", { ascending: true })
+  const fetchChartData = async () => {
+    setLoading(true)
+    const { data: checkins, error } = await supabase
+      .from("checkins")
+      .select("created_at")
+      .order("created_at", { ascending: true })
 
-      if (checkins) {
-        const grouping: Record<string, number> = {}
-        // Group by minute
-        checkins.forEach((c: { created_at: string }) => {
-          const time = new Date(c.created_at).toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-          grouping[time] = (grouping[time] || 0) + 1
-        })
+    if (!error && checkins) {
+      const intervals: Record<string, number> = {}
+      checkins.forEach((checkin: { created_at: string }) => {
+        const date = new Date(checkin.created_at)
+        const timeKey = format(date, "HH:mm")
+        intervals[timeKey] = (intervals[timeKey] || 0) + 1
+      })
 
-        const chartData = Object.entries(grouping).map(([time, count]) => ({
-          time,
-          "Số lượng": count,
-        }))
-        setData(chartData)
-      }
-      setLoading(false)
+      const formattedData = Object.entries(intervals).map(([time, count]) => ({
+        time,
+        "Số lượng": count,
+      }))
+      setData(formattedData)
     }
+    setLoading(false)
+  }
 
-    fetchData()
+  useEffect(() => {
+    fetchChartData()
 
-    if (!selectedEventId) return
-
-    // Realtime updates for THIS event
-    const subscription = supabase
-      .channel("checkins_dashboard")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "checkins" },
-        () => fetchData()
-      )
+    const sub = supabase
+      .channel("chart_realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchChartData)
       .subscribe()
 
     return () => {
-      supabase.removeChannel(subscription)
+      supabase.removeChannel(sub)
     }
-  }, [supabase, selectedEventId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabase])
 
   if (loading && data.length === 0) {
     return (
-      <div className="flex h-96 w-full items-center justify-center rounded-xl border border-slate-200 bg-white">
-        <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+      <div className="flex h-[300px] w-full items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
       </div>
     )
   }
 
-  // To match the UI in the screenshot, we create the full layout within this component
   return (
-    <div className="w-full">
-      {/* Header outside */}
-      <div className="mb-6 flex items-start justify-between">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100">
+      <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Thống kê check-in</h2>
-          <div className="mt-1 flex items-center gap-2">
-            <span className="text-sm font-medium text-slate-600">
-              Phân tích chi tiết cho chương trình
-            </span>
-            <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white uppercase">
-              {activeEvent?.title || "Ute Check-In"}
-            </span>
-          </div>
+          <h3 className="flex items-center gap-2 text-sm font-black tracking-widest text-slate-400 uppercase">
+            Xác nhận check-in theo thời gian
+          </h3>
+          <p className="text-xs text-slate-400 font-medium italic">Biểu đồ thể hiện tốc độ đại biểu vào chương trình</p>
         </div>
       </div>
 
-      {/* Inner Card representing the chart panel */}
-      <div className="flex h-[450px] w-full flex-col rounded-2xl border border-slate-200 bg-[#f8fafc] p-6 shadow-sm">
-        <div className="mb-8 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-slate-800">
-            Lượt check-in (Hôm nay)
-          </h3>
-          <div className="flex items-center gap-2">
-            <button className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
-              7 ngày
-            </button>
-            <button className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
-              14 ngày
-            </button>
-            <button className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
-              30 ngày
-            </button>
-            <button className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
-              <Calendar className="h-3.5 w-3.5 text-slate-500" />
-              {new Date().toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </button>
-          </div>
-        </div>
-
-        <div className="flex-1 min-h-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={data}
-              margin={{ top: 10, right: 10, bottom: 0, left: -20 }}
-            >
-              <defs>
-                <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={true}
-                horizontal={true}
-                stroke="#e2e8f0"
-              />
-              <XAxis
-                dataKey="time"
-                tickLine={false}
-                axisLine={{ stroke: "#cbd5e1" }}
-                tick={{ fontSize: 11, fill: "#64748b" }}
-                tickMargin={8}
-                minTickGap={30}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={{ stroke: "#cbd5e1" }}
-                tick={{ fontSize: 11, fill: "#64748b" }}
-                tickMargin={8}
-                allowDecimals={false}
-              />
-              <Tooltip
-                contentStyle={{
-                  borderRadius: "8px",
-                  border: "none",
-                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                }}
-                itemStyle={{ color: "#0f172a", fontWeight: "bold" }}
-              />
-              <Area
-                type="monotone"
-                dataKey="Số lượng"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorCount)"
-                activeDot={{ r: 5, fill: "#3b82f6", stroke: "#fff", strokeWidth: 2 }}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="h-[300px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+            <XAxis 
+              dataKey="time" 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 10, fill: '#64748b', fontWeight: 600 }}
+              dy={10}
+            />
+            <YAxis 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 10, fill: '#64748b', fontWeight: 600 }}
+            />
+            <Tooltip 
+              contentStyle={{ 
+                borderRadius: '12px', 
+                border: 'none', 
+                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                padding: '8px 12px'
+              }}
+              labelStyle={{ fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}
+            />
+            <Area 
+              type="monotone" 
+              dataKey="Số lượng" 
+              stroke="#2563eb" 
+              strokeWidth={3}
+              fillOpacity={1} 
+              fill="url(#colorCount)" 
+              animationDuration={1500}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
     </div>
   )

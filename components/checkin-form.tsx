@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus, AlertCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSupabase } from "@/components/supabase-provider"
-import { useEvent } from "@/components/event-context"
 import { cn } from "@/lib/utils"
 
 type Candidate = {
@@ -26,8 +25,7 @@ const EMPTY_FORM: Candidate = {
 
 export function CheckinForm() {
   const { supabase } = useSupabase()
-  const { selectedEventId } = useEvent()
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm] = useState<Candidate>(EMPTY_FORM)
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">(
     "idle"
   )
@@ -39,30 +37,28 @@ export function CheckinForm() {
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Search from guests table for SELETED event
+  // Search from guests table globally
   useEffect(() => {
     const search = async () => {
-      if (!searchQuery.trim() || !selectedEventId) {
+      if (!searchQuery.trim()) {
         setCandidates([])
         return
       }
       setIsSearching(true)
       const q = searchQuery.toLowerCase()
 
-      // 1. Get potential guests (filtered by event_id)
+      // 1. Get potential guests
       const { data: guestData, error: guestError } = await supabase
         .from("guests")
         .select("name, chuc_vu, don_vi")
-        .eq("event_id", selectedEventId)
         .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%`)
         .limit(8)
 
       if (!guestError && guestData) {
-        // 2. Fetch recent checkins for THIS event
+        // 2. Fetch recent checkins
         const { data: checkinData } = await supabase
           .from("checkins")
           .select("name")
-          .eq("event_id", selectedEventId)
           .order("created_at", { ascending: false })
           .limit(1000)
 
@@ -83,9 +79,7 @@ export function CheckinForm() {
 
     const timer = setTimeout(search, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, supabase, selectedEventId])
-
-  const filteredCandidates = candidates;
+  }, [searchQuery, supabase])
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -102,7 +96,11 @@ export function CheckinForm() {
   }, [])
 
   const selectCandidate = (c: Candidate) => {
-    setForm(c)
+    setForm({
+      name: c.name,
+      chuc_vu: c.chuc_vu,
+      don_vi: c.don_vi
+    })
     setSearchQuery(c.name)
     setShowDropdown(false)
   }
@@ -116,12 +114,6 @@ export function CheckinForm() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!selectedEventId) {
-      setError("Vui lòng chọn chương trình trước khi check-in.")
-      setStatus("error")
-      return
-    }
-
     setStatus("saving")
     setError(null)
 
@@ -129,7 +121,6 @@ export function CheckinForm() {
       name: form.name.trim(),
       chuc_vu: form.chuc_vu.trim(),
       don_vi: form.don_vi.trim(),
-      event_id: selectedEventId
     }
 
     if (!trimmed.name || !trimmed.chuc_vu || !trimmed.don_vi) {
@@ -160,115 +151,86 @@ export function CheckinForm() {
     }
   }
 
-  // Reset FOR THIS EVENT
   const handleReset = async () => {
-    if (!selectedEventId) return
-    if (
-      !confirm("Bạn có chắc chắn muốn xoá toàn bộ danh sách check-in của chương trình này?")
-    )
-      return
+    if (!confirm("Bạn có chắc chắn muốn xoá toàn bộ danh sách check-in?")) return
     setResetting(true)
     try {
       const res = await fetch("/api/checkin/reset", { 
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event_id: selectedEventId }) 
+        body: JSON.stringify({}) 
       })
-      const result = await res.json()
-      if (!res.ok) {
-        alert("Lỗi khi reset: " + result.error)
+      if (res.ok) {
+        alert("Đã xóa sạch danh sách check-in.")
       }
     } finally {
       setResetting(false)
     }
   }
 
-  if (!selectedEventId) {
-    return (
-      <Card className="border-amber-200 bg-amber-50">
-        <CardContent className="pt-6 text-center">
-          <AlertCircle className="mx-auto h-8 w-8 text-amber-500 mb-2" />
-          <p className="text-sm font-bold text-amber-800 uppercase text-center">Chưa chọn chương trình</p>
-          <p className="text-xs text-amber-600 mt-1">Vui lòng chọn hoặc tạo chương trình ở phía trên để bắt đầu.</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
   return (
     <div className="space-y-4">
-      {/* Search from init data */}
-      <Card className="border-slate-200 bg-white shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base text-slate-800">
+      {/* Search */}
+      <Card className="border-slate-200 bg-white shadow-sm overflow-visible">
+        <CardHeader className="pb-3 bg-slate-50/50 border-b border-slate-100 mb-4">
+          <CardTitle className="flex items-center gap-2 text-sm font-bold text-slate-800">
             <Search className="h-4 w-4 text-blue-600" />
-            Tìm đại biểu
+            TÌM ĐẠI BIỂU
           </CardTitle>
         </CardHeader>
-
         <CardContent>
           <div className="relative" ref={dropdownRef}>
-            <Input
-              placeholder="Gõ tên, chức vụ hoặc đơn vị..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                setShowDropdown(true)
-              }}
-              onFocus={() => setShowDropdown(true)}
-              className="border-slate-300 bg-white pr-10 focus:border-blue-500"
-            />
-            {isSearching && (
+            <div className="relative">
+              <Input
+                placeholder="Gõ tên, chức vụ hoặc đơn vị..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setShowDropdown(true)
+                }}
+                onFocus={() => setShowDropdown(true)}
+                className="border-slate-300 bg-white pr-10 focus:border-blue-500 font-medium"
+              />
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                {isSearching ? <Loader2 className="h-4 w-4 animate-spin text-slate-400" /> : <Search className="h-4 w-4 text-slate-300" />}
               </div>
-            )}
+            </div>
 
-            {/* Dropdown results */}
             <AnimatePresence>
-              {showDropdown && filteredCandidates.length > 0 && (
+              {showDropdown && candidates.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="absolute top-full right-0 left-0 z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg"
+                  className="absolute top-full left-0 right-0 z-[100] mt-1 max-h-64 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl"
                 >
-                  {filteredCandidates.map((c, i) => (
+                  {candidates.map((c, i) => (
                     <button
                       key={i}
                       type="button"
                       onClick={() => selectCandidate(c)}
                       className={cn(
                         "flex w-full items-center justify-between border-b border-slate-100 px-4 py-3 text-left transition-all last:border-0 hover:bg-blue-50",
-                        c.isCheckedIn ? "bg-green-50/50" : "bg-white"
+                        c.isCheckedIn ? "bg-green-50/30" : "bg-white"
                       )}
                     >
-                      <div className="flex flex-col gap-0.5">
+                      <div className="flex flex-col gap-0.5 min-w-0">
                         <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1.5 min-w-0">
-                            {c.isCheckedIn && (
-                              <>
-                                <img src="/assets/LOGO.png" alt="Logo" className="w-5 h-5 object-contain shrink-0" />
-                                <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
-                              </>
-                            )}
-                            <span className={cn(
-                              "font-bold transition-colors truncate",
-                              c.isCheckedIn ? "text-green-700" : "text-slate-800"
-                            )}>
-                              {c.name}
-                            </span>
-                          </div>
+                          <span className={cn(
+                            "font-bold truncate",
+                            c.isCheckedIn ? "text-green-700" : "text-slate-800"
+                          )}>
+                            {c.name}
+                          </span>
                         </div>
-                        <span className="text-xs text-slate-500 font-medium tracking-tight">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tight">
                           {c.chuc_vu} — {c.don_vi}
                         </span>
                       </div>
 
                       {c.isCheckedIn && (
-                        <div className="flex items-center gap-1.5 rounded-full bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700">
-                          <CheckCircle2 className="h-3 w-3" />
-                          <span className="hidden sm:inline">ĐÃ CHECK-IN</span>
+                        <div className="flex items-center gap-1 ml-2 rounded-full bg-green-100 px-2 py-0.5 text-[9px] font-black text-green-700 whitespace-nowrap">
+                          <CheckCircle2 className="h-3 w-3" /> ĐÃ XÁC NHẬN
                         </div>
                       )}
                     </button>
@@ -280,132 +242,54 @@ export function CheckinForm() {
         </CardContent>
       </Card>
 
-      {/* Manual entry / Form */}
-      <Card className="border-slate-200 bg-white shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base text-slate-800">
-            <UserPlus className="h-4 w-4 text-blue-600" />
-            Check-in đại biểu
+      {/* Form */}
+      <Card className="border-slate-200 bg-white shadow-sm overflow-hidden">
+        <CardHeader className="pb-3 bg-slate-50/50 border-b border-slate-100 mb-4">
+          <CardTitle className="flex items-center gap-2 text-sm font-bold text-slate-800">
+            <UserCheck className="h-4 w-4 text-blue-600" />
+            CHECK-IN ĐẠI BIỂU
           </CardTitle>
         </CardHeader>
-
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             <div className="space-y-1.5">
-              <Label
-                htmlFor="name"
-                className="text-xs font-semibold tracking-wider text-slate-600 uppercase"
-              >
-                Họ và tên
-              </Label>
-              <Input
-                id="name"
-                placeholder="Nguyễn Văn An"
-                value={form.name}
-                onChange={handleChange("name")}
-                className="border-slate-300 bg-white focus:border-blue-500"
-                disabled={status === "saving"}
-              />
+              <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Họ và tên</Label>
+              <Input id="name" value={form.name} onChange={handleChange("name")} className="border-slate-300 font-bold" disabled={status === "saving"} />
             </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label
-                  htmlFor="chuc_vu"
-                  className="text-xs font-semibold tracking-wider text-slate-600 uppercase"
-                >
-                  Chức vụ
-                </Label>
-                <Input
-                  id="chuc_vu"
-                  placeholder="Bí thư"
-                  value={form.chuc_vu}
-                  onChange={handleChange("chuc_vu")}
-                  className="border-slate-300 bg-white focus:border-blue-500"
-                  disabled={status === "saving"}
-                />
+                <Label htmlFor="chuc_vu" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Chức vụ</Label>
+                <Input id="chuc_vu" value={form.chuc_vu} onChange={handleChange("chuc_vu")} className="border-slate-300 font-bold" disabled={status === "saving"} />
               </div>
               <div className="space-y-1.5">
-                <Label
-                  htmlFor="don_vi"
-                  className="text-xs font-semibold tracking-wider text-slate-600 uppercase"
-                >
-                  Đơn vị
-                </Label>
-                <Input
-                  id="don_vi"
-                  placeholder="Khoa CNTT"
-                  value={form.don_vi}
-                  onChange={handleChange("don_vi")}
-                  className="border-slate-300 bg-white focus:border-blue-500"
-                  disabled={status === "saving"}
-                />
+                <Label htmlFor="don_vi" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Đơn vị</Label>
+                <Input id="don_vi" value={form.don_vi} onChange={handleChange("don_vi")} className="border-slate-300 font-bold" disabled={status === "saving"} />
               </div>
             </div>
 
             <AnimatePresence>
               {error && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="rounded-lg border border-red-100 bg-red-50 p-3 text-sm font-medium text-red-600"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-lg bg-red-50 p-3 text-xs font-bold text-red-600">
                   {error}
                 </motion.div>
               )}
               {status === "success" && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-2 rounded-lg border border-green-100 bg-green-50 p-3 text-sm font-semibold text-green-600"
-                >
-                  <CheckCircle2 size={16} />
-                  Check-in thành công!
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 rounded-lg bg-green-50 p-3 text-xs font-bold text-green-600">
+                  <CheckCircle2 size={14} /> XÁC NHẬN THÀNH CÔNG!
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 py-5 font-semibold text-white hover:bg-blue-700"
-              disabled={status === "saving"}
-            >
-              {status === "saving" ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Đang xử lý...
-                </>
-              ) : (
-                <>
-                  <UserCheck className="mr-2 h-5 w-5" />
-                  XÁC NHẬN CHECK-IN
-                </>
-              )}
+            <Button type="submit" className="w-full bg-blue-600 font-black h-11 text-sm shadow-lg shadow-blue-200" disabled={status === "saving"}>
+              {status === "saving" ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <UserCheck className="mr-2 h-5 w-5" />}
+              {status === "saving" ? "ĐANG XỬ LÝ..." : "XÁC NHẬN VÀO HỘI TRƯỜNG"}
             </Button>
           </CardContent>
         </form>
       </Card>
 
-      {/* Reset data button */}
-      <Button
-        variant="outline"
-        className="w-full border-orange-200 font-semibold text-orange-600 hover:bg-orange-50 hover:text-orange-700"
-        onClick={handleReset}
-        disabled={resetting}
-      >
-        {resetting ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Đang reset...
-          </>
-        ) : (
-          <>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Reset dữ liệu gốc
-          </>
-        )}
+      <Button variant="ghost" className="w-full text-red-400 hover:text-red-600 hover:bg-red-50 text-[10px] font-bold uppercase tracking-widest h-8" onClick={handleReset} disabled={resetting}>
+        <RotateCcw className="mr-2 h-3 w-3" /> {resetting ? "Đang xóa..." : "Xóa sạch dữ liệu Check-in"}
       </Button>
     </div>
   )

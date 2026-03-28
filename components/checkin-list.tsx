@@ -36,17 +36,11 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
 
   useEffect(() => {
     async function fetchCheckins() {
-      if (!selectedEventId) {
-        setCheckins([])
-        setLoading(false)
-        return
-      }
       setLoading(true)
       try {
         const { data, error } = await supabase
           .from("checkins")
           .select("*")
-          .eq("event_id", selectedEventId)
           .order("created_at", { ascending: false })
           .limit(maxItems)
 
@@ -60,8 +54,6 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
 
     fetchCheckins()
 
-    if (!selectedEventId) return
-
     const subscription = supabase
       .channel("checkins_changes")
       .on(
@@ -74,7 +66,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
     return () => {
       supabase.removeChannel(subscription)
     }
-  }, [supabase, maxItems, selectedEventId])
+  }, [supabase, maxItems])
 
   const handleDelete = async (id: string) => {
     if (confirm("Bạn có chắc chắn muốn xóa khách mời này?")) {

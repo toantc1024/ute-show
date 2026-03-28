@@ -8,26 +8,25 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
   try {
-    const { candidates } = await request.json()
+    const { items } = await request.json()
 
-    if (!Array.isArray(candidates) || candidates.length === 0) {
+    if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
         { error: "No candidates provided" },
         { status: 400 }
       )
     }
 
-    const rows = candidates
-      .map((c: { name: string; chuc_vu: string; don_vi: string; event_id?: string }) => ({
+    const rows = items
+      .map((c: { name: string; chuc_vu: string; don_vi: string }) => ({
         name: String(c.name).trim(),
         chuc_vu: String(c.chuc_vu).trim(),
-        don_vi: String(c.don_vi).trim(),
-        event_id: c.event_id
+        don_vi: String(c.don_vi).trim()
       }))
-      .filter((r) => r.name && r.chuc_vu && r.don_vi && r.event_id)
+      .filter((r) => r.name && r.chuc_vu && r.don_vi)
 
     if (rows.length === 0) {
-      return NextResponse.json({ error: "No valid rows (missing required fields or event_id)" }, { status: 400 })
+      return NextResponse.json({ error: "No valid rows (missing required fields)" }, { status: 400 })
     }
 
     const { error } = await supabaseAdmin.from("guests").insert(rows)

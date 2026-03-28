@@ -9,34 +9,19 @@ type GuestRow = Database["public"]["Tables"]["guests"]["Row"]
 
 export function NotCheckedInList() {
   const { supabase } = useSupabase()
-  const { selectedEventId } = useEvent()
   const [guests, setGuests] = useState<GuestRow[]>([])
   const [checkedInNames, setCheckedInNames] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
 
   const fetchData = async () => {
-    if (!selectedEventId) {
-      setGuests([])
-      setCheckedInNames(new Set())
-      setLoading(false)
-      return
-    }
-
     setLoading(true)
     try {
-      // Fetch guests for SELETED event
-      const { data: guestData } = await supabase
-        .from("guests")
-        .select("*")
-        .eq("event_id", selectedEventId)
-        .order("name", { ascending: true })
-
-      // Fetch checkins for SELETED event
-      const { data: checkinData } = await supabase
-        .from("checkins")
-        .select("name")
-        .eq("event_id", selectedEventId)
+      // Fetch all guests and checkins globally
+      const [{ data: guestData }, { data: checkinData }] = await Promise.all([
+        supabase.from("guests").select("*").order("name", { ascending: true }),
+        supabase.from("checkins").select("name"),
+      ])
 
       const checkedNames = new Set(
         ((checkinData || []) as { name: string }[]).map((c) => c.name.trim().toLowerCase())
@@ -52,28 +37,22 @@ export function NotCheckedInList() {
   useEffect(() => {
     fetchData()
 
-    if (!selectedEventId) return
+    const sub1 = supabase
+      .channel("guests_sync")
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, fetchData)
+      .subscribe()
 
-    // Subscribe to real-time changes on both tables for THIS event
-    const guestSub = supabase
-      .channel("not_checkedin_guests")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "guests" },
-        () => fetchData()
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "checkins" },
-        () => fetchData()
-      )
+    const sub2 = supabase
+      .channel("checkins_sync")
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchData)
       .subscribe()
 
     return () => {
-      supabase.removeChannel(guestSub)
+      supabase.removeChannel(sub1)
+      supabase.removeChannel(sub2)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supabase, selectedEventId])
+  }, [supabase])
 
   const notCheckedIn = useMemo(() => {
     return guests.filter(
