@@ -59,12 +59,12 @@ export function NotCheckedInList() {
       .channel("not_checkedin_guests")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "guests", filter: `event_id=eq.${selectedEventId}` },
+        { event: "*", schema: "public", table: "guests" },
         () => fetchData()
       )
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` },
+        { event: "*", schema: "public", table: "checkins" },
         () => fetchData()
       )
       .subscribe()

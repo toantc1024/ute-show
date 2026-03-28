@@ -62,11 +62,13 @@ export function StatsBar() {
 
     const sub = supabase
       .channel("stats_realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "guests", filter: `event_id=eq.${selectedEventId}` }, fetchStats)
-      .on("postgres_changes", { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` }, fetchStats)
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, fetchStats)
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchStats)
       .subscribe()
 
-    return () => { supabase.removeChannel(sub) }
+    return () => {
+      supabase.removeChannel(sub)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase, selectedEventId])
 

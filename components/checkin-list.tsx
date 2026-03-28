@@ -66,7 +66,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
       .channel("checkins_changes")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` },
+        { event: "*", schema: "public", table: "checkins" },
         () => fetchCheckins()
       )
       .subscribe()

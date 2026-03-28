@@ -61,7 +61,7 @@ export function DashboardChart() {
       .channel("checkins_dashboard")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "checkins", filter: `event_id=eq.${selectedEventId}` },
+        { event: "*", schema: "public", table: "checkins" },
         () => fetchData()
       )
       .subscribe()
