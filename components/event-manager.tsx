@@ -28,41 +28,68 @@ export function EventManager() {
     if (!title) return
     
     setLoading(true)
-    const { error } = await (supabase.from("events") as any).insert({
-      title,
-      event_date: eventDate || null,
-      checkin_start: checkinStart || null,
-      checkin_end: checkinEnd || null,
-      is_active: false
-    })
+    try {
+      const res = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          event_date: eventDate || null,
+          checkin_start: checkinStart || null,
+          checkin_end: checkinEnd || null
+        })
+      })
 
-    if (!error) {
-      setTitle("")
-      setEventDate("")
-      setCheckinStart("")
-      setCheckinEnd("")
-      setIsAdding(false)
-      await refreshEvents()
+      if (res.ok) {
+        setTitle("")
+        setEventDate("")
+        setCheckinStart("")
+        setCheckinEnd("")
+        setIsAdding(false)
+        await refreshEvents()
+      } else {
+        const err = await res.json()
+        alert("Lỗi khi tạo chương trình: " + err.error)
+      }
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm("Xác nhận xóa chương trình này? Toàn bộ dữ liệu check-in đính kèm cũng sẽ bị xóa.")) return
     
-    const { error } = await (supabase.from("events") as any).delete().eq("id", id)
-    if (!error) {
-      if (selectedEventId === id) setSelectedEventId(null)
-      await refreshEvents()
+    try {
+      const res = await fetch(`/api/events/${id}`, { method: "DELETE" })
+      if (res.ok) {
+        if (selectedEventId === id) setSelectedEventId(null)
+        await refreshEvents()
+      } else {
+        const err = await res.json()
+        alert("Lỗi khi xóa: " + err.error)
+      }
+    } catch (err) {
+      alert("Lỗi kết nối khi xóa.")
     }
   }
 
   const toggleActive = async (id: string, current: boolean) => {
-    // First deactivate all
-    await (supabase.from("events") as any).update({ is_active: false }).neq("id", id)
-    // Then activate this one
-    await (supabase.from("events") as any).update({ is_active: !current }).eq("id", id)
-    await refreshEvents()
+    try {
+      const res = await fetch(`/api/events/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: !current })
+      })
+
+      if (res.ok) {
+        await refreshEvents()
+      } else {
+        const err = await res.json()
+        alert("Lỗi khi thay đổi trạng thái: " + err.error)
+      }
+    } catch (err) {
+      alert("Lỗi kết nối.")
+    }
   }
 
   return (
