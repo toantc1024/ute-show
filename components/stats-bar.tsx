@@ -17,8 +17,9 @@ export function StatsBar() {
   const [stats, setStats] = useState<Stats>({ total: 0, checkedIn: 0, notCheckedIn: 0, newGuests: 0 })
   const [loading, setLoading] = useState(true)
 
-  const fetchStats = async () => {
-    setLoading(true)
+  const fetchStats = async (isInitial = false) => {
+    if (isInitial) setLoading(true)
+    
     // Fetch all guests and checkins globally
     const [{ data: guestData }, { data: checkinData }] = await Promise.all([
       supabase.from("guests").select("name"),
@@ -28,37 +29,39 @@ export function StatsBar() {
     const guestNames = new Set(
       (guestData || []).map((g: { name: string }) => g.name.trim().toLowerCase())
     )
-    const checkinNames = new Set(
+    const checkinNamesSet = new Set(
       (checkinData || []).map((c: { name: string }) => c.name.trim().toLowerCase())
     )
 
     // Đã check-in: trong guests VÀ đã check-in
-    const checkedIn = [...checkinNames].filter((n) => guestNames.has(n)).length
+    const checkedIn = [...checkinNamesSet].filter((n) => guestNames.has(n)).length
 
     // Chưa check-in: trong guests NHƯNG chưa check-in
-    const notCheckedIn = [...guestNames].filter((n) => !checkinNames.has(n)).length
+    const notCheckedIn = [...guestNames].filter((n) => !checkinNamesSet.has(n)).length
 
-    // Thêm mới: check-in NHƯNG không có trong guests (thêm ngoài danh sách)
-    const newGuests = [...checkinNames].filter((n) => !guestNames.has(n)).length
+    // Thêm mới: check-in NHƯNG không có trong guests
+    const newGuests = [...checkinNamesSet].filter((n) => !guestNames.has(n)).length
 
     // Tổng = checkedIn + notCheckedIn + newGuests
     const total = checkedIn + notCheckedIn + newGuests
 
     setStats({ total, checkedIn, notCheckedIn, newGuests })
-    setLoading(false)
+    if (isInitial) setLoading(false)
   }
 
   useEffect(() => {
-    fetchStats()
+    // Initial fetch
+    fetchStats(true)
 
-    const sub = supabase
-      .channel("stats_realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, fetchStats)
-      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchStats)
+    // Subscribe to real-time changes
+    const channel = supabase
+      .channel("stats_chan")
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, () => fetchStats())
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, () => fetchStats())
       .subscribe()
 
     return () => {
-      supabase.removeChannel(sub)
+      supabase.removeChannel(channel)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase])

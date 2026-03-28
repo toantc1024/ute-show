@@ -14,8 +14,8 @@ export function NotCheckedInList() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
 
-  const fetchData = async () => {
-    setLoading(true)
+  const fetchData = async (isInitial = false) => {
+    if (isInitial) setLoading(true)
     try {
       // Fetch all guests and checkins globally
       const [{ data: guestData }, { data: checkinData }] = await Promise.all([
@@ -30,26 +30,21 @@ export function NotCheckedInList() {
       setGuests(guestData || [])
       setCheckedInNames(checkedNames)
     } finally {
-      setLoading(false)
+      if (isInitial) setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchData()
+    fetchData(true)
 
-    const sub1 = supabase
-      .channel("guests_sync")
-      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, fetchData)
-      .subscribe()
-
-    const sub2 = supabase
-      .channel("checkins_sync")
-      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchData)
+    const channel = supabase
+      .channel("not_checkedin_sync")
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, () => fetchData())
       .subscribe()
 
     return () => {
-      supabase.removeChannel(sub1)
-      supabase.removeChannel(sub2)
+      supabase.removeChannel(channel)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase])

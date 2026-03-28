@@ -17,8 +17,8 @@ export function DashboardChart() {
   const [data, setData] = useState<{ time: string; "Số lượng": number }[]>([])
   const [loading, setLoading] = useState(true)
 
-  const fetchChartData = async () => {
-    setLoading(true)
+  const fetchChartData = async (isInitial = false) => {
+    if (isInitial) setLoading(true)
     const { data: checkins, error } = await supabase
       .from("checkins")
       .select("created_at")
@@ -38,15 +38,15 @@ export function DashboardChart() {
       }))
       setData(formattedData)
     }
-    setLoading(false)
+    if (isInitial) setLoading(false)
   }
 
   useEffect(() => {
-    fetchChartData()
+    fetchChartData(true)
 
     const sub = supabase
-      .channel("chart_realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, fetchChartData)
+      .channel("chart_realtime_v2")
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, () => fetchChartData())
       .subscribe()
 
     return () => {
