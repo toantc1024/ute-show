@@ -25,20 +25,27 @@ export function EventManager() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!title) return
+    if (!title || !title.trim()) {
+      alert("Vui lòng nhập tên chương trình")
+      return
+    }
     
     setLoading(true)
     try {
+      const payload = {
+        title: title.trim(),
+        event_date: eventDate || null,
+        checkin_start: checkinStart || null,
+        checkin_end: checkinEnd || null
+      }
+      
       const res = await fetch("/api/events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          event_date: eventDate || null,
-          checkin_start: checkinStart || null,
-          checkin_end: checkinEnd || null
-        })
+        body: JSON.stringify(payload)
       })
+
+      const result = await res.json()
 
       if (res.ok) {
         setTitle("")
@@ -47,10 +54,16 @@ export function EventManager() {
         setCheckinEnd("")
         setIsAdding(false)
         await refreshEvents()
+        alert("Tạo chương trình thành công!")
       } else {
-        const err = await res.json()
-        alert("Lỗi khi tạo chương trình: " + err.error)
+        const errorMessage = result.error || "Không xác định"
+        const details = result.details ? `\nChi tiết: ${JSON.stringify(result.details)}` : ""
+        alert(`Lỗi từ hệ thống: ${errorMessage}${details}`)
+        console.error("Event creation error details:", result)
       }
+    } catch (err: any) {
+      alert("Lỗi kết nối: " + err.message)
+      console.error("Fetch error:", err)
     } finally {
       setLoading(false)
     }
