@@ -95,7 +95,7 @@ export function AdminAuthGate({ children }: { children: React.ReactNode }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={
-            "text-center text-lg tracking-widest " +
+            "text-center text-lg tracking-normal " +
             (error ? "border-red-400 bg-red-50" : "border-slate-300")
           }
           autoFocus

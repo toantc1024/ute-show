@@ -130,7 +130,7 @@ export function StatsBar() {
               <div className={`flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm transition-transform group-hover:scale-105 ${card.iconBg} ${card.color}`}>
                 <Icon className="h-7 w-7" />
               </div>
-              <div className={`mt-2 text-3xl font-black tracking-tight text-slate-900`}>
+              <div className={`mt-2 text-3xl font-black tracking-normal text-slate-900`}>
                 {loading ? (
                   <span className="inline-block h-8 w-16 animate-pulse rounded bg-slate-100" />
                 ) : (

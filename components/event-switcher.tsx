@@ -18,7 +18,7 @@ export function EventSwitcher() {
         </div>
         <div className="text-left min-w-0 max-w-[150px] sm:max-w-[250px]">
           <div className="flex items-center gap-1.5">
-            <div className="text-[10px] font-bold text-blue-500 uppercase tracking-widest leading-none">
+            <div className="text-[10px] font-bold text-blue-500 uppercase tracking-normal leading-none">
               Chương trình
             </div>
             {activeEvent?.is_active && (
@@ -35,7 +35,7 @@ export function EventSwitcher() {
       {/* Dropdown menu */}
       <div className="absolute right-0 top-full z-50 mt-2 hidden w-72 origin-top-right overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl group-hover:block animate-in fade-in zoom-in-95 duration-200">
         <div className="p-2 border-b border-slate-100 bg-slate-50/50">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 py-1 flex items-center gap-1.5">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-normal px-2 py-1 flex items-center gap-1.5">
             <PlayCircle className="h-3 w-3" /> Tất cả chương trình
           </span>
         </div>
@@ -50,7 +50,7 @@ export function EventSwitcher() {
               )}
             >
               <div className="flex w-full items-center justify-between">
-                <span className="truncate font-bold text-[13px] tracking-tight">{event.title}</span>
+                <span className="truncate font-bold text-[13px] tracking-normal">{event.title}</span>
                 {event.is_active && (
                   <span className="shrink-0 rounded-full bg-green-100 px-1.5 py-0.5 text-[8px] font-extrabold text-green-700 uppercase ring-1 ring-green-200">
                     Live

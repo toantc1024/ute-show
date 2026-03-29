@@ -25,7 +25,7 @@ export function NotCheckedInTab({ stats, onRefresh, onExportVang }: NotCheckedIn
           isComplete ? "bg-gradient-to-br from-green-600 to-green-400 text-white shadow-green-900/20" : "bg-gradient-to-br from-primary to-primary-container text-on-primary-container shadow-blue-900/20"
         )}>
           <div className="relative z-10">
-            <p className="text-sm font-bold opacity-80 uppercase tracking-widest mb-2 uppercase">Trạng thái hiện tại</p>
+            <p className="text-sm font-bold opacity-80 uppercase tracking-normal mb-2 uppercase">Trạng thái hiện tại</p>
             <h3 className="text-4xl font-black mb-1">{isComplete ? "Hoàn tất 100%" : `${Math.round((stats?.checkinCount || 0) / (stats?.totalGuests || 1) * 100)}% Hoàn thành`}</h3>
             <p className="text-sm opacity-90 font-medium">{isComplete ? "Tất cả đại biểu đã có mặt tại hội trường." : `Đang tiến hành check-in cho ${stats?.totalGuests || 0} đại biểu.`}</p>
           </div>
@@ -63,7 +63,7 @@ export function NotCheckedInTab({ stats, onRefresh, onExportVang }: NotCheckedIn
         </div>
         <button 
           onClick={onExportVang}
-          className="flex items-center gap-2 text-primary font-black text-xs uppercase px-4 py-2 hover:bg-primary/5 rounded-full transition-colors tracking-widest"
+          className="flex items-center gap-2 text-primary font-black text-xs uppercase px-4 py-2 hover:bg-primary/5 rounded-full transition-colors tracking-normal"
         >
           <Download size={16} />
           Xuất danh sách vắng
@@ -85,7 +85,7 @@ export function NotCheckedInTab({ stats, onRefresh, onExportVang }: NotCheckedIn
               <span className="material-symbols-outlined text-6xl text-green-500" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
             </div>
             <div>
-              <h3 className="text-3xl font-black text-on-surface mb-3 tracking-tighter uppercase">Tất cả đại biểu đã check-in! 🎉</h3>
+              <h3 className="text-3xl font-black text-on-surface mb-3 tracking-normal uppercase">Tất cả đại biểu đã check-in! 🎉</h3>
               <p className="text-on-surface-variant font-medium leading-relaxed opacity-80 px-4">
                 Hiện tại không có đại biểu nào trong danh sách chờ. Mọi người đều đã hoàn tất thủ tục điểm danh thành công.
               </p>
@@ -110,12 +110,12 @@ export function NotCheckedInTab({ stats, onRefresh, onExportVang }: NotCheckedIn
         </div>
       ) : (
          <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-outline-variant/5 min-h-[500px]">
-           <p className="text-center py-20 text-slate-400 italic font-black uppercase tracking-widest opacity-50">Danh sách vắng mặt đang được xử lý...</p>
+           <p className="text-center py-20 text-slate-400 italic font-black uppercase tracking-normal opacity-50">Danh sách vắng mặt đang được xử lý...</p>
          </div>
       )}
 
       {/* Meta info */}
-      <div className="flex items-center justify-between text-on-surface-variant/40 text-[10px] font-black tracking-widest uppercase px-4 pt-4">
+      <div className="flex items-center justify-between text-on-surface-variant/40 text-[10px] font-black tracking-normal uppercase px-4 pt-4">
         <p>Cập nhật lần cuối: {new Date().toLocaleTimeString('vi-VN')}</p>
         <p className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>

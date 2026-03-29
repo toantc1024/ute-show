@@ -77,8 +77,8 @@ export function CSVImport() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="bg-surface-container-low/50 rounded-2xl p-6 border border-outline-variant/10 shadow-inner">
-        <h3 className="text-xl font-black text-on-surface tracking-tighter uppercase mb-2">Nhập dữ liệu Excel</h3>
-        <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest opacity-60">
+        <h3 className="text-xl font-black text-on-surface tracking-normal uppercase mb-2">Nhập dữ liệu Excel</h3>
+        <p className="text-xs font-bold text-on-surface-variant uppercase tracking-normal opacity-60">
           Hỗ trợ định dạng .xlsx, .xls, .csv để nạp danh sách đại biểu hàng loạt.
         </p>
       </div>
@@ -95,8 +95,8 @@ export function CSVImport() {
             <Users size={24} />
           </div>
           <div>
-            <p className={cn("text-xs font-black uppercase tracking-widest", mode === "guests" ? "text-primary" : "text-slate-500")}>Danh sách chờ</p>
-            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">Nạp vào danh bạ đại biểu</p>
+            <p className={cn("text-xs font-black uppercase tracking-normal", mode === "guests" ? "text-primary" : "text-slate-500")}>Danh sách chờ</p>
+            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-normal">Nạp vào danh bạ đại biểu</p>
           </div>
         </button>
 
@@ -111,8 +111,8 @@ export function CSVImport() {
             <Zap size={24} />
           </div>
           <div>
-            <p className={cn("text-xs font-black uppercase tracking-widest", mode === "checkins" ? "text-secondary" : "text-slate-500")}>Xác nhận ngay</p>
-            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">Nạp và hiển thị màn hình</p>
+            <p className={cn("text-xs font-black uppercase tracking-normal", mode === "checkins" ? "text-secondary" : "text-slate-500")}>Xác nhận ngay</p>
+            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-normal">Nạp và hiển thị màn hình</p>
           </div>
         </button>
       </div>
@@ -123,14 +123,14 @@ export function CSVImport() {
             <div className="flex items-center gap-4">
               <span className="material-symbols-outlined text-4xl text-primary font-light">cloud_upload</span>
               <div>
-                <p className="font-black text-on-surface uppercase tracking-tight text-lg">Tải tệp lên</p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">Chọn file Excel từ máy tính của bạn</p>
+                <p className="font-black text-on-surface uppercase tracking-normal text-lg">Tải tệp lên</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-normal leading-none mt-1">Chọn file Excel từ máy tính của bạn</p>
               </div>
             </div>
             <Button 
               variant="outline" 
               onClick={() => fileInputRef.current?.click()}
-              className="h-12 px-6 border-outline-variant/20 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/5 transition-all"
+              className="h-12 px-6 border-outline-variant/20 rounded-xl font-black text-[10px] uppercase tracking-normal hover:bg-primary/5 transition-all"
             >
               Chọn tệp
             </Button>
@@ -141,21 +141,21 @@ export function CSVImport() {
             {status === "preview" && parsed.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-surface-container-low/50 rounded-2xl p-6 border border-primary/20 space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-black text-primary uppercase tracking-widest flex items-center gap-2">
+                  <p className="text-xs font-black text-primary uppercase tracking-normal flex items-center gap-2">
                     <CheckCircle2 size={16} /> Sẵn sàng nạp {parsed.length} đại biểu
                   </p>
-                  <button onClick={() => setParsed([])} className="text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-tighter underline">Hủy bỏ</button>
+                  <button onClick={() => setParsed([])} className="text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-normal underline">Hủy bỏ</button>
                 </div>
                 <div className="bg-white rounded-xl p-4 max-h-40 overflow-y-auto border border-outline-variant/5 shadow-inner">
                   {parsed.slice(0, 5).map((p, i) => (
                     <div key={i} className="py-2 border-b border-slate-50 last:border-0 flex justify-between items-center">
-                      <span className="text-xs font-black text-on-surface uppercase tracking-tight">{p.name}</span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{p.student_id}</span>
+                      <span className="text-xs font-black text-on-surface uppercase tracking-normal">{p.name}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-normal">{p.student_id}</span>
                     </div>
                   ))}
                   {parsed.length > 5 && <p className="text-center pt-2 text-[10px] font-bold text-slate-300 uppercase italic">... và {parsed.length - 5} người khác</p>}
                 </div>
-                <Button onClick={handleSave} className="w-full h-14 bg-primary hover:bg-primary-container text-white font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/10 rounded-xl transition-all">
+                <Button onClick={handleSave} className="w-full h-14 bg-primary hover:bg-primary-container text-white font-black text-sm uppercase tracking-normal shadow-xl shadow-primary/10 rounded-xl transition-all">
                   Nạp vào hệ thống
                 </Button>
               </motion.div>
@@ -164,7 +164,7 @@ export function CSVImport() {
             {status === "saving" && (
               <div className="py-10 flex flex-col items-center gap-4 text-primary animate-pulse">
                 <Loader2 className="h-10 w-10 animate-spin" />
-                <p className="font-black uppercase tracking-[0.3em] text-[10px]">Đang ghi dữ liệu...</p>
+                <p className="font-black uppercase tracking-normal text-[10px]">Đang ghi dữ liệu...</p>
               </div>
             )}
 
@@ -173,7 +173,7 @@ export function CSVImport() {
                 <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
                   <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                 </div>
-                <p className="font-black uppercase tracking-[0.3em] text-[10px]">Hoàn tất nạp dữ liệu!</p>
+                <p className="font-black uppercase tracking-normal text-[10px]">Hoàn tất nạp dữ liệu!</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -188,7 +188,7 @@ export function CSVImport() {
                window.location.reload();
              }
           }}
-          className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border border-red-100 text-red-400 hover:bg-red-50 transition-all font-black text-[10px] uppercase tracking-widest"
+          className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border border-red-100 text-red-400 hover:bg-red-50 transition-all font-black text-[10px] uppercase tracking-normal"
         >
           <Trash2 size={14} /> Xóa Master List
         </button>
@@ -199,7 +199,7 @@ export function CSVImport() {
               window.location.reload();
             }
           }}
-          className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border border-red-100 text-red-500 hover:bg-red-50 transition-all font-black text-[10px] uppercase tracking-widest"
+          className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border border-red-100 text-red-500 hover:bg-red-50 transition-all font-black text-[10px] uppercase tracking-normal"
         >
           <Trash2 size={14} /> Reset Check-in
         </button>

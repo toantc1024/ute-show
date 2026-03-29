@@ -48,7 +48,7 @@ export function NotCheckedInList() {
   }, [guests, checkedInNames])
 
   if (loading && guests.length === 0) {
-    return <div className="py-20 text-center font-bold text-slate-400 uppercase tracking-widest animate-pulse">Đang đồng bộ danh sách vắng...</div>
+    return <div className="py-20 text-center font-bold text-slate-400 uppercase tracking-normal animate-pulse">Đang đồng bộ danh sách vắng...</div>
   }
 
   if (notCheckedIn.length === 0) return null // Parent component handles empty state
@@ -56,8 +56,8 @@ export function NotCheckedInList() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
-        <h4 className="text-sm font-black text-on-surface tracking-widest uppercase opacity-70">Danh sách đại biểu vắng mặt</h4>
-        <span className="text-[10px] font-black text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-tighter">
+        <h4 className="text-sm font-black text-on-surface tracking-normal uppercase opacity-70">Danh sách đại biểu vắng mặt</h4>
+        <span className="text-[10px] font-black text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-normal">
           {notCheckedIn.length} VẮNG MẶT
         </span>
       </div>
@@ -78,13 +78,13 @@ export function NotCheckedInList() {
                   {guest.name.substring(0, 1).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-black text-on-surface uppercase tracking-tight text-sm leading-tight">{guest.name}</p>
-                  <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-60 mt-1">
+                  <p className="font-black text-on-surface uppercase tracking-normal text-sm leading-tight">{guest.name}</p>
+                  <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-normal opacity-60 mt-1">
                     {guest.don_vi} {guest.student_id ? `• ${guest.student_id}` : ""}
                   </p>
                 </div>
               </div>
-              <div className="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-[9px] font-black tracking-widest uppercase">
+              <div className="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-[9px] font-black tracking-normal uppercase">
                 MISSING
               </div>
             </motion.div>

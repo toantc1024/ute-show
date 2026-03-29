@@ -79,14 +79,14 @@ export function CheckinList({ showDelete, maxItems = 100, query = "" }: CheckinL
   }, [checkins, query])
 
   if (loading && checkins.length === 0) {
-    return <div className="py-20 text-center font-bold text-slate-400 uppercase tracking-widest animate-pulse">Đang đồng bộ dữ liệu...</div>
+    return <div className="py-20 text-center font-bold text-slate-400 uppercase tracking-normal animate-pulse">Đang đồng bộ dữ liệu...</div>
   }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-sm font-black text-on-surface tracking-widest uppercase opacity-70">Danh sách đã Check-in</h4>
-        <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-tighter">
+        <h4 className="text-sm font-black text-on-surface tracking-normal uppercase opacity-70">Danh sách đã Check-in</h4>
+        <span className="text-[10px] font-black text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-normal">
           {filteredCheckins.length} ĐẠI BIỂU
         </span>
       </div>
@@ -94,7 +94,7 @@ export function CheckinList({ showDelete, maxItems = 100, query = "" }: CheckinL
       <div className="space-y-3">
         <AnimatePresence mode="popLayout">
           {filteredCheckins.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center text-slate-400 italic font-medium uppercase tracking-tighter text-xs">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center text-slate-400 italic font-medium uppercase tracking-normal text-xs">
               {query ? "Không tìm thấy đại biểu phù hợp." : "Chưa có đại biểu nào check-in."}
             </motion.div>
           ) : (
@@ -112,18 +112,18 @@ export function CheckinList({ showDelete, maxItems = 100, query = "" }: CheckinL
                     {item.name.substring(0, 2)}
                   </div>
                   <div>
-                    <p className="font-black text-on-surface uppercase tracking-tight text-sm">{item.name}</p>
-                    <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-60 leading-none mt-1">
+                    <p className="font-black text-on-surface uppercase tracking-normal text-sm">{item.name}</p>
+                    <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-normal opacity-60 leading-none mt-1">
                       {item.don_vi} {item.student_id ? `• MSSV: ${item.student_id}` : ""}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-xs font-black text-primary tracking-tighter">
+                    <p className="text-xs font-black text-primary tracking-normal">
                       {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
-                    <p className="text-[9px] font-black text-green-600 px-2 py-0.5 bg-green-50 rounded-full inline-block tracking-widest uppercase shadow-sm">SUCCESS</p>
+                    <p className="text-[9px] font-black text-green-600 px-2 py-0.5 bg-green-50 rounded-full inline-block tracking-normal uppercase shadow-sm">SUCCESS</p>
                   </div>
                   {showDelete && isAdmin && (
                     <button 

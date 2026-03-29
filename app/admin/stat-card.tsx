@@ -35,18 +35,18 @@ export function StatCard({ label, value, icon, trendColor, description }: StatCa
         <div className={cn("p-3 rounded-2xl transition-transform group-hover:scale-110", iconBgMap[trendColor])}>
           <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
         </div>
-        <div className={cn("px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase", iconBgMap[trendColor])}>
+        <div className={cn("px-3 py-1 rounded-full text-[10px] font-black tracking-normal uppercase", iconBgMap[trendColor])}>
           LIVE
         </div>
       </div>
       
       <div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1 mb-1">{label}</p>
-        <h3 className="text-4xl font-black text-on-surface tabular-nums tracking-tighter">{value}</h3>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-normal pl-1 mb-1">{label}</p>
+        <h3 className="text-4xl font-black text-on-surface tabular-nums tracking-normal">{value}</h3>
       </div>
 
       {description && (
-        <p className="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-tight opacity-80 leading-relaxed italic">
+        <p className="mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-normal opacity-80 leading-relaxed italic">
           {description}
         </p>
       )}

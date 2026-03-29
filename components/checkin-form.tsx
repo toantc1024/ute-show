@@ -183,14 +183,14 @@ export function CheckinForm() {
                       {c.name.substring(0, 1).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-black text-on-surface uppercase tracking-tighter text-sm">{c.name}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">
+                      <p className="font-black text-on-surface uppercase tracking-normal text-sm">{c.name}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-normal leading-none mt-1">
                         {c.student_id ? `${c.student_id} • ` : ""}{c.chuc_vu}
                       </p>
                     </div>
                   </div>
                   {c.isCheckedIn && (
-                     <div className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-black tracking-widest">
+                     <div className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-black tracking-normal">
                        OK
                      </div>
                   )}
@@ -204,7 +204,7 @@ export function CheckinForm() {
       {/* Check-in Form Card */}
       <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-3xl overflow-hidden">
         <div className="px-8 py-6 bg-surface-container-low/50 border-b border-outline-variant/5">
-          <h3 className="text-sm font-black text-primary uppercase tracking-widest flex items-center gap-2">
+          <h3 className="text-sm font-black text-primary uppercase tracking-normal flex items-center gap-2">
             <span className="material-symbols-outlined text-lg">how_to_reg</span>
             Xác nhận thông tin
           </h3>
@@ -212,7 +212,7 @@ export function CheckinForm() {
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Họ và tên</Label>
+              <Label className="text-[10px] font-black uppercase tracking-normal text-slate-400 pl-1">Họ và tên</Label>
               <Input 
                 value={form.name} 
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
@@ -221,30 +221,30 @@ export function CheckinForm() {
             </div>
             <div className="grid grid-cols-2 gap-4">
                <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">MSSV</Label>
+                <Label className="text-[10px] font-black uppercase tracking-normal text-slate-400 pl-1">MSSV</Label>
                 <Input value={form.student_id} onChange={e => setForm(f => ({ ...f, student_id: e.target.value }))} className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl shadow-inner" />
               </div>
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Chức vụ</Label>
+                <Label className="text-[10px] font-black uppercase tracking-normal text-slate-400 pl-1">Chức vụ</Label>
                 <Input value={form.chuc_vu} onChange={e => setForm(f => ({ ...f, chuc_vu: e.target.value }))} className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl shadow-inner" />
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Đơn vị / Đào tạo</Label>
+              <Label className="text-[10px] font-black uppercase tracking-normal text-slate-400 pl-1">Đơn vị / Đào tạo</Label>
               <Input value={form.don_vi} onChange={e => setForm(f => ({ ...f, don_vi: e.target.value }))} className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl shadow-inner" />
             </div>
           </div>
 
           <AnimatePresence mode="wait">
             {error && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 text-red-600 p-4 rounded-2xl text-xs font-black uppercase tracking-widest border border-red-100 italic">
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 text-red-600 p-4 rounded-2xl text-xs font-black uppercase tracking-normal border border-red-100 italic">
                 {error}
               </motion.div>
             )}
             {status === "success" && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-600 text-white p-6 rounded-2xl flex flex-col items-center gap-2 shadow-xl shadow-green-500/20 text-center">
                 <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                <p className="font-black uppercase tracking-widest text-sm">Check-in thành công!</p>
+                <p className="font-black uppercase tracking-normal text-sm">Check-in thành công!</p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -255,7 +255,7 @@ export function CheckinForm() {
         </form>
       </Card>
       
-      <p className="text-[10px] font-bold text-slate-400 text-center uppercase tracking-widest px-8 leading-relaxed opacity-60">
+      <p className="text-[10px] font-bold text-slate-400 text-center uppercase tracking-normal px-8 leading-relaxed opacity-60">
         Hãy đảm bảo thông tin đại biểu trùng khớp với danh sách chính thức trước khi xác nhận.
       </p>
     </div>

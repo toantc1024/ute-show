@@ -67,7 +67,7 @@ export function DashboardChart() {
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h3 className="flex items-center gap-2 text-sm font-black tracking-widest text-slate-400 uppercase">
+          <h3 className="flex items-center gap-2 text-sm font-black tracking-normal text-slate-400 uppercase">
             Xác nhận check-in theo thời gian
           </h3>
           <p className="text-xs text-slate-400 font-medium italic">Biểu đồ thể hiện tốc độ đại biểu vào chương trình</p>

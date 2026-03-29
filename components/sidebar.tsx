@@ -23,11 +23,11 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
   return (
     <aside className="h-screen w-64 fixed left-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-950 z-40 border-r border-outline-variant/10 shadow-premium">
       <div className="px-8 py-10">
-        <h1 className="text-xl font-black tracking-tighter uppercase flex items-center">
+        <h1 className="text-xl font-black tracking-normal uppercase flex items-center">
           <span className="text-blue-800 dark:text-blue-400">UTE</span>
           <span className="text-secondary dark:text-secondary-fixed-dim ml-1">Check-in</span>
         </h1>
-        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Precision Pulse</p>
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-normal mt-1">Precision Pulse</p>
       </div>
 
       <nav className="flex flex-col gap-2 px-2">
@@ -58,7 +58,7 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
       <div className="mt-auto flex flex-col gap-2 px-2 pb-8">
         <button className="bg-primary text-on-primary rounded-full px-6 py-4 mb-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
           <span className="material-symbols-outlined">qr_code_scanner</span>
-          <span className="font-bold uppercase tracking-tight">Quick Scan</span>
+          <span className="font-bold uppercase tracking-normal">Quick Scan</span>
         </button>
         
         <button className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-all text-left w-full">

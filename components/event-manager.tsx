@@ -160,7 +160,7 @@ export function EventManager() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-800 uppercase tracking-tight flex items-center gap-2">
+        <h2 className="text-lg font-bold text-slate-800 uppercase tracking-normal flex items-center gap-2">
           <Settings className="h-5 w-5 text-blue-600" />
           QUẢN LÝ CHƯƠNG TRÌNH
         </h2>
@@ -265,7 +265,7 @@ export function EventManager() {
                       {event.title}
                     </h3>
                     {event.is_active && (
-                      <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 ring-1 ring-green-200 uppercase tracking-tighter">
+                      <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 ring-1 ring-green-200 uppercase tracking-normal">
                         <PlayCircle className="h-3 w-3" /> Đang chạy
                       </span>
                     )}

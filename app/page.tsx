@@ -34,7 +34,7 @@ export default function Page() {
         {/* Centered header — glass pill */}
         <section className="flex shrink-0 flex-col justify-center gap-4 px-4 text-center md:px-8">
           <div className="flex flex-col items-center gap-1.5 rounded-2xl px-6 py-2.5 text-center md:px-10 md:py-3"></div>
-          <h2 className="text-xl font-black tracking-tight text-[#27aae2] uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-4xl lg:text-6xl max-w-7xl mx-auto leading-tight">
+          <h2 className="text-xl font-black tracking-normal text-[#27aae2] uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-4xl lg:text-6xl max-w-7xl mx-auto leading-tight">
             {activeEvent?.title || "BAN GIÁM ĐỐC TRUNG TÂM CÁC THỜI KỲ"}
           </h2>
         </section>
@@ -47,7 +47,7 @@ export default function Page() {
         {/* Bottom: Real-time Check-in List */}
         <section className="mx-auto flex min-h-0 w-full max-w-[1920px] flex-1 flex-col px-4 md:px-8">
           <div className="border-border mb-1 flex shrink-0 items-center justify-center rounded-xl border-blue-400/70 p-2 shadow-lg shadow-blue-400/10 md:mb-1">
-            <h2 className="!text-xl font-bold tracking-tight text-[#27aae2] uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl px-4 text-center">
+            <h2 className="!text-xl font-bold tracking-normal text-[#27aae2] uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-3xl lg:text-4xl px-4 text-center">
               CHÀO MỪNG QUÝ ĐẠI BIỂU, ĐẠI GIA ĐÌNH MECUTE CÁC THỜI KỲ VỀ THAM DỰ CHƯƠNG TRÌNH
             </h2>
           </div>

@@ -29,7 +29,7 @@ export function StatCard({
         className
       )}>
         <div className="relative z-10">
-          <p className="text-sm font-bold opacity-80 uppercase tracking-widest mb-2">{label}</p>
+          <p className="text-sm font-bold opacity-80 uppercase tracking-normal mb-2">{label}</p>
           <h3 className="text-4xl font-black mb-1">{value}</h3>
           {trend && <p className="text-sm opacity-90">{trend}</p>}
         </div>
@@ -60,8 +60,8 @@ export function StatCard({
         )}
       </div>
       <div>
-        <p className="text-[2.5rem] font-black text-on-surface leading-none tracking-tighter">{value}</p>
-        <p className="text-sm font-bold text-on-surface-variant uppercase tracking-tighter mt-2 group-hover:text-primary transition-colors">{label}</p>
+        <p className="text-[2.5rem] font-black text-on-surface leading-none tracking-normal">{value}</p>
+        <p className="text-sm font-bold text-on-surface-variant uppercase tracking-normal mt-2 group-hover:text-primary transition-colors">{label}</p>
       </div>
     </div>
   )

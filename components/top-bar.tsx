@@ -36,10 +36,10 @@ export function TopBar({
   return (
     <header className="sticky top-0 w-full z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm shadow-blue-900/5 px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
       <div className="flex items-center gap-4 shrink-0">
-        <h2 className="text-lg font-bold text-on-surface uppercase tracking-tight whitespace-nowrap">{title}</h2>
+        <h2 className="text-lg font-bold text-on-surface uppercase tracking-normal whitespace-nowrap">{title}</h2>
         {contextStats && (
           <div className="px-3 py-1 bg-primary/10 rounded-full animate-in fade-in slide-in-from-left-2 grow-0 hidden sm:block">
-            <span className="text-xs font-bold text-primary tracking-wider uppercase">{contextStats}</span>
+            <span className="text-xs font-bold text-primary tracking-normal uppercase">{contextStats}</span>
           </div>
         )}
       </div>

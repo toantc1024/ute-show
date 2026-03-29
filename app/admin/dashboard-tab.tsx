@@ -20,8 +20,8 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
       {/* Wrapped Banner */}
       <section className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary via-tertiary to-secondary-container p-12 text-white shadow-2xl shadow-primary/20 group">
         <div className="relative z-10 max-w-2xl">
-          <span className="inline-block px-4 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-4">Annual Statistics</span>
-          <h2 className="text-6xl font-black tracking-tighter leading-tight mb-4 uppercase">
+          <span className="inline-block px-4 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold tracking-normal uppercase mb-4">Annual Statistics</span>
+          <h2 className="text-6xl font-black tracking-normal leading-tight mb-4 uppercase">
             {activeEvent?.title || "UTE"} WRAPPED 2026
           </h2>
           <p className="text-lg text-white/80 font-medium">
@@ -71,16 +71,16 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
       <section className="bg-surface-container-low rounded-lg p-10 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h3 className="text-2xl font-black text-on-surface tracking-tight mb-2 uppercase flex items-center gap-3">
+            <h3 className="text-2xl font-black text-on-surface tracking-normal mb-2 uppercase flex items-center gap-3">
               Dữ liệu tổng quan
               {activeEvent && (
-                <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-widest animate-in fade-in zoom-in duration-500">
+                <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-normal animate-in fade-in zoom-in duration-500">
                   {activeEvent.title}
                 </span>
               )}
             </h3>
             <p className="text-on-surface-variant text-sm font-medium">
-              Bạn đang xem dữ liệu ngày: <span className="text-primary font-black uppercase tracking-tighter">
+              Bạn đang xem dữ liệu ngày: <span className="text-primary font-black uppercase tracking-normal">
                 {activeEvent?.event_date ? new Date(activeEvent.event_date).toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' }) : "Chưa chọn ngày"}
               </span>
             </p>
@@ -138,8 +138,8 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
         <div className="lg:col-span-2 bg-surface-container-lowest rounded-lg p-8 shadow-sm border border-outline-variant/10">
           <div className="flex items-center justify-between mb-8">
-            <h4 className="text-lg font-black text-on-surface tracking-tight uppercase">HOẠT ĐỘNG GẦN ĐÂY</h4>
-            <button className="text-sm font-bold text-slate-500 hover:text-primary transition-colors uppercase tracking-widest">Xem tất cả</button>
+            <h4 className="text-lg font-black text-on-surface tracking-normal uppercase">HOẠT ĐỘNG GẦN ĐÂY</h4>
+            <button className="text-sm font-bold text-slate-500 hover:text-primary transition-colors uppercase tracking-normal">Xem tất cả</button>
           </div>
           <div className="space-y-4">
             {recentCheckins.length === 0 ? (
@@ -160,7 +160,7 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-black text-primary">{item.checkin_time && new Date(item.checkin_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    <p className="text-[10px] font-bold text-green-600 px-2 py-0.5 bg-green-50 rounded-full inline-block tracking-tighter uppercase">SUCCESS</p>
+                    <p className="text-[10px] font-bold text-green-600 px-2 py-0.5 bg-green-50 rounded-full inline-block tracking-normal uppercase">SUCCESS</p>
                   </div>
                 </div>
               ))
@@ -169,18 +169,18 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
         </div>
 
         <div className="bg-surface-container-lowest rounded-lg p-8 flex flex-col items-center justify-between text-center shadow-sm border border-outline-variant/10">
-          <h4 className="text-lg font-black text-on-surface tracking-tight mb-6 w-full text-left uppercase">PHÂN BỔ ĐẠI BIỂU</h4>
+          <h4 className="text-lg font-black text-on-surface tracking-normal mb-6 w-full text-left uppercase">PHÂN BỔ ĐẠI BIỂU</h4>
           <div className="relative w-48 h-48 mb-6 animate-in zoom-in duration-700">
             <div className="absolute inset-0 rounded-full border-[12px] border-primary border-r-transparent border-b-transparent rotate-45"></div>
             <div className="absolute inset-2 rounded-full border-[12px] border-secondary-container border-l-transparent border-t-transparent -rotate-12"></div>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-2xl font-black text-on-surface">{stats?.totalGuests || 0}</span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TOTAL</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-normal">TOTAL</span>
             </div>
           </div>
           <div className="space-y-4 w-full px-2">
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-tighter">
+              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-normal">
                 <span className="text-on-surface-variant">Sinh viên</span>
                 <span className="text-primary">85%</span>
               </div>
@@ -189,7 +189,7 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
               </div>
             </div>
             <div className="space-y-1.5 pt-1">
-              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-tighter">
+              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-normal">
                 <span className="text-on-surface-variant">Giảng viên / VIP</span>
                 <span className="text-secondary">15%</span>
               </div>
