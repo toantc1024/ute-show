@@ -72,21 +72,29 @@ function AdminContent() {
       .eq("event_id", selectedEventId)) as any
 
     if (allCheckins && allCheckins.length > 0) {
-      const hours = allCheckins.map((c: any) => new Date(c.created_at).getHours())
-      const minHour = Math.min(...hours)
-      const maxHour = Math.max(...hours)
+      const times = allCheckins.map((c: any) => new Date(c.created_at).getTime())
+      const minTime = Math.min(...times)
+      const maxTime = Math.max(...times)
       
-      const range = maxHour - minHour + 1
-      const counts = new Array(range).fill(0)
+      let rangeMs = maxTime - minTime
+      if (rangeMs < 60000) rangeMs = 60000 // minimum 1 minute window for visual spread
+      
+      const BUCKETS = Math.min(60, Math.max(10, Math.floor(rangeMs / 5000))) // Max 60 bars, 1 bar per 5 seconds at minimum
+      const counts = new Array(BUCKETS).fill(0)
       const labels = []
 
-      for (let i = 0; i < range; i++) {
-        labels.push(`${String(minHour + i).padStart(2, '0')}:00`)
+      const bucketDuration = rangeMs / BUCKETS
+      
+      for (let i = 0; i < BUCKETS; i++) {
+        const d = new Date(minTime + bucketDuration * i)
+        labels.push(`${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`)
       }
 
       allCheckins.forEach((c: any) => {
-        const hour = new Date(c.created_at).getHours()
-        counts[hour - minHour]++
+        const t = new Date(c.created_at).getTime()
+        let b = Math.floor((t - minTime) / bucketDuration)
+        if (b >= BUCKETS) b = BUCKETS - 1
+        counts[b]++
       })
       
       setChartData({ counts, labels })

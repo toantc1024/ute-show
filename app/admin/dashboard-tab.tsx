@@ -93,10 +93,6 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex bg-surface-container-highest/50 backdrop-blur-md rounded-lg p-1.5 shadow-inner">
-              <button className="px-8 py-2.5 rounded-lg text-xs font-black bg-white shadow-xl text-primary uppercase tracking-normal">Giờ</button>
-              <button className="px-8 py-2.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-white/50 transition-all uppercase tracking-normal">Ngày</button>
-            </div>
             <button 
               onClick={onExport}
               className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-lg font-black text-xs uppercase tracking-[0.1em] hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 shadow-xl shadow-primary/20"
@@ -126,17 +122,17 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
             </div>
           </div>
           
-          <div className="flex-1 px-12 pt-16 pb-8 flex items-end justify-between gap-6 bg-gradient-to-b from-transparent to-slate-50/50">
+          <div className="flex-1 px-12 pt-16 pb-8 flex items-end justify-between gap-1 sm:gap-1.5 bg-gradient-to-b from-transparent to-slate-50/50">
             {counts.length === 0 ? (
                <div className="w-full text-center py-20 text-slate-300 italic font-black text-sm uppercase">Chưa có dữ liệu check-in để hiển thị biểu đồ.</div>
             ) : (
               counts.map((val, i) => {
-                const height = (val / maxVal) * 80 + 5 
+                const height = maxVal > 0 ? (val / maxVal) * 80 + 5 : 5
                 return (
-                  <div key={i} className="flex-1 bg-primary/5 rounded-t-xl relative group transition-all hover:bg-primary/10" style={{ height: `100%` }}>
+                  <div key={i} className="flex-1 bg-primary/5 rounded-t-sm relative group transition-all hover:bg-primary/10" style={{ height: `100%` }}>
                     {/* The actual data bar */}
                     <div 
-                      className="absolute inset-x-2 bottom-0 bg-gradient-to-t from-primary to-primary-container rounded-t-xl transition-all duration-1000 ease-out shadow-lg shadow-primary/10 group-hover:from-primary group-hover:to-secondary-container" 
+                      className="absolute inset-x-0 sm:inset-x-0.5 bottom-0 bg-gradient-to-t from-primary to-primary-container rounded-t-sm transition-all duration-1000 ease-out shadow-lg shadow-primary/10 group-hover:from-primary group-hover:to-secondary-container" 
                       style={{ height: `${height}%` }}
                     >
                       <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] font-black py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 shadow-xl whitespace-nowrap">
@@ -154,7 +150,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           </div>
           
           <div className="p-6 px-12 flex justify-between border-t border-outline-variant/5 bg-slate-50/30 overflow-x-auto">
-            {labels.map((t, idx) => (
+            {labels.filter((_, idx) => idx % Math.max(1, Math.floor(labels.length / 5)) === 0).map((t, idx) => (
               <span key={idx} className="text-[10px] font-black text-slate-400 tracking-normal mx-2">{t}</span>
             ))}
           </div>
