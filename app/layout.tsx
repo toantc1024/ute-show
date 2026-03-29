@@ -1,11 +1,11 @@
-import { Geist_Mono, Inter } from "next/font/google"
+import { Geist_Mono, Space_Grotesk } from "next/font/google"
 import "./globals.css"
 import { SupabaseProvider } from "@/components/supabase-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 import { EventProvider } from "@/components/event-context"
 import { cn } from "@/lib/utils"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin", "vietnamese"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={cn(
           "bg-background min-h-screen font-sans antialiased text-on-surface",
-          inter.variable,
+          spaceGrotesk.variable,
           fontMono.variable
         )}
       >
