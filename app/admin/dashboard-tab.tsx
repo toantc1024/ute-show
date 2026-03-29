@@ -48,7 +48,6 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
           icon="check_circle" 
           trend={`${Math.round((stats?.checkinCount || 0) / (stats?.totalGuests || 1) * 100)}%`}
           trendColor="success" 
-          className="border-l-4 border-primary"
         />
         <StatCard 
           label="Chưa Check-in" 
@@ -56,7 +55,6 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
           icon="pending" 
           trend={`${Math.round(((stats?.totalGuests || 0) - (stats?.checkinCount || 0)) / (stats?.totalGuests || 1) * 100)}%`}
           trendColor="secondary" 
-          className="border-l-4 border-secondary"
         />
         <StatCard 
           label="Đại biểu mới" 
