@@ -46,6 +46,7 @@ export default function AdminPage() {
 
 function AdminContent() {
   const [activeTab, setActiveTab] = useState<"dashboard" | "checkin" | "not-checkedin" | "import" | "programs">("dashboard")
+  const [filterDate, setFilterDate] = useState<string>("")
   const { isAdmin, logout } = useAdmin()
   const { supabase } = useSupabase()
   const { activeEvent, events, selectedEventId, setSelectedEventId } = useEvent()
@@ -189,21 +190,58 @@ function AdminContent() {
                   {activeTab === "import" && "Nhập dữ liệu Excel"}
                 </h2>
                 
-                {/* Global Program Selector */}
+                {/* Global Program Selector & Filter */}
                 {activeTab !== "programs" && (
-                  <div className="flex items-center gap-2 rounded-2xl bg-white px-4 py-2 shadow-sm border border-slate-100">
-                    <CalendarDays className="h-4 w-4 text-blue-500" />
-                    <select 
-                      className="bg-transparent text-sm font-bold text-slate-700 focus:outline-none appearance-none cursor-pointer pr-4"
-                      value={selectedEventId || ""}
-                      onChange={(e) => setSelectedEventId(e.target.value)}
-                    >
-                      {events.map(event => (
-                        <option key={event.id} value={event.id}>
-                          {event.event_date ? `[${format(new Date(event.event_date), "dd/MM")}] ` : ""}{event.title}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="flex items-center gap-3">
+                    {/* Date Filter Input */}
+                    <div className="flex items-center gap-2 rounded-2xl bg-white px-3 py-1.5 shadow-sm border border-slate-100">
+                      <Search className="h-3.5 w-3.5 text-slate-400" />
+                      <input 
+                        type="date"
+                        className="bg-transparent text-[11px] font-bold text-slate-600 focus:outline-none cursor-pointer"
+                        value={filterDate}
+                        onChange={(e) => setFilterDate(e.target.value)}
+                        title="Lọc chương trình theo ngày"
+                      />
+                      {filterDate && (
+                        <button 
+                          onClick={() => setFilterDate("")}
+                          className="text-xs text-slate-400 hover:text-slate-600 font-bold"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 rounded-2xl bg-white px-4 py-2 shadow-sm border border-slate-100">
+                      <CalendarDays className="h-4 w-4 text-blue-500" />
+                      <select 
+                        className="bg-transparent text-sm font-bold text-slate-700 focus:outline-none appearance-none cursor-pointer pr-4"
+                        value={selectedEventId || ""}
+                        onChange={(e) => setSelectedEventId(e.target.value)}
+                      >
+                        {events
+                          .filter(event => {
+                            if (!filterDate) return true;
+                            if (!event.event_date) return false;
+                            const d1 = new Date(event.event_date).toISOString().split('T')[0];
+                            return d1 === filterDate;
+                          })
+                          .map(event => (
+                            <option key={event.id} value={event.id}>
+                              {event.event_date ? `[${format(new Date(event.event_date), "dd/MM")}] ` : ""}{event.title}
+                            </option>
+                          ))}
+                        {events.filter(event => {
+                          if (!filterDate) return true;
+                          if (!event.event_date) return false;
+                          const d1 = new Date(event.event_date).toISOString().split('T')[0];
+                          return d1 === filterDate;
+                        }).length === 0 && (
+                          <option value="" disabled>Không có chương trình nào</option>
+                        )}
+                      </select>
+                    </div>
                   </div>
                 )}
               </div>
