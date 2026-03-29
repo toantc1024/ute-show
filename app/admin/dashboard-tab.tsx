@@ -71,8 +71,19 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
       <section className="bg-surface-container-low rounded-lg p-10 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h3 className="text-2xl font-black text-on-surface tracking-tight mb-2 uppercase">Dữ liệu tổng quan</h3>
-            <p className="text-on-surface-variant text-sm font-medium">Theo dõi biến động lượt ra vào và hiệu suất Check-in theo thời gian thực.</p>
+            <h3 className="text-2xl font-black text-on-surface tracking-tight mb-2 uppercase flex items-center gap-3">
+              Dữ liệu tổng quan
+              {activeEvent && (
+                <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-widest animate-in fade-in zoom-in duration-500">
+                  {activeEvent.title}
+                </span>
+              )}
+            </h3>
+            <p className="text-on-surface-variant text-sm font-medium">
+              Bạn đang xem dữ liệu ngày: <span className="text-primary font-black uppercase tracking-tighter">
+                {activeEvent?.event_date ? new Date(activeEvent.event_date).toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' }) : "Chưa chọn ngày"}
+              </span>
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex bg-surface-container-highest rounded-full p-1 shadow-inner">

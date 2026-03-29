@@ -28,6 +28,7 @@ export default function AdminPage() {
 function AdminContent() {
   const [activeTab, setActiveTab] = useState<TabType>("dashboard")
   const [searchQuery, setSearchQuery] = useState("")
+  const [filterDate, setFilterDate] = useState("")
   const { isAdmin, logout } = useAdmin()
   const { supabase } = useSupabase()
   const { activeEvent, selectedEventId, setSelectedEventId } = useEvent()
@@ -157,6 +158,8 @@ function AdminContent() {
             searchValue={searchQuery}
             onSearchChange={setSearchQuery}
             searchPlaceholder={activeTab === "programs" ? "Tìm kiếm chương trình..." : "Tìm kiếm đại biểu..."}
+            filterDate={filterDate}
+            onFilterDateChange={setFilterDate}
           />
 
           <div className="p-8 max-w-7xl mx-auto">
