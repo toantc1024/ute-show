@@ -38,11 +38,17 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
     async function fetchCheckins() {
       setLoading(true)
       try {
-        const { data, error } = await supabase
+        let query = supabase
           .from("checkins")
           .select("*")
           .order("created_at", { ascending: false })
           .limit(maxItems)
+
+        if (selectedEventId) {
+          query = query.eq("event_id", selectedEventId)
+        }
+
+        const { data, error } = await query
 
         if (!error && data) {
           setCheckins(data)
@@ -58,7 +64,12 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
       .channel("checkins_changes")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "checkins" },
+        { 
+          event: "*", 
+          schema: "public", 
+          table: "checkins",
+          ...(selectedEventId ? { filter: `event_id=eq.${selectedEventId}` } : {})
+        },
         () => fetchCheckins()
       )
       .subscribe()
@@ -66,7 +77,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
     return () => {
       supabase.removeChannel(subscription)
     }
-  }, [supabase, maxItems])
+  }, [supabase, maxItems, selectedEventId])
 
   const handleDelete = async (id: string) => {
     if (confirm("Bạn có chắc chắn muốn xóa khách mời này?")) {

@@ -9,6 +9,7 @@ type GuestRow = Database["public"]["Tables"]["guests"]["Row"]
 
 export function NotCheckedInList() {
   const { supabase } = useSupabase()
+  const { selectedEventId } = useEvent()
   const [guests, setGuests] = useState<GuestRow[]>([])
   const [checkedInNames, setCheckedInNames] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
@@ -17,10 +18,18 @@ export function NotCheckedInList() {
   const fetchData = async (isInitial = false) => {
     if (isInitial) setLoading(true)
     try {
-      // Fetch all guests and checkins globally
+      // Fetch guests and checkins filtered by event_id
+      let guestsQuery = supabase.from("guests").select("*").order("name", { ascending: true })
+      let checkinsQuery = supabase.from("checkins").select("name")
+
+      if (selectedEventId) {
+        guestsQuery = guestsQuery.eq("event_id", selectedEventId)
+        checkinsQuery = checkinsQuery.eq("event_id", selectedEventId)
+      }
+
       const [{ data: guestData }, { data: checkinData }] = await Promise.all([
-        supabase.from("guests").select("*").order("name", { ascending: true }),
-        supabase.from("checkins").select("name"),
+        guestsQuery,
+        checkinsQuery
       ])
 
       const checkedNames = new Set(
@@ -47,7 +56,7 @@ export function NotCheckedInList() {
       supabase.removeChannel(channel)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supabase])
+  }, [supabase, selectedEventId])
 
   const notCheckedIn = useMemo(() => {
     return guests.filter(

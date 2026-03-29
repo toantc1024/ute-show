@@ -14,16 +14,25 @@ interface Stats {
 
 export function StatsBar() {
   const { supabase } = useSupabase()
+  const { selectedEventId } = useEvent()
   const [stats, setStats] = useState<Stats>({ total: 0, checkedIn: 0, notCheckedIn: 0, newGuests: 0 })
   const [loading, setLoading] = useState(true)
 
   const fetchStats = async (isInitial = false) => {
     if (isInitial) setLoading(true)
     
-    // Fetch all guests and checkins globally
+    // Fetch events globally or by event_id
+    let guestsQuery = supabase.from("guests").select("name")
+    let checkinsQuery = supabase.from("checkins").select("name")
+
+    if (selectedEventId) {
+      guestsQuery = guestsQuery.eq("event_id", selectedEventId)
+      checkinsQuery = checkinsQuery.eq("event_id", selectedEventId)
+    }
+    
     const [{ data: guestData }, { data: checkinData }] = await Promise.all([
-      supabase.from("guests").select("name"),
-      supabase.from("checkins").select("name"),
+      guestsQuery,
+      checkinsQuery
     ])
 
     const guestNames = new Set(
@@ -64,7 +73,7 @@ export function StatsBar() {
       supabase.removeChannel(channel)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [supabase])
+  }, [supabase, selectedEventId])
 
   const cards = [
     {

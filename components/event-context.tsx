@@ -34,7 +34,20 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
       setEvents(typedEvents)
       
       if (!selectedEventId) {
-        const active = typedEvents.find(e => e.is_active) || typedEvents[0]
+        const now = new Date()
+        
+        // Find is_active first, then find by current time
+        const active = typedEvents.find(e => e.is_active) || 
+                      typedEvents.find(e => {
+                        if (!e.event_date) return false
+                        const eventDate = new Date(e.event_date)
+                        // Buffer of 2 hours before/after
+                        const buffer = 2 * 60 * 60 * 1000
+                        return now.getTime() >= eventDate.getTime() - buffer && 
+                               now.getTime() <= eventDate.getTime() + buffer
+                      }) || 
+                      typedEvents[0]
+        
         setSelectedEventId(active.id)
       }
     }

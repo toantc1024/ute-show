@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Upload, FileText, Loader2, CheckCircle2, Users, Zap } from "lucide-react"
 import * as XLSX from "xlsx"
+import { useEvent } from "@/components/event-context"
 import { cn } from "@/lib/utils"
 
 type Candidate = {
@@ -43,6 +44,7 @@ function parseCSV(text: string): Candidate[] {
 }
 
 export function CSVImport() {
+  const { selectedEventId } = useEvent()
   const [csvText, setCsvText] = useState("")
   const [parsed, setParsed] = useState<Candidate[]>([])
   const [status, setStatus] = useState<
@@ -106,7 +108,7 @@ export function CSVImport() {
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: parsed }),
+        body: JSON.stringify({ items: parsed, event_id: selectedEventId }),
       })
       
       if (res.ok) {

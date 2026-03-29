@@ -8,20 +8,18 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
   try {
-    const { items } = await request.json()
-
+    const { items, event_id } = await request.json()
+    
     if (!Array.isArray(items) || items.length === 0) {
-      return NextResponse.json(
-        { error: "No candidates provided" },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "No candidates provided" }, { status: 400 })
     }
 
     const rows = items
       .map((c: { name: string; chuc_vu: string; don_vi: string }) => ({
         name: String(c.name).trim(),
         chuc_vu: String(c.chuc_vu).trim(),
-        don_vi: String(c.don_vi).trim()
+        don_vi: String(c.don_vi).trim(),
+        event_id: event_id || null
       }))
       .filter((r) => r.name && r.chuc_vu && r.don_vi)
 

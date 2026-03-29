@@ -22,12 +22,15 @@ import {
   XCircle,
   Settings,
   PlusCircle,
-  Database
+  Database,
+  CalendarDays
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import { useEvent } from "@/components/event-context"
+import { EventManager } from "@/components/event-manager"
 
 export default function AdminPage() {
   return (
@@ -38,11 +41,13 @@ export default function AdminPage() {
 }
 
 function AdminContent() {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "checkin" | "not-checkedin" | "import">("dashboard")
+  const [activeTab, setActiveTab] = useState<"dashboard" | "checkin" | "not-checkedin" | "import" | "programs">("dashboard")
   const { isAdmin, logout } = useAdmin()
+  const { activeEvent, events, selectedEventId, setSelectedEventId } = useEvent()
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "programs", label: "Chương trình", icon: CalendarDays },
     { id: "checkin", label: "Check-in", icon: UserCheck },
     { id: "not-checkedin", label: "Chưa Check-in", icon: XCircle },
     { id: "import", label: "Nhập dữ liệu", icon: Database },
@@ -56,11 +61,11 @@ function AdminContent() {
           {/* Logo */}
           <div className="flex items-center justify-center py-10">
              <div className="flex flex-col items-center gap-1">
-                <div className="relative h-12 w-48">
-                  {/* Using a placeholder text logo based on the image */}
+                <div className="relative flex flex-col items-center">
                   <span className="text-2xl font-black italic tracking-tighter text-blue-600">
-                    GO<span className="text-orange-500">YOUTH!</span>
+                    UTE <span className="text-orange-500">Check-in</span>
                   </span>
+                  <div className="h-1 w-12 bg-blue-600 rounded-full mt-1" />
                 </div>
              </div>
           </div>
@@ -110,17 +115,17 @@ function AdminContent() {
         <section className="flex flex-1 flex-col overflow-y-auto px-8 py-2">
           {/* Top Banner (Wrapped Style) */}
           <div className="relative mb-8 overflow-hidden rounded-[40px] bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70] p-10 shadow-xl shadow-purple-500/20">
-            <div className="relative z-10 flex items-center justify-between">
-              <div>
+            <div className="relative z-10 flex items-center justify-between gap-6">
+              <div className="min-w-0 flex-1">
                 <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/80">
                   <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/20">✨</span>
                   Sự kiện đặc biệt
                 </div>
-                <h1 className="mb-2 text-5xl font-black tracking-tight text-white italic">
-                  UTE-SHOW WRAPPED 2026
+                <h1 className="mb-2 text-4xl md:text-5xl font-black tracking-tight text-white italic leading-tight uppercase">
+                  {activeEvent ? `${activeEvent.title} WRAPPED 2026` : "UTE-SHOW WRAPPED 2026"}
                 </h1>
                 <p className="text-lg font-medium text-white/90">
-                  Nhìn lại hành trình rực rỡ của bạn cùng chúng tôi.
+                  {activeEvent?.description || "Nhìn lại hành trình rực rỡ của bạn cùng chúng tôi."}
                 </p>
               </div>
               
@@ -142,13 +147,35 @@ function AdminContent() {
 
           {/* Dynamic Content based on Active Tab */}
           <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-slate-800">
-                {activeTab === "dashboard" && "Dữ liệu tổng quan"}
-                {activeTab === "checkin" && "Check-in Đại biểu"}
-                {activeTab === "not-checkedin" && "Chưa Check-in"}
-                {activeTab === "import" && "Nhập dữ liệu Excel"}
-              </h2>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4 min-w-0">
+                <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight whitespace-nowrap">
+                  {activeTab === "dashboard" && "Dữ liệu tổng quan"}
+                  {activeTab === "programs" && "Quản lý chương trình"}
+                  {activeTab === "checkin" && "Check-in Đại biểu"}
+                  {activeTab === "not-checkedin" && "Chưa Check-in"}
+                  {activeTab === "import" && "Nhập dữ liệu Excel"}
+                </h2>
+                
+                {/* Global Program Selector */}
+                {activeTab !== "programs" && (
+                  <div className="flex items-center gap-2 rounded-2xl bg-white px-4 py-2 shadow-sm border border-slate-100">
+                    <CalendarDays className="h-4 w-4 text-blue-500" />
+                    <select 
+                      className="bg-transparent text-sm font-bold text-slate-700 focus:outline-none appearance-none cursor-pointer pr-4"
+                      value={selectedEventId || ""}
+                      onChange={(e) => setSelectedEventId(e.target.value)}
+                    >
+                      {events.map(event => (
+                        <option key={event.id} value={event.id}>
+                          {event.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+
               {activeTab === "dashboard" && (
                 <button className="rounded-full bg-blue-50 px-5 py-2 text-sm font-bold text-blue-600 transition-all hover:bg-blue-100">
                    Xem tất cả
@@ -158,6 +185,7 @@ function AdminContent() {
 
             <div className="min-h-[400px]">
               {activeTab === "dashboard" && <DashboardChart />}
+              {activeTab === "programs" && <EventManager />}
               {activeTab === "checkin" && (
                 <div className="grid gap-8 lg:grid-cols-12">
                    <div className="lg:col-span-4">

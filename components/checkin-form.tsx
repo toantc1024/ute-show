@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus, AlertCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSupabase } from "@/components/supabase-provider"
+import { useEvent } from "@/components/event-context"
 import { cn } from "@/lib/utils"
 
 type Candidate = {
@@ -25,6 +26,7 @@ const EMPTY_FORM: Candidate = {
 
 export function CheckinForm() {
   const { supabase } = useSupabase()
+  const { selectedEventId } = useEvent()
   const [form, setForm] = useState<Candidate>(EMPTY_FORM)
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">(
     "idle"
@@ -47,20 +49,30 @@ export function CheckinForm() {
       setIsSearching(true)
       const q = searchQuery.toLowerCase()
 
-      // 1. Get potential guests
-      const { data: guestData, error: guestError } = await supabase
+      // 1. Get potential guests (filtered by event_id)
+      let guestQuery = supabase
         .from("guests")
         .select("name, chuc_vu, don_vi")
         .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%`)
-        .limit(8)
+
+      if (selectedEventId) {
+        guestQuery = guestQuery.eq("event_id", selectedEventId)
+      }
+
+      const { data: guestData, error: guestError } = await guestQuery.limit(8)
 
       if (!guestError && guestData) {
-        // 2. Fetch recent checkins
-        const { data: checkinData } = await supabase
+        // 2. Fetch recent checkins (filtered by event_id)
+        let checkinQuery = supabase
           .from("checkins")
           .select("name")
           .order("created_at", { ascending: false })
-          .limit(1000)
+
+        if (selectedEventId) {
+          checkinQuery = checkinQuery.eq("event_id", selectedEventId)
+        }
+
+        const { data: checkinData } = await checkinQuery.limit(1000)
 
         const checkedInSet = new Set(
           (checkinData as { name: string }[] || []).map(c => c.name.trim().toLowerCase())
@@ -79,7 +91,7 @@ export function CheckinForm() {
 
     const timer = setTimeout(search, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, supabase])
+  }, [searchQuery, supabase, selectedEventId])
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -121,6 +133,7 @@ export function CheckinForm() {
       name: form.name.trim(),
       chuc_vu: form.chuc_vu.trim(),
       don_vi: form.don_vi.trim(),
+      event_id: selectedEventId
     }
 
     if (!trimmed.name || !trimmed.chuc_vu || !trimmed.don_vi) {
