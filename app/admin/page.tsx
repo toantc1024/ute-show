@@ -72,32 +72,28 @@ function AdminContent() {
       .eq("event_id", selectedEventId)) as any
 
     if (allCheckins && allCheckins.length > 0) {
-      const times = allCheckins.map((c: any) => new Date(c.created_at).getTime())
-      const minTime = Math.min(...times)
-      const maxTime = Math.max(...times)
+      const timeMap: Record<string, number> = {}
       
-      let rangeMs = maxTime - minTime
-      if (rangeMs < 60000) rangeMs = 60000 // minimum 1 minute window for visual spread
+      allCheckins.sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
       
-      const BUCKETS = Math.min(60, Math.max(10, Math.floor(rangeMs / 5000))) // Max 60 bars, 1 bar per 5 seconds at minimum
-      const counts = new Array(BUCKETS).fill(0)
-      const labels = []
-
-      const bucketDuration = rangeMs / BUCKETS
-      
-      for (let i = 0; i < BUCKETS; i++) {
-        const d = new Date(minTime + bucketDuration * i)
-        labels.push(`${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`)
-      }
-
       allCheckins.forEach((c: any) => {
-        const t = new Date(c.created_at).getTime()
-        let b = Math.floor((t - minTime) / bucketDuration)
-        if (b >= BUCKETS) b = BUCKETS - 1
-        counts[b]++
+        const d = new Date(c.created_at)
+        const label = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`
+        timeMap[label] = (timeMap[label] || 0) + 1
       })
       
-      setChartData({ counts, labels })
+      const labels = Object.keys(timeMap)
+      const counts = Object.values(timeMap)
+      
+      // If there are too many unique seconds, cap the display array (e.g. latest 100) to explicitly prevent UI crushing
+      if (labels.length > 100) {
+        setChartData({ 
+           counts: counts.slice(-100), 
+           labels: labels.slice(-100) 
+        })
+      } else {
+        setChartData({ counts, labels })
+      }
     } else {
       setChartData({ counts: [], labels: [] })
     }
