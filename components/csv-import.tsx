@@ -11,6 +11,7 @@ type Candidate = {
   name: string
   chuc_vu: string
   don_vi: string
+  student_id: string
 }
 
 function parseCSV(text: string): Candidate[] {
@@ -34,8 +35,9 @@ function parseCSV(text: string): Candidate[] {
       const name = parts[0].trim()
       const chuc_vu = parts[1].trim()
       const don_vi = parts[2].trim()
-      if (name && chuc_vu && don_vi) {
-        results.push({ name, chuc_vu, don_vi })
+      const student_id = parts[3]?.trim() || ""
+      if (name) {
+        results.push({ name, chuc_vu, don_vi, student_id })
       }
     }
   }
@@ -77,14 +79,15 @@ export function CSVImport() {
           const name = String(row[0] || "").trim()
           const chuc_vu = String(row[1] || "").trim()
           const don_vi = String(row[2] || "").trim()
+          const student_id = String(row[3] || "").trim()
           
           if (name) {
-            candidates.push({ name, chuc_vu, don_vi })
+            candidates.push({ name, chuc_vu, don_vi, student_id })
           }
         }
         
         setParsed(candidates)
-        setCsvText(candidates.map(c => `${c.name}, ${c.chuc_vu}, ${c.don_vi}`).join("\n"))
+        setCsvText(candidates.map(c => `${c.name}, ${c.chuc_vu}, ${c.don_vi}, ${c.student_id}`).join("\n"))
         setStatus("preview")
       } catch (err) {
         alert("Lỗi đọc file: " + err)
@@ -228,7 +231,7 @@ export function CSVImport() {
           />
           
           <Textarea
-            placeholder={`Nguyễn Văn A, Bí thư, Khoa CNTT...`}
+            placeholder={`Nguyễn Văn A, Bí thư, Khoa CNTT, 21110xxx`}
             value={csvText}
             onChange={(e) => setCsvText(e.target.value)}
             rows={3}
@@ -253,7 +256,7 @@ export function CSVImport() {
             <div className="max-h-24 overflow-y-auto rounded border border-blue-200 bg-white p-2 text-[10px]">
               {parsed.slice(0, 10).map((c, i) => (
                 <div key={i} className="border-b border-slate-50 py-0.5 last:border-0 truncate">
-                  <span className="font-bold">{c.name}</span> <span className="text-slate-300">|</span> {c.chuc_vu}
+                  <span className="font-bold">{c.name}</span> {c.student_id && <span className="text-blue-600">({c.student_id})</span>} <span className="text-slate-300">|</span> {c.chuc_vu}
                 </div>
               ))}
               {parsed.length > 10 && <div className="text-center pt-1 text-slate-400">...và {parsed.length - 10} người khác</div>}

@@ -70,6 +70,7 @@ export function NotCheckedInList() {
     return notCheckedIn.filter(
       (g) =>
         g.name.toLowerCase().includes(term) ||
+        (g.student_id && g.student_id.toLowerCase().includes(term)) ||
         g.chuc_vu.toLowerCase().includes(term) ||
         g.don_vi.toLowerCase().includes(term)
     )
@@ -157,7 +158,7 @@ export function NotCheckedInList() {
                     {guest.name}
                   </p>
                   <p className="mt-0.5 truncate text-xs font-medium text-red-400">
-                    {guest.chuc_vu} — {guest.don_vi}
+                    {guest.student_id ? `${guest.student_id} — ` : ""}{guest.chuc_vu} — {guest.don_vi}
                   </p>
                 </div>
 

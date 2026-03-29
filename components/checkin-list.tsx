@@ -103,6 +103,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
     return checkins.filter(
       (item) =>
         item.name.toLowerCase().includes(term) ||
+        (item.student_id && item.student_id.toLowerCase().includes(term)) ||
         item.chuc_vu.toLowerCase().includes(term) ||
         item.don_vi.toLowerCase().includes(term)
     )
@@ -194,7 +195,7 @@ export function CheckinList({ showDelete, maxItems = 50 }: CheckinListProps) {
                               {item.chuc_vu}
                             </span>
                             <span className="line-clamp-1 text-sm font-medium text-slate-600">
-                              {item.don_vi}
+                              {item.student_id ? `${item.student_id} — ` : ""}{item.don_vi}
                             </span>
                           </div>
                         </div>

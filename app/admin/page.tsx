@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { AdminProvider, AdminAuthGate, useAdmin } from "@/components/admin-auth"
+import { useSupabase } from "@/components/supabase-provider"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
 import { NotCheckedInList } from "@/components/not-checkedin-list"
@@ -23,8 +24,11 @@ import {
   Settings,
   PlusCircle,
   Database,
-  CalendarDays
+  CalendarDays,
+  Download
 } from "lucide-react"
+import * as XLSX from "xlsx"
+import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -43,7 +47,35 @@ export default function AdminPage() {
 function AdminContent() {
   const [activeTab, setActiveTab] = useState<"dashboard" | "checkin" | "not-checkedin" | "import" | "programs">("dashboard")
   const { isAdmin, logout } = useAdmin()
+  const { supabase } = useSupabase()
   const { activeEvent, events, selectedEventId, setSelectedEventId } = useEvent()
+
+  const handleExport = async () => {
+    if (!selectedEventId) return;
+    const { data } = await supabase
+      .from("checkins")
+      .select("name, chuc_vu, don_vi, student_id, created_at")
+      .eq("event_id", selectedEventId)
+      .order("created_at", { ascending: true }) as { data: any[] | null };
+
+    if (!data || data.length === 0) {
+      alert("Không có dữ liệu để xuất");
+      return;
+    }
+
+    const exportData = data.map((item: any) => ({
+      "Họ tên": item.name,
+      "MSSV": item.student_id || "",
+      "Chức vụ": item.chuc_vu,
+      "Đơn vị": item.don_vi,
+      "Thời gian": format(new Date(item.created_at), "HH:mm:ss dd/MM/yyyy")
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Checkins");
+    XLSX.writeFile(wb, `Checkin_${activeEvent?.title || "Data"}.xlsx`);
+  };
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -168,7 +200,7 @@ function AdminContent() {
                     >
                       {events.map(event => (
                         <option key={event.id} value={event.id}>
-                          {event.title}
+                          {event.event_date ? `[${format(new Date(event.event_date), "dd/MM")}] ` : ""}{event.title}
                         </option>
                       ))}
                     </select>
@@ -176,11 +208,22 @@ function AdminContent() {
                 )}
               </div>
 
-              {activeTab === "dashboard" && (
-                <button className="rounded-full bg-blue-50 px-5 py-2 text-sm font-bold text-blue-600 transition-all hover:bg-blue-100">
-                   Xem tất cả
-                </button>
-              )}
+              <div className="flex items-center gap-2">
+                {activeTab === "dashboard" && (
+                  <button 
+                    onClick={handleExport}
+                    className="flex items-center gap-2 rounded-full bg-green-50 px-5 py-2 text-sm font-bold text-green-600 transition-all hover:bg-green-100"
+                  >
+                    <Download className="h-4 w-4" />
+                    Xuất Excel
+                  </button>
+                )}
+                {activeTab === "dashboard" && (
+                  <button className="rounded-full bg-blue-50 px-5 py-2 text-sm font-bold text-blue-600 transition-all hover:bg-blue-100">
+                    Xem tất cả
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="min-h-[400px]">

@@ -15,13 +15,14 @@ export async function POST(request: Request) {
     }
 
     const rows = items
-      .map((c: { name: string; chuc_vu: string; don_vi: string }) => ({
+      .map((c: { name: string; chuc_vu: string; don_vi: string; student_id?: string }) => ({
         name: String(c.name).trim(),
         chuc_vu: String(c.chuc_vu).trim(),
         don_vi: String(c.don_vi).trim(),
+        student_id: String(c.student_id || "").trim() || null,
         event_id: event_id || null
       }))
-      .filter((r) => r.name && r.chuc_vu && r.don_vi)
+      .filter((r) => r.name)
 
     if (rows.length === 0) {
       return NextResponse.json({ error: "No valid rows (missing required fields)" }, { status: 400 })

@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, chuc_vu, don_vi } = body
+    const { name, chuc_vu, don_vi, student_id, event_id } = body
 
     if (!name?.trim() || !chuc_vu?.trim() || !don_vi?.trim()) {
       return NextResponse.json({ error: "Missing required fields (name, chuc_vu, don_vi)" }, { status: 400 })
@@ -20,7 +20,9 @@ export async function POST(request: Request) {
       .insert([{ 
         name: name.trim(), 
         chuc_vu: chuc_vu.trim(), 
-        don_vi: don_vi.trim()
+        don_vi: don_vi.trim(),
+        student_id: student_id?.trim() || null,
+        event_id: event_id || null
       }])
       .select()
 

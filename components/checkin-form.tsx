@@ -15,6 +15,7 @@ type Candidate = {
   name: string
   chuc_vu: string
   don_vi: string
+  student_id?: string
   isCheckedIn?: boolean
 }
 
@@ -22,6 +23,7 @@ const EMPTY_FORM: Candidate = {
   name: "",
   chuc_vu: "",
   don_vi: "",
+  student_id: "",
 }
 
 export function CheckinForm() {
@@ -52,8 +54,8 @@ export function CheckinForm() {
       // 1. Get potential guests (filtered by event_id)
       let guestQuery = supabase
         .from("guests")
-        .select("name, chuc_vu, don_vi")
-        .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%`)
+        .select("name, chuc_vu, don_vi, student_id")
+        .or(`name.ilike.%${q}%,chuc_vu.ilike.%${q}%,don_vi.ilike.%${q}%,student_id.ilike.%${q}%`)
 
       if (selectedEventId) {
         guestQuery = guestQuery.eq("event_id", selectedEventId)
@@ -111,7 +113,8 @@ export function CheckinForm() {
     setForm({
       name: c.name,
       chuc_vu: c.chuc_vu,
-      don_vi: c.don_vi
+      don_vi: c.don_vi,
+      student_id: c.student_id || ""
     })
     setSearchQuery(c.name)
     setShowDropdown(false)
@@ -133,6 +136,7 @@ export function CheckinForm() {
       name: form.name.trim(),
       chuc_vu: form.chuc_vu.trim(),
       don_vi: form.don_vi.trim(),
+      student_id: form.student_id?.trim() || null,
       event_id: selectedEventId
     }
 
@@ -195,7 +199,7 @@ export function CheckinForm() {
           <div className="relative" ref={dropdownRef}>
             <div className="relative">
               <Input
-                placeholder="Gõ tên, chức vụ hoặc đơn vị..."
+                placeholder="Gõ tên, MSSV, chức vụ hoặc đơn vị..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value)
@@ -237,7 +241,7 @@ export function CheckinForm() {
                           </span>
                         </div>
                         <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tight">
-                          {c.chuc_vu} — {c.don_vi}
+                          {c.student_id ? `${c.student_id} — ` : ""}{c.chuc_vu} — {c.don_vi}
                         </span>
                       </div>
 
@@ -265,9 +269,15 @@ export function CheckinForm() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Họ và tên</Label>
-              <Input id="name" value={form.name} onChange={handleChange("name")} className="border-slate-300 font-bold" disabled={status === "saving"} />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Họ và tên</Label>
+                <Input id="name" value={form.name} onChange={handleChange("name")} className="border-slate-300 font-bold" disabled={status === "saving"} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="student_id" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Mã số sinh viên (MSSV)</Label>
+                <Input id="student_id" value={form.student_id} onChange={handleChange("student_id")} className="border-slate-300 font-bold" disabled={status === "saving"} />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
