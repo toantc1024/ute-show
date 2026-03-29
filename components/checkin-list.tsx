@@ -134,22 +134,23 @@ export function CheckinList({ showDelete, maxItems = 100, query = "" }: CheckinL
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-xs font-black text-primary tracking-normal">
-                      {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                    <p className="text-[9px] font-black text-green-600 px-2 py-0.5 bg-green-50 rounded-lg inline-block tracking-normal uppercase shadow-sm">SUCCESS</p>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xs font-black text-primary tracking-normal">
+                        {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                      <p className="text-[9px] font-black text-green-600 px-2 py-0.5 bg-green-50 rounded-lg inline-block tracking-normal uppercase shadow-sm">SUCCESS</p>
+                    </div>
+                    {showDelete && (
+                      <button 
+                        onClick={() => handleDelete(item)}
+                        title="Xoá / Hoàn trả lịch sử"
+                        className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-40 group-hover:opacity-100"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
                   </div>
-                  {showDelete && isAdmin && (
-                    <button 
-                      onClick={() => handleDelete(item)}
-                      className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  )}
-                </div>
               </motion.div>
             ))
           )}
