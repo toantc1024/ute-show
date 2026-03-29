@@ -57,14 +57,14 @@ export function DashboardChart() {
 
   if (loading && data.length === 0) {
     return (
-      <div className="flex h-[300px] w-full items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      <div className="flex h-[300px] w-full items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm">
+        <div className="h-8 w-8 animate-spin rounded-lg border-4 border-primary border-t-transparent"></div>
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100">
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm ring-1 ring-slate-100">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h3 className="flex items-center gap-2 text-sm font-black tracking-normal text-slate-400 uppercase">

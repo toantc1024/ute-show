@@ -157,7 +157,7 @@ export function CheckinForm() {
               setShowDropdown(true)
             }}
             onFocus={() => setShowDropdown(true)}
-            className="h-14 bg-surface-container-low border-none rounded-2xl px-12 font-bold focus:ring-2 focus:ring-primary/20 transition-all text-sm shadow-sm"
+            className="h-14 bg-surface-container-low border-none rounded-xl px-12 font-bold focus:ring-2 focus:ring-primary/20 transition-all text-sm shadow-sm"
           />
           <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
           {isSearching && <Loader2 className="h-4 w-4 animate-spin absolute right-4 top-1/2 -translate-y-1/2 text-primary" />}
@@ -169,14 +169,14 @@ export function CheckinForm() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="absolute top-full left-0 right-0 z-[100] mt-2 max-h-80 overflow-y-auto rounded-3xl bg-white shadow-2xl border border-outline-variant/10 p-2"
+              className="absolute top-full left-0 right-0 z-[100] mt-2 max-h-80 overflow-y-auto rounded-xl bg-white shadow-2xl border border-outline-variant/10 p-2"
             >
               {candidates.map((c, i) => (
                 <button
                   key={i}
                   type="button"
                   onClick={() => selectCandidate(c)}
-                  className="flex w-full items-center justify-between p-4 rounded-2xl transition-all hover:bg-surface-container-lowest hover:shadow-sm group text-left mb-1 last:mb-0"
+                  className="flex w-full items-center justify-between p-4 rounded-xl transition-all hover:bg-surface-container-lowest hover:shadow-sm group text-left mb-1 last:mb-0"
                 >
                   <div className="flex items-center gap-4">
                     <div className={cn("w-10 h-10 rounded-full flex items-center justify-center font-bold", c.isCheckedIn ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary")}>
@@ -190,7 +190,7 @@ export function CheckinForm() {
                     </div>
                   </div>
                   {c.isCheckedIn && (
-                     <div className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-black tracking-normal">
+                     <div className="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-[10px] font-black tracking-normal">
                        OK
                      </div>
                   )}
@@ -202,7 +202,7 @@ export function CheckinForm() {
       </div>
 
       {/* Check-in Form Card */}
-      <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-3xl overflow-hidden">
+      <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-xl overflow-hidden">
         <div className="px-8 py-6 bg-surface-container-low/50 border-b border-outline-variant/5">
           <h3 className="text-sm font-black text-primary uppercase tracking-normal flex items-center gap-2">
             <span className="material-symbols-outlined text-lg">how_to_reg</span>
@@ -237,19 +237,19 @@ export function CheckinForm() {
 
           <AnimatePresence mode="wait">
             {error && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 text-red-600 p-4 rounded-2xl text-xs font-black uppercase tracking-normal border border-red-100 italic">
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 text-red-600 p-4 rounded-xl text-xs font-black uppercase tracking-normal border border-red-100 italic">
                 {error}
               </motion.div>
             )}
             {status === "success" && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-600 text-white p-6 rounded-2xl flex flex-col items-center gap-2 shadow-xl shadow-green-500/20 text-center">
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-600 text-white p-6 rounded-xl flex flex-col items-center gap-2 shadow-xl shadow-green-500/20 text-center">
                 <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                 <p className="font-black uppercase tracking-normal text-sm">Check-in thành công!</p>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <Button type="submit" disabled={status === "saving" || status === "success"} className="w-full h-14 bg-primary hover:bg-primary-container text-white font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 rounded-2xl transition-all active:scale-95 disabled:opacity-50">
+          <Button type="submit" disabled={status === "saving" || status === "success"} className="w-full h-14 bg-primary hover:bg-primary-container text-white font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 rounded-xl transition-all active:scale-95 disabled:opacity-50">
             {status === "saving" ? <Loader2 className="animate-spin h-6 w-6" /> : "Xác nhận vào"}
           </Button>
         </form>

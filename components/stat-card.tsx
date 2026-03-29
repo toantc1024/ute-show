@@ -36,7 +36,7 @@ export function StatCard({
   if (variant === "gradient") {
     return (
       <div className={cn(
-        "p-8 rounded-[32px] bg-gradient-to-br from-primary to-primary-container text-on-primary-container relative overflow-hidden shadow-2xl shadow-primary/20",
+        "p-8 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary-container relative overflow-hidden shadow-2xl shadow-primary/20",
         className
       )}>
         <div className="relative z-10">
@@ -51,7 +51,7 @@ export function StatCard({
 
   return (
     <div className={cn(
-      "p-8 rounded-[32px] bg-white shadow-xl shadow-blue-900/5 relative overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-500 group h-48 border border-outline-variant/5",
+      "p-8 rounded-xl bg-white shadow-xl shadow-blue-900/5 relative overflow-hidden flex flex-col justify-between hover:shadow-2xl transition-all duration-500 group h-48 border border-outline-variant/5",
       className
     )}>
       {/* Premium Accent Bar */}
@@ -66,7 +66,7 @@ export function StatCard({
       )}
 
       <div className="flex justify-between items-start relative z-10">
-        <div className={cn("p-4 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-sm", {
+        <div className={cn("p-4 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-sm", {
           "bg-primary/10 text-primary": trendColor === "primary",
           "bg-secondary/10 text-secondary": trendColor === "secondary",
           "bg-green-50 text-green-600": trendColor === "success"
@@ -74,7 +74,7 @@ export function StatCard({
           <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
         </div>
         {trend && (
-           <span className={cn("text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-normal shadow-sm", {
+           <span className={cn("text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-normal shadow-sm", {
             "bg-primary-fixed text-primary": trendColor === "primary",
             "bg-secondary-fixed text-secondary": trendColor === "secondary",
             "bg-green-50 text-green-700": trendColor === "success"
@@ -90,7 +90,7 @@ export function StatCard({
       </div>
 
       {/* Decorative background circle */}
-      <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-surface-container-low rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-0"></div>
+      <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-surface-container-low rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-0"></div>
     </div>
   )
 }

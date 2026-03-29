@@ -76,7 +76,7 @@ export function CSVImport() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="bg-surface-container-low/50 rounded-2xl p-6 border border-outline-variant/10 shadow-inner">
+      <div className="bg-surface-container-low/50 rounded-xl p-6 border border-outline-variant/10 shadow-inner">
         <h3 className="text-xl font-black text-on-surface tracking-normal uppercase mb-2">Nhập dữ liệu Excel</h3>
         <p className="text-xs font-bold text-on-surface-variant uppercase tracking-normal opacity-60">
           Hỗ trợ định dạng .xlsx, .xls, .csv để nạp danh sách đại biểu hàng loạt.
@@ -87,11 +87,11 @@ export function CSVImport() {
         <button 
           onClick={() => setMode("guests")}
           className={cn(
-            "p-6 rounded-2xl border transition-all flex flex-col items-center gap-3 text-center group",
+            "p-6 rounded-xl border transition-all flex flex-col items-center gap-3 text-center group",
             mode === "guests" ? "bg-white border-primary shadow-xl shadow-primary/10" : "bg-surface-container-low border-transparent hover:bg-white"
           )}
         >
-          <div className={cn("p-3 rounded-full transition-all group-hover:scale-110", mode === "guests" ? "bg-primary text-white" : "bg-white text-slate-400Shadow-sm")}>
+          <div className={cn("p-3 rounded-lg transition-all group-hover:scale-110", mode === "guests" ? "bg-primary text-white" : "bg-white text-slate-400Shadow-sm")}>
             <Users size={24} />
           </div>
           <div>
@@ -103,11 +103,11 @@ export function CSVImport() {
         <button 
           onClick={() => setMode("checkins")}
           className={cn(
-            "p-6 rounded-2xl border transition-all flex flex-col items-center gap-3 text-center group",
+            "p-6 rounded-xl border transition-all flex flex-col items-center gap-3 text-center group",
             mode === "checkins" ? "bg-white border-secondary shadow-xl shadow-secondary/10" : "bg-surface-container-low border-transparent hover:bg-white"
           )}
         >
-          <div className={cn("p-3 rounded-full transition-all group-hover:scale-110", mode === "checkins" ? "bg-secondary text-white" : "bg-white text-slate-400 shadow-sm")}>
+          <div className={cn("p-3 rounded-lg transition-all group-hover:scale-110", mode === "checkins" ? "bg-secondary text-white" : "bg-white text-slate-400 shadow-sm")}>
             <Zap size={24} />
           </div>
           <div>
@@ -117,7 +117,7 @@ export function CSVImport() {
         </button>
       </div>
 
-      <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-3xl overflow-hidden p-8">
+      <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-xl overflow-hidden p-8">
         <div className="space-y-6">
           <div className="flex items-center justify-between border-b border-outline-variant/10 pb-6">
             <div className="flex items-center gap-4">
@@ -139,7 +139,7 @@ export function CSVImport() {
 
           <AnimatePresence mode="wait">
             {status === "preview" && parsed.length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-surface-container-low/50 rounded-2xl p-6 border border-primary/20 space-y-4">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-surface-container-low/50 rounded-xl p-6 border border-primary/20 space-y-4">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-black text-primary uppercase tracking-normal flex items-center gap-2">
                     <CheckCircle2 size={16} /> Sẵn sàng nạp {parsed.length} đại biểu
@@ -170,7 +170,7 @@ export function CSVImport() {
 
             {status === "success" && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="py-10 flex flex-col items-center gap-4 text-green-600">
-                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-green-50 rounded-lg flex items-center justify-center">
                   <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                 </div>
                 <p className="font-black uppercase tracking-normal text-[10px]">Hoàn tất nạp dữ liệu!</p>

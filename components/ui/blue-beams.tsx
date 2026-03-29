@@ -31,7 +31,7 @@ export function BlueBeams({ className }: BlueBeamsProps) {
         // Outer div owns the CSS transform so framer-motion only handles opacity
         <div
           key={idx}
-          className="absolute rounded-full"
+          className="absolute rounded-lg"
           style={{
             left: beam.left,
             top: "50%",
@@ -42,7 +42,7 @@ export function BlueBeams({ className }: BlueBeamsProps) {
           }}
         >
           <motion.div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0 rounded-lg"
             style={{
               background: `linear-gradient(to bottom, transparent 0%, rgba(${beam.rgb},0.55) 40%, rgba(${beam.rgb},0.55) 60%, transparent 100%)`,
             }}

@@ -24,9 +24,9 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       {/* Wrapped Banner */}
-      <section className="relative overflow-hidden rounded-[40px] bg-gradient-to-br from-primary to-secondary p-16 text-white shadow-2xl shadow-primary/20 group">
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-secondary p-16 text-white shadow-2xl shadow-primary/20 group">
         <div className="relative z-10 max-w-2xl">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-black tracking-[0.2em] uppercase mb-6 animate-pulse">UTE Check-in 2026</span>
+          <span className="inline-block px-4 py-1.5 rounded-lg bg-white/20 backdrop-blur-md text-[10px] font-black tracking-[0.2em] uppercase mb-6 animate-pulse">UTE Check-in 2026</span>
           <h2 className="text-7xl font-black tracking-normal leading-none mb-6 uppercase">
              TRẢI NGHIỆM ĐIỂM DANH SỐ
           </h2>
@@ -35,8 +35,8 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           </p>
         </div>
         {/* Abstract Decorative Shapes */}
-        <div className="absolute -right-20 -top-20 w-[400px] h-[400px] bg-white/10 rounded-full blur-[100px] group-hover:scale-110 transition-transform duration-1000"></div>
-        <div className="absolute right-40 -bottom-10 w-[300px] h-[300px] bg-secondary/30 rounded-full blur-[80px] group-hover:scale-125 transition-transform duration-1000"></div>
+        <div className="absolute -right-20 -top-20 w-[400px] h-[400px] bg-white/10 rounded-lg blur-[100px] group-hover:scale-110 transition-transform duration-1000"></div>
+        <div className="absolute right-40 -bottom-10 w-[300px] h-[300px] bg-secondary/30 rounded-lg blur-[80px] group-hover:scale-125 transition-transform duration-1000"></div>
       </section>
 
       {/* Summary Cards Bento */}
@@ -76,7 +76,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
       </section>
 
       {/* Main Data Section */}
-      <section className="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[40px] p-12 shadow-xl shadow-blue-900/5 border border-outline-variant/5">
+      <section className="bg-surface-container-lowest/50 backdrop-blur-xl rounded-xl p-12 shadow-xl shadow-blue-900/5 border border-outline-variant/5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
           <div>
             <div className="flex items-center gap-4 mb-3">
@@ -84,7 +84,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
                 Xác nhận check-in
               </h3>
               {activeEvent && (
-                <span className="text-[10px] font-black text-primary bg-primary/10 px-4 py-1.5 rounded-full uppercase tracking-normal animate-in zoom-in-75">
+                <span className="text-[10px] font-black text-primary bg-primary/10 px-4 py-1.5 rounded-lg uppercase tracking-normal animate-in zoom-in-75">
                   {activeEvent.title}
                 </span>
               )}
@@ -94,13 +94,13 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex bg-surface-container-highest/50 backdrop-blur-md rounded-full p-1.5 shadow-inner">
-              <button className="px-8 py-2.5 rounded-full text-xs font-black bg-white shadow-xl text-primary uppercase tracking-normal">Giờ</button>
-              <button className="px-8 py-2.5 rounded-full text-xs font-bold text-on-surface-variant hover:bg-white/50 transition-all uppercase tracking-normal">Ngày</button>
+            <div className="flex bg-surface-container-highest/50 backdrop-blur-md rounded-lg p-1.5 shadow-inner">
+              <button className="px-8 py-2.5 rounded-lg text-xs font-black bg-white shadow-xl text-primary uppercase tracking-normal">Giờ</button>
+              <button className="px-8 py-2.5 rounded-lg text-xs font-bold text-on-surface-variant hover:bg-white/50 transition-all uppercase tracking-normal">Ngày</button>
             </div>
             <button 
               onClick={onExport}
-              className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-full font-black text-xs uppercase tracking-[0.1em] hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 shadow-xl shadow-primary/20"
+              className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-lg font-black text-xs uppercase tracking-[0.1em] hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 shadow-xl shadow-primary/20"
             >
               <Download size={16} />
               <span>Xuất Excel</span>
@@ -109,7 +109,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
         </div>
 
         {/* Real Chart (Calculated from checkin times) */}
-        <div className="relative bg-white rounded-[32px] h-[500px] overflow-hidden flex flex-col border border-outline-variant/10 shadow-2xl shadow-blue-900/5 group">
+        <div className="relative bg-white rounded-xl h-[500px] overflow-hidden flex flex-col border border-outline-variant/10 shadow-2xl shadow-blue-900/5 group">
           <div className="p-8 flex items-center justify-between border-b border-outline-variant/5">
              <h4 className="font-black text-on-surface uppercase text-xs tracking-normal flex items-center gap-2">
                <span className="material-symbols-outlined text-sm text-primary">timeline</span>
@@ -117,11 +117,11 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
              </h4>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-lg shadow-primary/30"></span>
+                <span className="w-2.5 h-2.5 rounded-lg bg-primary shadow-lg shadow-primary/30"></span>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-normal">Thành viên</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-secondary-container opacity-50"></span>
+                <span className="w-2.5 h-2.5 rounded-lg bg-secondary-container opacity-50"></span>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-normal">Dự kiến</span>
               </div>
             </div>
@@ -160,19 +160,19 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
 
       {/* Activity and Breakdown */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 pb-16">
-        <div className="lg:col-span-2 bg-white rounded-[40px] p-10 shadow-xl shadow-blue-900/5 border border-outline-variant/10">
+        <div className="lg:col-span-2 bg-white rounded-xl p-10 shadow-xl shadow-blue-900/5 border border-outline-variant/10">
           <div className="flex items-center justify-between mb-10">
             <h4 className="text-xl font-black text-on-surface tracking-normal uppercase">Hoạt động mới nhất</h4>
-            <button className="text-xs font-black text-primary hover:bg-primary/5 px-4 py-2 rounded-full transition-all uppercase tracking-normal">Xem tất cả</button>
+            <button className="text-xs font-black text-primary hover:bg-primary/5 px-4 py-2 rounded-lg transition-all uppercase tracking-normal">Xem tất cả</button>
           </div>
           <div className="space-y-4">
             {recentCheckins.length === 0 ? (
               <p className="text-center py-20 text-slate-300 italic font-medium uppercase tracking-normal text-xs">Chưa có hoạt động nào được ghi nhận.</p>
             ) : (
               recentCheckins.map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-5 rounded-3xl bg-surface-container-low/30 hover:bg-surface-container-low transition-all group border border-transparent hover:border-outline-variant/10">
+                <div key={i} className="flex items-center justify-between p-5 rounded-xl bg-surface-container-low/30 hover:bg-surface-container-low transition-all group border border-transparent hover:border-outline-variant/10">
                   <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary font-black shadow-inner shadow-primary/5">
+                    <div className="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary font-black shadow-inner shadow-primary/5">
                       {item.title ? item.title.substring(0, 2).toUpperCase() : "..."}
                     </div>
                     <div>
@@ -184,7 +184,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-black text-primary mb-1">{item.checkin_time && new Date(item.checkin_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    <p className="text-[9px] font-black text-green-600 px-3 py-1 bg-green-50 rounded-full inline-block tracking-normal uppercase shadow-sm">SUCCESS</p>
+                    <p className="text-[9px] font-black text-green-600 px-3 py-1 bg-green-50 rounded-lg inline-block tracking-normal uppercase shadow-sm">SUCCESS</p>
                   </div>
                 </div>
               ))
@@ -192,7 +192,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           </div>
         </div>
 
-        <div className="bg-white rounded-[40px] p-10 flex flex-col items-center justify-between text-center shadow-xl shadow-blue-900/5 border border-outline-variant/10">
+        <div className="bg-white rounded-xl p-10 flex flex-col items-center justify-between text-center shadow-xl shadow-blue-900/5 border border-outline-variant/10">
           <h4 className="text-xl font-black text-on-surface tracking-normal mb-8 w-full text-left uppercase">Phân bổ đại biểu</h4>
           <div className="relative w-56 h-56 mb-10 animate-in zoom-in-75 duration-1000">
              {/* Dynamic donut chart sim */}
@@ -209,8 +209,8 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
                 <span className="text-slate-500">Giảng viên / VIP</span>
                 <span className="text-primary">85%</span>
               </div>
-              <div className="w-full h-2 bg-slate-50 rounded-full overflow-hidden shadow-inner">
-                <div className="h-full bg-gradient-to-r from-primary to-primary-container w-[85%] rounded-full shadow-lg shadow-primary/20"></div>
+              <div className="w-full h-2 bg-slate-50 rounded-lg overflow-hidden shadow-inner">
+                <div className="h-full bg-gradient-to-r from-primary to-primary-container w-[85%] rounded-lg shadow-lg shadow-primary/20"></div>
               </div>
             </div>
             <div className="space-y-2">
@@ -218,8 +218,8 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
                 <span className="text-slate-500">Khách mời / SV</span>
                 <span className="text-secondary">15%</span>
               </div>
-              <div className="w-full h-2 bg-slate-50 rounded-full overflow-hidden shadow-inner">
-                <div className="h-full bg-gradient-to-r from-secondary to-secondary-container w-[15%] rounded-full shadow-lg shadow-secondary/20"></div>
+              <div className="w-full h-2 bg-slate-50 rounded-lg overflow-hidden shadow-inner">
+                <div className="h-full bg-gradient-to-r from-secondary to-secondary-container w-[15%] rounded-lg shadow-lg shadow-secondary/20"></div>
               </div>
             </div>
           </div>

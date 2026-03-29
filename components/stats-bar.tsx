@@ -121,13 +121,13 @@ export function StatsBar() {
         return (
           <div
             key={card.label}
-            className={`group relative overflow-hidden rounded-[32px] bg-white p-6 shadow-sm transition-all hover:shadow-md`}
+            className={`group relative overflow-hidden rounded-xl bg-white p-6 shadow-sm transition-all hover:shadow-md`}
           >
             {/* Background Accent Blur */}
-            <div className={`absolute -top-10 -right-10 h-32 w-32 rounded-full opacity-20 blur-3xl ${card.iconBg}`} />
+            <div className={`absolute -top-10 -right-10 h-32 w-32 rounded-lg opacity-20 blur-3xl ${card.iconBg}`} />
             
             <div className="flex flex-col items-center justify-center gap-2 text-center">
-              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm transition-transform group-hover:scale-105 ${card.iconBg} ${card.color}`}>
+              <div className={`flex h-14 w-14 items-center justify-center rounded-xl shadow-sm transition-transform group-hover:scale-105 ${card.iconBg} ${card.color}`}>
                 <Icon className="h-7 w-7" />
               </div>
               <div className={`mt-2 text-3xl font-black tracking-normal text-slate-900`}>

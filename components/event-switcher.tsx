@@ -22,7 +22,7 @@ export function EventSwitcher() {
               Chương trình
             </div>
             {activeEvent?.is_active && (
-              <span className="flex h-1.5 w-1.5 rounded-full bg-green-500 ring-4 ring-green-500/10 animate-pulse" />
+              <span className="flex h-1.5 w-1.5 rounded-lg bg-green-500 ring-4 ring-green-500/10 animate-pulse" />
             )}
           </div>
           <div className="truncate text-[13px] font-bold text-slate-800 leading-tight">
@@ -52,7 +52,7 @@ export function EventSwitcher() {
               <div className="flex w-full items-center justify-between">
                 <span className="truncate font-bold text-[13px] tracking-normal">{event.title}</span>
                 {event.is_active && (
-                  <span className="shrink-0 rounded-full bg-green-100 px-1.5 py-0.5 text-[8px] font-extrabold text-green-700 uppercase ring-1 ring-green-200">
+                  <span className="shrink-0 rounded-lg bg-green-100 px-1.5 py-0.5 text-[8px] font-extrabold text-green-700 uppercase ring-1 ring-green-200">
                     Live
                   </span>
                 )}

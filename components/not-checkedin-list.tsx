@@ -57,7 +57,7 @@ export function NotCheckedInList() {
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-sm font-black text-on-surface tracking-normal uppercase opacity-70">Danh sách đại biểu vắng mặt</h4>
-        <span className="text-[10px] font-black text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-normal">
+        <span className="text-[10px] font-black text-secondary bg-secondary/10 px-3 py-1 rounded-lg uppercase tracking-normal">
           {notCheckedIn.length} VẮNG MẶT
         </span>
       </div>
@@ -71,10 +71,10 @@ export function NotCheckedInList() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="flex items-center justify-between p-4 rounded-2xl bg-surface-container-low/30 hover:bg-surface-container-low transition-all border border-outline-variant/10 group shadow-sm"
+              className="flex items-center justify-between p-4 rounded-xl bg-surface-container-low/30 hover:bg-surface-container-low transition-all border border-outline-variant/10 group shadow-sm"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-black shadow-inner">
+                <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary font-black shadow-inner">
                   {guest.name.substring(0, 1).toUpperCase()}
                 </div>
                 <div>
@@ -84,7 +84,7 @@ export function NotCheckedInList() {
                   </p>
                 </div>
               </div>
-              <div className="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-[9px] font-black tracking-normal uppercase">
+              <div className="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-lg text-[9px] font-black tracking-normal uppercase">
                 MISSING
               </div>
             </motion.div>

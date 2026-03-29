@@ -265,7 +265,7 @@ export function EventManager() {
                       {event.title}
                     </h3>
                     {event.is_active && (
-                      <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 ring-1 ring-green-200 uppercase tracking-normal">
+                      <span className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 ring-1 ring-green-200 uppercase tracking-normal">
                         <PlayCircle className="h-3 w-3" /> Đang chạy
                       </span>
                     )}

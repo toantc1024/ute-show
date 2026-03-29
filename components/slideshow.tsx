@@ -44,7 +44,7 @@ export function Slideshow({ className }: { className?: string }) {
               <img
                 src={src}
                 alt="Ban Giám Đốc Trung Tâm"
-                className="aspect-square w-full rounded-2xl object-cover shadow-lg transition-transform duration-500 hover:scale-[1.04]"
+                className="aspect-square w-full rounded-xl object-cover shadow-lg transition-transform duration-500 hover:scale-[1.04]"
               />
             </CarouselItem>
           ))}

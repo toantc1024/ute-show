@@ -79,10 +79,10 @@ export function AdminAuthGate({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-[60vh] items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+        className="w-full max-w-sm space-y-4 rounded-xl border border-slate-200 bg-white p-8 shadow-sm"
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <div className="rounded-full bg-blue-100 p-3">
+          <div className="rounded-lg bg-blue-100 p-3">
             <Lock className="h-6 w-6 text-primary" />
           </div>
           <h2 className="text-xl font-bold text-slate-800">Trang Quản Trị</h2>

@@ -36,7 +36,7 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
             key={item.id}
             onClick={() => onTabChange(item.id)}
             className={cn(
-              "px-6 py-3 flex items-center gap-3 rounded-full transition-all active:translate-x-1 duration-150 group w-full text-left",
+              "px-6 py-3 flex items-center gap-3 rounded-lg transition-all active:translate-x-1 duration-150 group w-full text-left",
               activeTab === item.id 
                 ? "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200" 
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
@@ -56,19 +56,19 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-2 px-2 pb-8">
-        <button className="bg-primary text-on-primary rounded-full px-6 py-4 mb-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+        <button className="bg-primary text-on-primary rounded-lg px-6 py-4 mb-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
           <span className="material-symbols-outlined">qr_code_scanner</span>
           <span className="font-bold uppercase tracking-normal">Quick Scan</span>
         </button>
         
-        <button className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-all text-left w-full">
+        <button className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-left w-full">
           <span className="material-symbols-outlined">help</span>
           <span className="text-sm font-medium">Hỗ trợ</span>
         </button>
         
         <button 
           onClick={onLogout}
-          className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-all text-left w-full"
+          className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-left w-full"
         >
           <span className="material-symbols-outlined">logout</span>
           <span className="text-sm font-medium">Đăng xuất</span>

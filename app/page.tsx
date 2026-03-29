@@ -33,7 +33,7 @@ export default function Page() {
       <div className="relative isolate z-10 flex h-full w-full flex-col justify-between gap-6 pt-6 pb-6 md:gap-10 md:pt-10 md:pb-10">
         {/* Centered header — glass pill */}
         <section className="flex shrink-0 flex-col justify-center gap-4 px-4 text-center md:px-8">
-          <div className="flex flex-col items-center gap-1.5 rounded-2xl px-6 py-2.5 text-center md:px-10 md:py-3"></div>
+          <div className="flex flex-col items-center gap-1.5 rounded-xl px-6 py-2.5 text-center md:px-10 md:py-3"></div>
           <h2 className="text-xl font-black tracking-normal text-[var(--color-primary)] uppercase [text-shadow:0_1px_8px_rgba(255,255,255,0.7)] md:text-4xl lg:text-6xl max-w-7xl mx-auto leading-tight">
             {activeEvent?.title || "BAN GIÁM ĐỐC TRUNG TÂM CÁC THỜI KỲ"}
           </h2>

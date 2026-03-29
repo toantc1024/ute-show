@@ -28,14 +28,14 @@ export function StatCard({ label, value, icon, trendColor, description }: StatCa
 
   return (
     <div className={cn(
-      "relative overflow-hidden bg-white rounded-3xl p-6 shadow-xl shadow-blue-900/5 group border border-outline-variant/10",
+      "relative overflow-hidden bg-white rounded-xl p-6 shadow-xl shadow-blue-900/5 group border border-outline-variant/10",
       "transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/10"
     )}>
       <div className="flex items-start justify-between mb-4">
-        <div className={cn("p-3 rounded-2xl transition-transform group-hover:scale-110", iconBgMap[trendColor])}>
+        <div className={cn("p-3 rounded-xl transition-transform group-hover:scale-110", iconBgMap[trendColor])}>
           <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
         </div>
-        <div className={cn("px-3 py-1 rounded-full text-[10px] font-black tracking-normal uppercase", iconBgMap[trendColor])}>
+        <div className={cn("px-3 py-1 rounded-lg text-[10px] font-black tracking-normal uppercase", iconBgMap[trendColor])}>
           LIVE
         </div>
       </div>

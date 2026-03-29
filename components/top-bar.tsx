@@ -38,7 +38,7 @@ export function TopBar({
       <div className="flex items-center gap-4 shrink-0">
         <h2 className="text-lg font-bold text-on-surface uppercase tracking-normal whitespace-nowrap">{title}</h2>
         {contextStats && (
-          <div className="px-3 py-1 bg-primary/10 rounded-full animate-in fade-in slide-in-from-left-2 grow-0 hidden sm:block">
+          <div className="px-3 py-1 bg-primary/10 rounded-lg animate-in fade-in slide-in-from-left-2 grow-0 hidden sm:block">
             <span className="text-xs font-bold text-primary tracking-normal uppercase">{contextStats}</span>
           </div>
         )}
@@ -46,7 +46,7 @@ export function TopBar({
 
       <div className="flex flex-1 items-center justify-center md:justify-end gap-3 flex-wrap">
         {/* Date Selector */}
-        <div className="flex items-center bg-surface-container-low rounded-full px-4 py-1.5 shadow-sm border border-outline-variant/5">
+        <div className="flex items-center bg-surface-container-low rounded-lg px-4 py-1.5 shadow-sm border border-outline-variant/5">
           <span className="material-symbols-outlined text-slate-400 mr-2 text-lg">calendar_month</span>
           <input 
             type="date"
@@ -62,7 +62,7 @@ export function TopBar({
         </div>
 
         {/* Program Selector */}
-        <div className="flex items-center bg-surface-container-low rounded-full px-4 py-1.5 shadow-sm border border-outline-variant/5 max-w-[200px] lg:max-w-xs overflow-hidden">
+        <div className="flex items-center bg-surface-container-low rounded-lg px-4 py-1.5 shadow-sm border border-outline-variant/5 max-w-[200px] lg:max-w-xs overflow-hidden">
           <span className="material-symbols-outlined text-slate-400 mr-2 text-lg">event</span>
           <select 
             className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase text-slate-600 cursor-pointer outline-none w-full truncate pr-4"
@@ -79,7 +79,7 @@ export function TopBar({
           </select>
         </div>
 
-        <div className="relative flex items-center bg-surface-container-low rounded-full px-4 py-2 w-48 lg:w-64 group focus-within:ring-2 ring-primary/20 transition-all">
+        <div className="relative flex items-center bg-surface-container-low rounded-lg px-4 py-2 w-48 lg:w-64 group focus-within:ring-2 ring-primary/20 transition-all">
           <span className="material-symbols-outlined text-slate-400 mr-2 text-xl">search</span>
           <input 
             className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase w-full outline-none placeholder:text-slate-400" 
@@ -91,7 +91,7 @@ export function TopBar({
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="p-2 text-slate-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-full transition-colors active:scale-95 duration-200">
+          <button className="p-2 text-slate-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors active:scale-95 duration-200">
             <span className="material-symbols-outlined text-xl">notifications</span>
           </button>
           

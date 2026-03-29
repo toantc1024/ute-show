@@ -83,7 +83,7 @@ export function ProgramsTab() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center mix-blend-overlay"></div>
         <div className="relative h-full flex flex-col md:flex-row items-center px-12 justify-between gap-6 py-6 text-center md:text-left">
           <div className="max-w-xl">
-            <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-white text-[10px] font-bold mb-4 tracking-normal uppercase">REAL-TIME MONITOR</span>
+            <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-white text-[10px] font-bold mb-4 tracking-normal uppercase">REAL-TIME MONITOR</span>
             <h3 className="text-4xl font-extrabold text-white mb-2 leading-tight tracking-normal uppercase">Hoạt động đang diễn ra</h3>
             <p className="text-white/80 font-medium">Theo dõi và quản lý các sự kiện điểm danh trong khuôn viên trường đại học.</p>
           </div>
@@ -108,7 +108,7 @@ export function ProgramsTab() {
         </div>
         <button 
           onClick={() => { setIsAdding(true); setEditingId(null); setTitle(""); setEventDate(""); setCheckinStart(""); setCheckinEnd(""); }}
-          className="bg-secondary text-white px-6 py-3 rounded-full font-bold flex items-center gap-2 shadow-lg shadow-secondary/20 hover:scale-105 transition-transform active:scale-95"
+          className="bg-secondary text-white px-6 py-3 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-secondary/20 hover:scale-105 transition-transform active:scale-95"
         >
           <span className="material-symbols-outlined text-sm">add</span>
           Thêm chương trình
@@ -119,12 +119,12 @@ export function ProgramsTab() {
       {isAdding && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsAdding(false)}></div>
-          <Card className="relative w-full max-w-2xl bg-white shadow-2xl rounded-2xl overflow-hidden border-none animate-in zoom-in-95 duration-200">
+          <Card className="relative w-full max-w-2xl bg-white shadow-2xl rounded-xl overflow-hidden border-none animate-in zoom-in-95 duration-200">
             <div className="p-6 border-b border-outline-variant/10 flex items-center justify-between bg-surface-container-low">
               <h3 className="text-lg font-black tracking-normal uppercase">{editingId ? "Chỉnh sửa" : "Thêm mới"} chương trình</h3>
               <button 
                 onClick={() => setIsAdding(false)}
-                className="p-2 hover:bg-white rounded-full transition-colors text-slate-400 hover:text-slate-600"
+                className="p-2 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-slate-600"
               >
                 <X size={20} />
               </button>
@@ -170,7 +170,7 @@ export function ProgramsTab() {
             key={event.id}
             onClick={() => setSelectedEventId(event.id)}
             className={cn(
-              "bg-surface-container-lowest rounded-[32px] p-8 shadow-xl shadow-blue-900/5 hover:shadow-2xl transition-all duration-500 group cursor-pointer relative overflow-hidden h-full flex flex-col border border-outline-variant/5",
+              "bg-surface-container-lowest rounded-xl p-8 shadow-xl shadow-blue-900/5 hover:shadow-2xl transition-all duration-500 group cursor-pointer relative overflow-hidden h-full flex flex-col border border-outline-variant/5",
               selectedEventId === event.id ? "ring-2 ring-primary border-transparent" : ""
             )}
           >
@@ -182,11 +182,11 @@ export function ProgramsTab() {
                <div className="absolute left-0 top-12 bottom-12 w-1.5 rounded-r-full bg-gradient-to-b from-primary to-primary-container shadow-[4px_0_15px_-3px_rgba(27,105,255,0.4)]" />
             )}
             <div className="flex justify-between items-start mb-6">
-              <div className={cn("p-3 rounded-full", event.is_active ? "bg-secondary/10 text-secondary" : "bg-primary/10 text-primary")}>
+              <div className={cn("p-3 rounded-lg", event.is_active ? "bg-secondary/10 text-secondary" : "bg-primary/10 text-primary")}>
                 <span className="material-symbols-outlined text-xl">{event.is_active ? "sensors" : "event"}</span>
               </div>
               <span className={cn(
-                "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-normal",
+                "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-normal",
                 event.is_active ? "bg-secondary-fixed text-on-secondary-fixed-variant" : "bg-primary-fixed text-on-primary-fixed-variant"
               )}>
                 {event.is_active ? "Kích hoạt" : "Sắp diễn ra"}
@@ -220,19 +220,19 @@ export function ProgramsTab() {
                <div className="flex items-center gap-2 px-1">
                 <button 
                   onClick={(e) => { e.stopPropagation(); startEdit(event); }}
-                  className="p-2 text-primary hover:bg-primary/5 rounded-full transition-colors"
+                  className="p-2 text-primary hover:bg-primary/5 rounded-lg transition-colors"
                 >
                   <Pencil size={18} />
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); toggleActive(event.id, event.is_active); }}
-                  className={cn("p-2 rounded-full transition-colors", event.is_active ? "text-green-600 hover:bg-green-50" : "text-slate-400 hover:bg-slate-50")}
+                  className={cn("p-2 rounded-lg transition-colors", event.is_active ? "text-green-600 hover:bg-green-50" : "text-slate-400 hover:bg-slate-50")}
                 >
                   {event.is_active ? <Check size={18} /> : <PlayCircle size={18} />}
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleDelete(event.id); }}
-                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -271,7 +271,7 @@ export function ProgramsTab() {
           </div>
           <h6 className="text-lg font-bold mb-2 uppercase tracking-normal">Tạo báo cáo nhanh</h6>
           <p className="text-xs text-primary-fixed mb-6 font-medium leading-relaxed">Xuất dữ liệu check-in cho toàn bộ chương trình trong tuần này.</p>
-          <button className="w-full bg-white text-primary font-black py-3 rounded-full text-xs uppercase tracking-normal shadow-lg active:scale-95 transition-all">
+          <button className="w-full bg-white text-primary font-black py-3 rounded-lg text-xs uppercase tracking-normal shadow-lg active:scale-95 transition-all">
             Xuất File .CSV
           </button>
         </div>
