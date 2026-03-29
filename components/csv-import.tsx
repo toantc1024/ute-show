@@ -1,8 +1,11 @@
+"use client"
+
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, FileText, Loader2, CheckCircle2, Users, Zap } from "lucide-react"
+import { Upload, FileText, Loader2, CheckCircle2, Users, Zap, Trash2 } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import * as XLSX from "xlsx"
 import { useEvent } from "@/components/event-context"
 import { cn } from "@/lib/utils"
@@ -14,98 +17,49 @@ type Candidate = {
   student_id: string
 }
 
-function parseCSV(text: string): Candidate[] {
-  const lines = text
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean)
-
-  const results: Candidate[] = []
-
-  for (const line of lines) {
-    if (
-      line.toLowerCase().startsWith("name,") ||
-      line.toLowerCase().startsWith("name\t")
-    )
-      continue
-
-    const parts = line.includes("\t") ? line.split("\t") : line.split(",")
-
-    if (parts.length >= 3) {
-      const name = parts[0].trim()
-      const chuc_vu = parts[1].trim()
-      const don_vi = parts[2].trim()
-      const student_id = parts[3]?.trim() || ""
-      if (name) {
-        results.push({ name, chuc_vu, don_vi, student_id })
-      }
-    }
-  }
-
-  return results
-}
-
 export function CSVImport() {
   const { selectedEventId } = useEvent()
   const [csvText, setCsvText] = useState("")
   const [parsed, setParsed] = useState<Candidate[]>([])
-  const [status, setStatus] = useState<
-    "idle" | "preview" | "saving" | "success"
-  >("idle")
+  const [status, setStatus] = useState<"idle" | "preview" | "saving" | "success">("idle")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [mode, setMode] = useState<"checkins" | "guests">("checkins")
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
     const reader = new FileReader()
     reader.onload = (ev) => {
       try {
         const data = ev.target?.result
         const workbook = XLSX.read(data, { type: "binary" })
-        const sheetName = workbook.SheetNames[0]
-        const sheet = workbook.Sheets[sheetName]
-        
+        const sheet = workbook.Sheets[workbook.SheetNames[0]]
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][]
-        
         const candidates: Candidate[] = []
         for (const row of rows) {
           if (!row || row.length < 1) continue
-          
           const firstVal = String(row[0]).toLowerCase()
-          if (firstVal === "name" || firstVal === "tên" || firstVal === "họ tên") continue
-          
+          if (["name", "tên", "họ tên"].includes(firstVal)) continue
           const name = String(row[0] || "").trim()
-          const chuc_vu = String(row[1] || "").trim()
-          const don_vi = String(row[2] || "").trim()
-          const student_id = String(row[3] || "").trim()
-          
           if (name) {
-            candidates.push({ name, chuc_vu, don_vi, student_id })
+            candidates.push({ 
+              name, 
+              chuc_vu: String(row[1] || "").trim(), 
+              don_vi: String(row[2] || "").trim(), 
+              student_id: String(row[3] || "").trim() 
+            })
           }
         }
-        
         setParsed(candidates)
-        setCsvText(candidates.map(c => `${c.name}, ${c.chuc_vu}, ${c.don_vi}, ${c.student_id}`).join("\n"))
         setStatus("preview")
-      } catch (err) {
-        alert("Lỗi đọc file: " + err)
-      }
+      } catch (err) { alert("Lỗi: " + err) }
     }
     reader.readAsBinaryString(file)
-  }
-
-  const handleParse = () => {
-    const candidates = parseCSV(csvText)
-    setParsed(candidates)
-    setStatus("preview")
   }
 
   const handleSave = async () => {
     if (parsed.length === 0) return
     setStatus("saving")
-
     try {
       const endpoint = mode === "checkins" ? "/api/checkin/import" : "/api/guests/import"
       const res = await fetch(endpoint, {
@@ -113,178 +67,143 @@ export function CSVImport() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: parsed, event_id: selectedEventId }),
       })
-      
       if (res.ok) {
         setStatus("success")
-        setTimeout(() => {
-          setStatus("idle")
-          setCsvText("")
-          setParsed([])
-        }, 2000)
-      } else {
-        const result = await res.json()
-        alert("Lỗi: " + result.error)
-        setStatus("preview")
-      }
-    } catch {
-      alert("Lỗi kết nối")
-      setStatus("preview")
-    }
+        setTimeout(() => { setStatus("idle"); setParsed([]); setCsvText(""); }, 2000)
+      } else { setStatus("preview"); alert("Lỗi nạp dữ liệu."); }
+    } catch { setStatus("preview"); }
   }
 
   return (
-    <Card className="border-slate-200 bg-white shadow-sm overflow-hidden">
-      <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-3">
-        <CardTitle className="flex items-center justify-between text-sm font-bold text-slate-800">
-          <div className="flex items-center gap-2">
-            <Upload className="h-4 w-4 text-green-600" />
-            Nhập danh sách (Excel/XLSX)
-          </div>
-          {parsed.length > 0 && (
-            <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-              {parsed.length} người
-            </span>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="bg-surface-container-low/50 rounded-2xl p-6 border border-outline-variant/10 shadow-inner">
+        <h3 className="text-xl font-black text-on-surface tracking-tighter uppercase mb-2">Nhập dữ liệu Excel</h3>
+        <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest opacity-60">
+          Hỗ trợ định dạng .xlsx, .xls, .csv để nạp danh sách đại biểu hàng loạt.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <button 
+          onClick={() => setMode("guests")}
+          className={cn(
+            "p-6 rounded-2xl border transition-all flex flex-col items-center gap-3 text-center group",
+            mode === "guests" ? "bg-white border-primary shadow-xl shadow-primary/10" : "bg-surface-container-low border-transparent hover:bg-white"
           )}
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="pt-4 space-y-4">
-        {/* Destination Selector */}
-        <div className="space-y-2">
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
-            ĐÍCH ĐẾN:
-          </label>
-          <div className="flex gap-2 p-1 rounded-xl bg-slate-100/50 border border-slate-100">
-            <button
-              onClick={() => setMode("guests")}
-              className={cn(
-                "flex-1 flex flex-col items-center gap-1 rounded-lg py-2 transition-all",
-                mode === "guests"
-                  ? "bg-white text-green-700 shadow-sm border border-slate-200"
-                  : "text-slate-500 hover:text-slate-800"
-              )}
-            >
-              <Users className={cn("h-4 w-4", mode === "guests" ? "text-green-600" : "text-slate-400")} />
-              <span className="text-[10px] font-bold uppercase tracking-tight">Hàng chờ</span>
-            </button>
-            <button
-              onClick={() => setMode("checkins")}
-              className={cn(
-                "flex-1 flex flex-col items-center gap-1 rounded-lg py-2 transition-all",
-                mode === "checkins"
-                  ? "bg-white text-blue-700 shadow-sm border border-slate-200"
-                  : "text-slate-500 hover:text-slate-800"
-              )}
-            >
-              <Zap className={cn("h-4 w-4", mode === "checkins" ? "text-blue-600" : "text-slate-400")} />
-              <span className="text-[10px] font-bold uppercase tracking-tight">Màn hình</span>
-            </button>
+        >
+          <div className={cn("p-3 rounded-full transition-all group-hover:scale-110", mode === "guests" ? "bg-primary text-white" : "bg-white text-slate-400Shadow-sm")}>
+            <Users size={24} />
           </div>
-        </div>
-
-        {mode === "guests" && (
-          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
-            <p className="text-[10px] leading-tight text-slate-500 italic">
-              Nạp danh sách để tìm đại biểu nhanh.
-            </p>
-            <Button
-              variant="ghost"
-              className="h-6 px-2 text-[10px] text-red-500 hover:bg-red-50 hover:text-red-700 font-bold underline"
-              onClick={async () => {
-                if (confirm("XÓA SẠCH toàn bộ danh sách khách mời?")) {
-                  await fetch("/api/guests/reset", { 
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({})
-                  });
-                  alert("Đã xóa sạch.");
-                }
-              }}
-            >
-              Xóa Master List
-            </Button>
+          <div>
+            <p className={cn("text-xs font-black uppercase tracking-widest", mode === "guests" ? "text-primary" : "text-slate-500")}>Danh sách chờ</p>
+            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">Nạp vào danh bạ đại biểu</p>
           </div>
-        )}
+        </button>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
-              DỮ LIỆU ĐẦU VÀO:
-            </label>
-            <Button
-              variant="outline"
-              size="sm"
+        <button 
+          onClick={() => setMode("checkins")}
+          className={cn(
+            "p-6 rounded-2xl border transition-all flex flex-col items-center gap-3 text-center group",
+            mode === "checkins" ? "bg-white border-secondary shadow-xl shadow-secondary/10" : "bg-surface-container-low border-transparent hover:bg-white"
+          )}
+        >
+          <div className={cn("p-3 rounded-full transition-all group-hover:scale-110", mode === "checkins" ? "bg-secondary text-white" : "bg-white text-slate-400 shadow-sm")}>
+            <Zap size={24} />
+          </div>
+          <div>
+            <p className={cn("text-xs font-black uppercase tracking-widest", mode === "checkins" ? "text-secondary" : "text-slate-500")}>Xác nhận ngay</p>
+            <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">Nạp và hiển thị màn hình</p>
+          </div>
+        </button>
+      </div>
+
+      <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-3xl overflow-hidden p-8">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between border-b border-outline-variant/10 pb-6">
+            <div className="flex items-center gap-4">
+              <span className="material-symbols-outlined text-4xl text-primary font-light">cloud_upload</span>
+              <div>
+                <p className="font-black text-on-surface uppercase tracking-tight text-lg">Tải tệp lên</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">Chọn file Excel từ máy tính của bạn</p>
+              </div>
+            </div>
+            <Button 
+              variant="outline" 
               onClick={() => fileInputRef.current?.click()}
-              className="h-6 px-2 text-[10px] border-slate-300 font-bold"
+              className="h-12 px-6 border-outline-variant/20 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/5 transition-all"
             >
-              <FileText className="mr-1 h-3 w-3" />
-              Tải File Excel
+              Chọn tệp
             </Button>
+            <input ref={fileInputRef} type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={handleFileUpload} />
           </div>
-          
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".csv,.txt,.xlsx,.xls"
-            className="hidden"
-            onChange={handleFileUpload}
-          />
-          
-          <Textarea
-            placeholder={`Nguyễn Văn A, Bí thư, Khoa CNTT, 21110xxx`}
-            value={csvText}
-            onChange={(e) => setCsvText(e.target.value)}
-            rows={3}
-            className="border-slate-300 bg-white font-mono text-xs focus:border-blue-500 shadow-inner"
-          />
-        </div>
 
-        {status === "idle" && csvText.trim() && (
-          <Button size="sm" variant="secondary" className="w-full text-xs h-8" onClick={handleParse}>
-            Xử lý dữ liệu
-          </Button>
-        )}
-
-        {status === "preview" && parsed.length > 0 && (
-          <div className="space-y-3 rounded-lg border border-blue-100 bg-blue-50/50 p-3">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-bold text-blue-800">
-                Sẵn sàng nạp {parsed.length} người:
-              </p>
-              <button onClick={() => setParsed([])} className="text-[10px] text-slate-400 hover:text-slate-600 underline">Hủy</button>
-            </div>
-            <div className="max-h-24 overflow-y-auto rounded border border-blue-200 bg-white p-2 text-[10px]">
-              {parsed.slice(0, 10).map((c, i) => (
-                <div key={i} className="border-b border-slate-50 py-0.5 last:border-0 truncate">
-                  <span className="font-bold">{c.name}</span> {c.student_id && <span className="text-blue-600">({c.student_id})</span>} <span className="text-slate-300">|</span> {c.chuc_vu}
+          <AnimatePresence mode="wait">
+            {status === "preview" && parsed.length > 0 && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-surface-container-low/50 rounded-2xl p-6 border border-primary/20 space-y-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-black text-primary uppercase tracking-widest flex items-center gap-2">
+                    <CheckCircle2 size={16} /> Sẵn sàng nạp {parsed.length} đại biểu
+                  </p>
+                  <button onClick={() => setParsed([])} className="text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-tighter underline">Hủy bỏ</button>
                 </div>
-              ))}
-              {parsed.length > 10 && <div className="text-center pt-1 text-slate-400">...và {parsed.length - 10} người khác</div>}
-            </div>
-            <Button
-              size="sm"
-              className="w-full bg-blue-600 text-white hover:bg-blue-700 h-9 font-bold shadow-md shadow-blue-200"
-              onClick={handleSave}
-            >
-              BẮT ĐẦU NẠP DỮ LIỆU
-            </Button>
-          </div>
-        )}
+                <div className="bg-white rounded-xl p-4 max-h-40 overflow-y-auto border border-outline-variant/5 shadow-inner">
+                  {parsed.slice(0, 5).map((p, i) => (
+                    <div key={i} className="py-2 border-b border-slate-50 last:border-0 flex justify-between items-center">
+                      <span className="text-xs font-black text-on-surface uppercase tracking-tight">{p.name}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{p.student_id}</span>
+                    </div>
+                  ))}
+                  {parsed.length > 5 && <p className="text-center pt-2 text-[10px] font-bold text-slate-300 uppercase italic">... và {parsed.length - 5} người khác</p>}
+                </div>
+                <Button onClick={handleSave} className="w-full h-14 bg-primary hover:bg-primary-container text-white font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/10 rounded-xl transition-all">
+                  Nạp vào hệ thống
+                </Button>
+              </motion.div>
+            )}
 
-        {status === "saving" && (
-          <div className="flex items-center justify-center py-4 gap-2 text-xs font-bold text-blue-600 animate-pulse">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            ĐANG XỬ LÝ...
-          </div>
-        )}
+            {status === "saving" && (
+              <div className="py-10 flex flex-col items-center gap-4 text-primary animate-pulse">
+                <Loader2 className="h-10 w-10 animate-spin" />
+                <p className="font-black uppercase tracking-[0.3em] text-[10px]">Đang ghi dữ liệu...</p>
+              </div>
+            )}
 
-        {status === "success" && (
-          <div className="flex items-center justify-center py-4 gap-2 text-xs font-bold text-green-600">
-            <CheckCircle2 className="h-4 w-4" />
-            HOÀN TẤT THÀNH CÔNG!
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            {status === "success" && (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="py-10 flex flex-col items-center gap-4 text-green-600">
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
+                  <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                </div>
+                <p className="font-black uppercase tracking-[0.3em] text-[10px]">Hoàn tất nạp dữ liệu!</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Card>
+
+      <div className="flex gap-4">
+        <button 
+          onClick={async () => {
+             if (confirm("DANGEROUS: Xóa Master List?")) {
+               await fetch("/api/guests/reset", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+               window.location.reload();
+             }
+          }}
+          className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border border-red-100 text-red-400 hover:bg-red-50 transition-all font-black text-[10px] uppercase tracking-widest"
+        >
+          <Trash2 size={14} /> Xóa Master List
+        </button>
+        <button 
+          onClick={async () => {
+            if (confirm("DANGEROUS: Xóa Check-in List?")) {
+              await fetch("/api/checkin/reset", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+              window.location.reload();
+            }
+          }}
+          className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border border-red-100 text-red-500 hover:bg-red-50 transition-all font-black text-[10px] uppercase tracking-widest"
+        >
+          <Trash2 size={14} /> Reset Check-in
+        </button>
+      </div>
+    </div>
   )
 }

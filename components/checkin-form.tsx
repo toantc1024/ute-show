@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useMemo, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2, Loader2, RotateCcw, Search, UserCheck, UserPlus, AlertCircle } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Loader2, UserCheck, Search, CheckCircle2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useSupabase } from "@/components/supabase-provider"
 import { useEvent } from "@/components/event-context"
@@ -30,18 +30,14 @@ export function CheckinForm() {
   const { supabase } = useSupabase()
   const { selectedEventId } = useEvent()
   const [form, setForm] = useState<Candidate>(EMPTY_FORM)
-  const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">(
-    "idle"
-  )
+  const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [showDropdown, setShowDropdown] = useState(false)
-  const [resetting, setResetting] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [candidates, setCandidates] = useState<Candidate[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Search from guests table globally
   useEffect(() => {
     const search = async () => {
       if (!searchQuery.trim()) {
@@ -51,7 +47,6 @@ export function CheckinForm() {
       setIsSearching(true)
       const q = searchQuery.toLowerCase()
 
-      // 1. Get potential guests (filtered by event_id)
       let guestQuery = supabase
         .from("guests")
         .select("name, chuc_vu, don_vi, student_id")
@@ -64,7 +59,6 @@ export function CheckinForm() {
       const { data: guestData, error: guestError } = await guestQuery.limit(8)
 
       if (!guestError && guestData) {
-        // 2. Fetch recent checkins (filtered by event_id)
         let checkinQuery = supabase
           .from("checkins")
           .select("name")
@@ -75,18 +69,12 @@ export function CheckinForm() {
         }
 
         const { data: checkinData } = await checkinQuery.limit(1000)
+        const checkedInSet = new Set((checkinData as { name: string }[] || []).map(c => c.name.trim().toLowerCase()))
 
-        const checkedInSet = new Set(
-          (checkinData as { name: string }[] || []).map(c => c.name.trim().toLowerCase())
-        )
-
-        const guestList = guestData as Candidate[]
-        const results = guestList.map(g => ({
+        setCandidates((guestData as Candidate[]).map(g => ({
           ...g,
           isCheckedIn: checkedInSet.has(g.name.trim().toLowerCase())
-        }))
-
-        setCandidates(results)
+        })))
       }
       setIsSearching(false)
     }
@@ -95,13 +83,9 @@ export function CheckinForm() {
     return () => clearTimeout(timer)
   }, [searchQuery, supabase, selectedEventId])
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setShowDropdown(false)
       }
     }
@@ -119,13 +103,6 @@ export function CheckinForm() {
     setSearchQuery(c.name)
     setShowDropdown(false)
   }
-
-  const handleChange =
-    (field: keyof Candidate) =>
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        setForm((prev) => ({ ...prev, [field]: event.target.value }))
-        if (status !== "idle") setStatus("idle")
-      }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -152,9 +129,9 @@ export function CheckinForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(trimmed),
       })
-      const result = await res.json()
       if (!res.ok) {
-        setError(result.error || "Không thể lưu check-in.")
+        const result = await res.json()
+        setError(result.error || "Lỗi.")
         setStatus("error")
       } else {
         setStatus("success")
@@ -163,157 +140,124 @@ export function CheckinForm() {
         setTimeout(() => setStatus("idle"), 2000)
       }
     } catch {
-      setError("Lỗi kết nối. Vui lòng thử lại.")
       setStatus("error")
     }
   }
 
-  const handleReset = async () => {
-    if (!confirm("Bạn có chắc chắn muốn xoá toàn bộ danh sách check-in?")) return
-    setResetting(true)
-    try {
-      const res = await fetch("/api/checkin/reset", { 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}) 
-      })
-      if (res.ok) {
-        alert("Đã xóa sạch danh sách check-in.")
-      }
-    } finally {
-      setResetting(false)
-    }
-  }
-
   return (
-    <div className="space-y-4">
-      {/* Search */}
-      <Card className="border-slate-200 bg-white shadow-sm overflow-visible">
-        <CardHeader className="pb-3 bg-slate-50/50 border-b border-slate-100 mb-4">
-          <CardTitle className="flex items-center gap-2 text-sm font-bold text-slate-800">
-            <Search className="h-4 w-4 text-blue-600" />
-            TÌM ĐẠI BIỂU
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="relative" ref={dropdownRef}>
-            <div className="relative">
-              <Input
-                placeholder="Gõ tên, MSSV, chức vụ hoặc đơn vị..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value)
-                  setShowDropdown(true)
-                }}
-                onFocus={() => setShowDropdown(true)}
-                className="border-slate-300 bg-white pr-10 focus:border-blue-500 font-medium"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                {isSearching ? <Loader2 className="h-4 w-4 animate-spin text-slate-400" /> : <Search className="h-4 w-4 text-slate-300" />}
-              </div>
-            </div>
+    <div className="space-y-6">
+      {/* Search Bar */}
+      <div className="relative" ref={dropdownRef}>
+        <div className="relative group">
+          <Input
+            placeholder="Tìm theo tên, MSSV..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value)
+              setShowDropdown(true)
+            }}
+            onFocus={() => setShowDropdown(true)}
+            className="h-14 bg-surface-container-low border-none rounded-2xl px-12 font-bold focus:ring-2 focus:ring-primary/20 transition-all text-sm shadow-sm"
+          />
+          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+          {isSearching && <Loader2 className="h-4 w-4 animate-spin absolute right-4 top-1/2 -translate-y-1/2 text-primary" />}
+        </div>
 
-            <AnimatePresence>
-              {showDropdown && candidates.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  className="absolute top-full left-0 right-0 z-[100] mt-1 max-h-64 overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl"
+        <AnimatePresence>
+          {showDropdown && candidates.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="absolute top-full left-0 right-0 z-[100] mt-2 max-h-80 overflow-y-auto rounded-3xl bg-white shadow-2xl border border-outline-variant/10 p-2"
+            >
+              {candidates.map((c, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => selectCandidate(c)}
+                  className="flex w-full items-center justify-between p-4 rounded-2xl transition-all hover:bg-surface-container-lowest hover:shadow-sm group text-left mb-1 last:mb-0"
                 >
-                  {candidates.map((c, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => selectCandidate(c)}
-                      className={cn(
-                        "flex w-full items-center justify-between border-b border-slate-100 px-4 py-3 text-left transition-all last:border-0 hover:bg-blue-50",
-                        c.isCheckedIn ? "bg-green-50/30" : "bg-white"
-                      )}
-                    >
-                      <div className="flex flex-col gap-0.5 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className={cn(
-                            "font-bold truncate",
-                            c.isCheckedIn ? "text-green-700" : "text-slate-800"
-                          )}>
-                            {c.name}
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tight">
-                          {c.student_id ? `${c.student_id} — ` : ""}{c.chuc_vu} — {c.don_vi}
-                        </span>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className={cn("w-10 h-10 rounded-full flex items-center justify-center font-bold", c.isCheckedIn ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary")}>
+                      {c.name.substring(0, 1).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-black text-on-surface uppercase tracking-tighter text-sm">{c.name}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">
+                        {c.student_id ? `${c.student_id} • ` : ""}{c.chuc_vu}
+                      </p>
+                    </div>
+                  </div>
+                  {c.isCheckedIn && (
+                     <div className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-black tracking-widest">
+                       OK
+                     </div>
+                  )}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-                      {c.isCheckedIn && (
-                        <div className="flex items-center gap-1 ml-2 rounded-full bg-green-100 px-2 py-0.5 text-[9px] font-black text-green-700 whitespace-nowrap">
-                          <CheckCircle2 className="h-3 w-3" /> ĐÃ XÁC NHẬN
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+      {/* Check-in Form Card */}
+      <Card className="border-none shadow-xl shadow-blue-900/5 bg-white rounded-3xl overflow-hidden">
+        <div className="px-8 py-6 bg-surface-container-low/50 border-b border-outline-variant/5">
+          <h3 className="text-sm font-black text-primary uppercase tracking-widest flex items-center gap-2">
+            <span className="material-symbols-outlined text-lg">how_to_reg</span>
+            Xác nhận thông tin
+          </h3>
+        </div>
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Họ và tên</Label>
+              <Input 
+                value={form.name} 
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl px-4 focus:ring-2 focus:ring-primary/20 shadow-inner"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">MSSV</Label>
+                <Input value={form.student_id} onChange={e => setForm(f => ({ ...f, student_id: e.target.value }))} className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl shadow-inner" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Chức vụ</Label>
+                <Input value={form.chuc_vu} onChange={e => setForm(f => ({ ...f, chuc_vu: e.target.value }))} className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl shadow-inner" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-1">Đơn vị / Đào tạo</Label>
+              <Input value={form.don_vi} onChange={e => setForm(f => ({ ...f, don_vi: e.target.value }))} className="h-12 bg-surface-container-lowest border-none font-bold rounded-xl shadow-inner" />
+            </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Form */}
-      <Card className="border-slate-200 bg-white shadow-sm overflow-hidden">
-        <CardHeader className="pb-3 bg-slate-50/50 border-b border-slate-100 mb-4">
-          <CardTitle className="flex items-center gap-2 text-sm font-bold text-slate-800">
-            <UserCheck className="h-4 w-4 text-blue-600" />
-            CHECK-IN ĐẠI BIỂU
-          </CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Họ và tên</Label>
-                <Input id="name" value={form.name} onChange={handleChange("name")} className="border-slate-300 font-bold" disabled={status === "saving"} />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="student_id" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Mã số sinh viên (MSSV)</Label>
-                <Input id="student_id" value={form.student_id} onChange={handleChange("student_id")} className="border-slate-300 font-bold" disabled={status === "saving"} />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="chuc_vu" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Chức vụ</Label>
-                <Input id="chuc_vu" value={form.chuc_vu} onChange={handleChange("chuc_vu")} className="border-slate-300 font-bold" disabled={status === "saving"} />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="don_vi" className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Đơn vị</Label>
-                <Input id="don_vi" value={form.don_vi} onChange={handleChange("don_vi")} className="border-slate-300 font-bold" disabled={status === "saving"} />
-              </div>
-            </div>
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="bg-red-50 text-red-600 p-4 rounded-2xl text-xs font-black uppercase tracking-widest border border-red-100 italic">
+                {error}
+              </motion.div>
+            )}
+            {status === "success" && (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-green-600 text-white p-6 rounded-2xl flex flex-col items-center gap-2 shadow-xl shadow-green-500/20 text-center">
+                <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                <p className="font-black uppercase tracking-widest text-sm">Check-in thành công!</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-            <AnimatePresence>
-              {error && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-lg bg-red-50 p-3 text-xs font-bold text-red-600">
-                  {error}
-                </motion.div>
-              )}
-              {status === "success" && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2 rounded-lg bg-green-50 p-3 text-xs font-bold text-green-600">
-                  <CheckCircle2 size={14} /> XÁC NHẬN THÀNH CÔNG!
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <Button type="submit" className="w-full bg-blue-600 font-black h-11 text-sm shadow-lg shadow-blue-200" disabled={status === "saving"}>
-              {status === "saving" ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <UserCheck className="mr-2 h-5 w-5" />}
-              {status === "saving" ? "ĐANG XỬ LÝ..." : "XÁC NHẬN VÀO HỘI TRƯỜNG"}
-            </Button>
-          </CardContent>
+          <Button type="submit" disabled={status === "saving" || status === "success"} className="w-full h-14 bg-primary hover:bg-primary-container text-white font-black text-sm uppercase tracking-[0.2em] shadow-2xl shadow-primary/30 rounded-2xl transition-all active:scale-95 disabled:opacity-50">
+            {status === "saving" ? <Loader2 className="animate-spin h-6 w-6" /> : "Xác nhận vào"}
+          </Button>
         </form>
       </Card>
-
-      <Button variant="ghost" className="w-full text-red-400 hover:text-red-600 hover:bg-red-50 text-[10px] font-bold uppercase tracking-widest h-8" onClick={handleReset} disabled={resetting}>
-        <RotateCcw className="mr-2 h-3 w-3" /> {resetting ? "Đang xóa..." : "Xóa sạch dữ liệu Check-in"}
-      </Button>
+      
+      <p className="text-[10px] font-bold text-slate-400 text-center uppercase tracking-widest px-8 leading-relaxed opacity-60">
+        Hãy đảm bảo thông tin đại biểu trùng khớp với danh sách chính thức trước khi xác nhận.
+      </p>
     </div>
   )
 }
