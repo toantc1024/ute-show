@@ -13,9 +13,8 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata = {
-  title:
-    "BAN GIÁM ĐỐC TRUNG TÂM CÁC THỜI KỲ - UTE Check-in",
-  description: "Hệ thống CHÀO MỪNG QUÝ ĐẠI BIỂU, ĐẠI GIA ĐÌNH MECUTE CÁC THỜI KỲ VỀ THAM DỰ CHƯƠNG TRÌNH thời gian thực",
+  title: "UTE Checkin",
+  description: "Hệ thống quản lý check-in sự kiện thông minh cho cộng đồng HCMUTE",
 }
 
 export default function RootLayout({

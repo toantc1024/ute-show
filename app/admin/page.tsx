@@ -39,7 +39,7 @@ function AdminContent() {
     newGuestsToday: 0
   })
   const [recentCheckins, setRecentCheckins] = useState<any[]>([])
-  const [chartData, setChartData] = useState<number[]>(new Array(10).fill(0)) // 8:00 to 18:00 (10 slots)
+  const [chartData, setChartData] = useState<{ counts: number[], labels: string[] }>({ counts: [], labels: [] })
 
   const fetchStats = useCallback(async () => {
     if (!selectedEventId) return
@@ -71,15 +71,27 @@ function AdminContent() {
       .select("created_at")
       .eq("event_id", selectedEventId)) as any
 
-    if (allCheckins) {
-      const counts = new Array(11).fill(0) // 08:00 to 18:00
+    if (allCheckins && allCheckins.length > 0) {
+      const hours = allCheckins.map((c: any) => new Date(c.created_at).getHours())
+      const minHour = Math.min(...hours)
+      const maxHour = Math.max(...hours)
+      
+      const range = maxHour - minHour + 1
+      const counts = new Array(range).fill(0)
+      const labels = []
+
+      for (let i = 0; i < range; i++) {
+        labels.push(`${String(minHour + i).padStart(2, '0')}:00`)
+      }
+
       allCheckins.forEach((c: any) => {
         const hour = new Date(c.created_at).getHours()
-        if (hour >= 8 && hour <= 18) {
-          counts[hour - 8]++
-        }
+        counts[hour - minHour]++
       })
-      setChartData(counts)
+      
+      setChartData({ counts, labels })
+    } else {
+      setChartData({ counts: [], labels: [] })
     }
 
     setStats({

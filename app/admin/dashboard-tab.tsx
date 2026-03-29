@@ -9,17 +9,16 @@ import { cn } from "@/lib/utils"
 interface DashboardTabProps {
   stats: any
   recentCheckins: any[]
-  chartData: number[]
+  chartData: { counts: number[], labels: string[] }
   onExport: () => void
 }
 
 export function DashboardTab({ stats, recentCheckins, chartData, onExport }: DashboardTabProps) {
   const { activeEvent } = useEvent()
   
-  // Find peak for label
-  const maxVal = Math.max(...chartData, 1)
-  const peakIndex = chartData.indexOf(Math.max(...chartData))
-  const peakLabel = `${peakIndex + 8}:00`
+  const { counts, labels } = chartData
+  const maxVal = counts.length > 0 ? Math.max(...counts, 1) : 1
+  const peakIndex = counts.length > 0 ? counts.indexOf(Math.max(...counts)) : -1
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -90,7 +89,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
               )}
             </div>
             <p className="text-slate-400 text-sm font-bold uppercase tracking-normal">
-              TRỤC OY: SỐ LƯỢNG | TRỤC OX: THỜI GIAN
+              TRỤC OY: SỐ LƯỢNG | TRỤC OX: THỜI GIAN THEO LƯỢT CHECK-IN THỰC TẾ
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -113,7 +112,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           <div className="p-8 flex items-center justify-between border-b border-outline-variant/5">
              <h4 className="font-black text-on-surface uppercase text-xs tracking-normal flex items-center gap-2">
                <span className="material-symbols-outlined text-sm text-primary">timeline</span>
-               THỐNG KÊ THEO KHUNG GIỜ
+               THỐNG KÊ THEO LƯỢT CHECK-IN (TỪ {labels[0] || "..."} ĐẾN {labels[labels.length-1] || "..."})
              </h4>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
@@ -128,31 +127,35 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           </div>
           
           <div className="flex-1 px-12 pt-16 pb-8 flex items-end justify-between gap-6 bg-gradient-to-b from-transparent to-slate-50/50">
-            {chartData.map((val, i) => {
-              const height = (val / maxVal) * 80 + 5 
-              return (
-                <div key={i} className="flex-1 bg-primary/5 rounded-t-2xl relative group transition-all hover:bg-primary/10" style={{ height: `100%` }}>
-                  {/* The actual data bar */}
-                  <div 
-                    className="absolute inset-x-2 bottom-0 bg-gradient-to-t from-primary to-primary-container rounded-t-2xl transition-all duration-1000 ease-out shadow-lg shadow-primary/10 group-hover:from-primary group-hover:to-secondary-container" 
-                    style={{ height: `${height}%` }}
-                  >
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] font-black py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 shadow-xl whitespace-nowrap">
-                      {val} LƯỢT
+            {counts.length === 0 ? (
+               <div className="w-full text-center py-20 text-slate-300 italic font-black text-sm uppercase">Chưa có dữ liệu check-in để hiển thị biểu đồ.</div>
+            ) : (
+              counts.map((val, i) => {
+                const height = (val / maxVal) * 80 + 5 
+                return (
+                  <div key={i} className="flex-1 bg-primary/5 rounded-t-xl relative group transition-all hover:bg-primary/10" style={{ height: `100%` }}>
+                    {/* The actual data bar */}
+                    <div 
+                      className="absolute inset-x-2 bottom-0 bg-gradient-to-t from-primary to-primary-container rounded-t-xl transition-all duration-1000 ease-out shadow-lg shadow-primary/10 group-hover:from-primary group-hover:to-secondary-container" 
+                      style={{ height: `${height}%` }}
+                    >
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] font-black py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 shadow-xl whitespace-nowrap">
+                        {val} LƯỢT ({labels[i]})
+                      </div>
                     </div>
+                    
+                    {i === peakIndex && val > 0 && (
+                       <div className="absolute top-4 left-1/2 -translate-x-1/2 border border-primary/20 bg-primary/5 px-2 py-0.5 rounded-lg text-[8px] font-black text-primary uppercase whitespace-nowrap">Peak</div>
+                    )}
                   </div>
-                  
-                  {i === peakIndex && val > 0 && (
-                     <div className="absolute top-4 left-1/2 -translate-x-1/2 border border-primary/20 bg-primary/5 px-2 py-0.5 rounded text-[8px] font-black text-primary uppercase whitespace-nowrap">Peak</div>
-                  )}
-                </div>
-              )
-            })}
+                )
+              })
+            )}
           </div>
           
-          <div className="p-6 px-12 flex justify-between border-t border-outline-variant/5 bg-slate-50/30">
-            {["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"].map(t => (
-              <span key={t} className="text-[10px] font-black text-slate-400 tracking-normal">{t}</span>
+          <div className="p-6 px-12 flex justify-between border-t border-outline-variant/5 bg-slate-50/30 overflow-x-auto">
+            {labels.map((t, idx) => (
+              <span key={idx} className="text-[10px] font-black text-slate-400 tracking-normal mx-2">{t}</span>
             ))}
           </div>
         </div>
@@ -172,7 +175,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
               recentCheckins.map((item, i) => (
                 <div key={i} className="flex items-center justify-between p-5 rounded-xl bg-surface-container-low/30 hover:bg-surface-container-low transition-all group border border-transparent hover:border-outline-variant/10">
                   <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary font-black shadow-inner shadow-primary/5">
+                    <div className="w-14 h-14 rounded-full bg-primary-container/10 flex items-center justify-center text-primary font-black shadow-inner shadow-primary/5">
                       {item.title ? item.title.substring(0, 2).toUpperCase() : "..."}
                     </div>
                     <div>
