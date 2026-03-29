@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Calendar, Clock, Check, Trash2, Loader2, PlayCircle, Settings } from "lucide-react"
+import { Plus, Calendar, Clock, Check, Trash2, Loader2, PlayCircle, Settings, Pencil, X } from "lucide-react"
 import { format } from "date-fns"
 import { vi } from "date-fns/locale"
 import { cn } from "@/lib/utils"
+
+type EventRow = any; // Will use real types from context
 
 export function EventManager() {
   const { supabase } = useSupabase()
@@ -22,6 +24,8 @@ export function EventManager() {
   const [eventDate, setEventDate] = useState("")
   const [checkinStart, setCheckinStart] = useState("")
   const [checkinEnd, setCheckinEnd] = useState("")
+
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,6 +109,54 @@ export function EventManager() {
     }
   }
 
+  const startEdit = (event: any) => {
+    setEditingId(event.id)
+    setTitle(event.title)
+    setEventDate(event.event_date ? format(new Date(event.event_date), "yyyy-MM-dd'T'HH:mm") : "")
+    setCheckinStart(event.checkin_start ? format(new Date(event.checkin_start), "yyyy-MM-dd'T'HH:mm") : "")
+    setCheckinEnd(event.checkin_end ? format(new Date(event.checkin_end), "yyyy-MM-dd'T'HH:mm") : "")
+    setIsAdding(true)
+  }
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingId) return
+
+    setLoading(true)
+    try {
+      const payload = {
+        title: title.trim(),
+        event_date: eventDate || null,
+        checkin_start: checkinStart || null,
+        checkin_end: checkinEnd || null
+      }
+      
+      const res = await fetch(`/api/events/${editingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+
+      if (res.ok) {
+        setEditingId(null)
+        setTitle("")
+        setEventDate("")
+        setCheckinStart("")
+        setCheckinEnd("")
+        setIsAdding(false)
+        await refreshEvents()
+        alert("Cập nhật chương trình thành công!")
+      } else {
+        const result = await res.json()
+        alert("Lỗi khi cập nhật: " + result.error)
+      }
+    } catch (err: any) {
+      alert("Lỗi kết nối: " + err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -113,7 +165,16 @@ export function EventManager() {
           QUẢN LÝ CHƯƠNG TRÌNH
         </h2>
         <Button 
-          onClick={() => setIsAdding(!isAdding)}
+          onClick={() => {
+            if (isAdding) {
+              setEditingId(null)
+              setTitle("")
+              setEventDate("")
+              setCheckinStart("")
+              setCheckinEnd("")
+            }
+            setIsAdding(!isAdding)
+          }}
           variant={isAdding ? "ghost" : "default"}
           className={cn("font-bold transition-all", isAdding ? "text-red-500 hover:bg-red-50" : "bg-blue-600")}
         >
@@ -124,10 +185,13 @@ export function EventManager() {
       {isAdding && (
         <Card className="border-blue-200 bg-blue-50/30 shadow-md animate-in fade-in slide-in-from-top-4 duration-300">
           <CardHeader className="pb-3 border-b border-blue-100">
-            <CardTitle className="text-sm font-bold text-blue-800 uppercase">Thêm chương trình mới</CardTitle>
+            <CardTitle className="text-sm font-bold text-blue-800 uppercase flex items-center justify-between">
+              {editingId ? "Chỉnh sửa chương trình" : "Thêm chương trình mới"}
+              <button onClick={() => { setIsAdding(false); setEditingId(null); }} className="text-slate-400 hover:text-slate-600"><X size={16}/></button>
+            </CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={editingId ? handleUpdate : handleCreate} className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase text-slate-500">Tên chương trình</Label>
                 <Input 
@@ -177,8 +241,8 @@ export function EventManager() {
                 </div>
               </div>
               
-              <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 font-bold py-5 mt-2">
-                {loading ? <Loader2 className="animate-spin h-5 w-5" /> : "XÁC NHẬN TẠO"}
+              <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 font-bold py-5 mt-2 shadow-md shadow-blue-200">
+                {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (editingId ? "CẬP NHẬT THÔNG TIN" : "XÁC NHẬN TẠO")}
               </Button>
             </form>
           </CardContent>
@@ -233,6 +297,15 @@ export function EventManager() {
                     {event.is_active ? <><Check className="mr-1.5 h-3.5 w-3.5" /> Active</> : "Kích hoạt"}
                   </Button>
                   
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-blue-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    onClick={() => startEdit(event)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+
                   <Button
                     size="icon"
                     variant="ghost"

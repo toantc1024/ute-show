@@ -224,7 +224,8 @@ function AdminContent() {
                           .filter(event => {
                             if (!filterDate) return true;
                             if (!event.event_date) return false;
-                            const d1 = new Date(event.event_date).toISOString().split('T')[0];
+                            const eventDate = new Date(event.event_date);
+                            const d1 = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
                             return d1 === filterDate;
                           })
                           .map(event => (
