@@ -58,14 +58,30 @@ export function CheckinList({ showDelete, maxItems = 100, query = "" }: CheckinL
     return () => { supabase.removeChannel(channel) }
   }, [supabase, selectedEventId, maxItems])
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Xác nhận xóa?")) return
-    await fetch("/api/checkin/delete", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    })
-    fetchCheckins()
+  const handleDelete = async (item: CheckinRow) => {
+    if (!confirm(`Bạn chắc chắn muốn huỷ Check-in của đại biểu ${item.name}?`)) return
+    
+    try {
+      const res = await fetch("/api/checkin/delete", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: item.id }),
+      })
+      
+      const data = await res.json()
+      if (res.ok) {
+        if (data.wasInGuestList) {
+          alert("✅ Xoá lịch sử thành công: Đại biểu đã được tự động hoàn chuyển về Danh sách chờ ban đầu.")
+        } else {
+          alert("🗑️ Xoá lịch sử thành công: Đại biểu này là khách vãng lai (không có trong Data gốc) nên đã bị xoá hoàn toàn khỏi hệ thống.")
+        }
+      } else {
+        alert("Lỗi: " + data.error)
+      }
+      fetchCheckins()
+    } catch (e) {
+      alert("Đã xảy ra lỗi hệ thống khi thao tác.")
+    }
   }
 
   const filteredCheckins = useMemo(() => {
@@ -127,7 +143,7 @@ export function CheckinList({ showDelete, maxItems = 100, query = "" }: CheckinL
                   </div>
                   {showDelete && isAdmin && (
                     <button 
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDelete(item)}
                       className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
                     >
                       <Trash2 size={16} />
