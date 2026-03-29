@@ -39,6 +39,7 @@ function AdminContent() {
     newGuestsToday: 0
   })
   const [recentCheckins, setRecentCheckins] = useState<any[]>([])
+  const [chartData, setChartData] = useState<number[]>(new Array(10).fill(0)) // 8:00 to 18:00 (10 slots)
 
   const fetchStats = useCallback(async () => {
     if (!selectedEventId) return
@@ -64,10 +65,27 @@ function AdminContent() {
       .order("created_at", { ascending: false })
       .limit(5)) as any
 
+    // Chart data (Group by hour)
+    const { data: allCheckins } = (await supabase
+      .from("checkins")
+      .select("created_at")
+      .eq("event_id", selectedEventId)) as any
+
+    if (allCheckins) {
+      const counts = new Array(11).fill(0) // 08:00 to 18:00
+      allCheckins.forEach((c: any) => {
+        const hour = new Date(c.created_at).getHours()
+        if (hour >= 8 && hour <= 18) {
+          counts[hour - 8]++
+        }
+      })
+      setChartData(counts)
+    }
+
     setStats({
       totalGuests: total || 0,
       checkinCount: checkedIn || 0,
-      newGuestsToday: 0 // Simplification for now
+      newGuestsToday: 0
     })
     
     if (recent) {
@@ -167,6 +185,7 @@ function AdminContent() {
               <DashboardTab 
                 stats={stats} 
                 recentCheckins={recentCheckins} 
+                chartData={chartData}
                 onExport={handleExport} 
               />
             )}

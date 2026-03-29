@@ -9,52 +9,61 @@ import { cn } from "@/lib/utils"
 interface DashboardTabProps {
   stats: any
   recentCheckins: any[]
+  chartData: number[]
   onExport: () => void
 }
 
-export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabProps) {
+export function DashboardTab({ stats, recentCheckins, chartData, onExport }: DashboardTabProps) {
   const { activeEvent } = useEvent()
+  
+  // Find peak for label
+  const maxVal = Math.max(...chartData, 1)
+  const peakIndex = chartData.indexOf(Math.max(...chartData))
+  const peakLabel = `${peakIndex + 8}:00`
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       {/* Wrapped Banner */}
-      <section className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group">
+      <section className="relative overflow-hidden rounded-[40px] bg-gradient-to-br from-primary to-secondary p-16 text-white shadow-2xl shadow-primary/20 group">
         <div className="relative z-10 max-w-2xl">
-          <span className="inline-block px-4 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold tracking-normal uppercase mb-4">Annual Statistics</span>
-          <h2 className="text-6xl font-black tracking-normal leading-tight mb-4 uppercase">
-            {activeEvent?.title || "UTE"} WRAPPED 2026
+          <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-black tracking-[0.2em] uppercase mb-6 animate-pulse">UTE Check-in 2026</span>
+          <h2 className="text-7xl font-black tracking-normal leading-none mb-6 uppercase">
+             TRẢI NGHIỆM ĐIỂM DANH SỐ
           </h2>
-          <p className="text-lg text-white/80 font-medium">
-            Nhìn lại hành trình kết nối và chuyển đổi số tại hệ thống điểm danh thông minh UTE.
+          <p className="text-xl text-white/80 font-medium leading-relaxed max-w-lg">
+            Hệ thống quản lý sự kiện và điểm danh thông minh dành riêng cho cộng đồng HCMUTE.
           </p>
         </div>
         {/* Abstract Decorative Shapes */}
-        <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
-        <div className="absolute right-40 -bottom-10 w-60 h-60 bg-secondary/30 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-1000"></div>
+        <div className="absolute -right-20 -top-20 w-[400px] h-[400px] bg-white/10 rounded-full blur-[100px] group-hover:scale-110 transition-transform duration-1000"></div>
+        <div className="absolute right-40 -bottom-10 w-[300px] h-[300px] bg-secondary/30 rounded-full blur-[80px] group-hover:scale-125 transition-transform duration-1000"></div>
       </section>
 
       {/* Summary Cards Bento */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <StatCard 
           label="Tổng đại biểu" 
           value={stats?.totalGuests || 0} 
           icon="groups" 
           trend="+12%" 
           trendColor="primary" 
+          accent="none"
         />
         <StatCard 
           label="Đã Check-in" 
           value={stats?.checkinCount || 0} 
           icon="check_circle" 
-          trend={`${Math.round((stats?.checkinCount || 0) / (stats?.totalGuests || 1) * 100)}%`}
-          trendColor="success" 
+          trend={`${stats?.totalGuests ? Math.round((stats?.checkinCount || 0) / (stats?.totalGuests || 1) * 100) : 0}%`}
+          trendColor="primary" 
+          accent="left"
         />
         <StatCard 
           label="Chưa Check-in" 
           value={(stats?.totalGuests || 0) - (stats?.checkinCount || 0)} 
           icon="pending" 
-          trend={`${Math.round(((stats?.totalGuests || 0) - (stats?.checkinCount || 0)) / (stats?.totalGuests || 1) * 100)}%`}
+          trend={`${stats?.totalGuests ? Math.round(((stats?.totalGuests || 0) - (stats?.checkinCount || 0)) / (stats?.totalGuests || 1) * 100) : 0}%`}
           trendColor="secondary" 
+          accent="right"
         />
         <StatCard 
           label="Đại biểu mới" 
@@ -62,103 +71,120 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
           icon="person_add" 
           trend="+5" 
           trendColor="primary" 
+          accent="none"
         />
       </section>
 
       {/* Main Data Section */}
-      <section className="bg-surface-container-low rounded-lg p-10 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+      <section className="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[40px] p-12 shadow-xl shadow-blue-900/5 border border-outline-variant/5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
           <div>
-            <h3 className="text-2xl font-black text-on-surface tracking-normal mb-2 uppercase flex items-center gap-3">
-              Dữ liệu tổng quan
+            <div className="flex items-center gap-4 mb-3">
+              <h3 className="text-3xl font-black text-on-surface tracking-normal uppercase">
+                Xác nhận check-in
+              </h3>
               {activeEvent && (
-                <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-normal animate-in fade-in zoom-in duration-500">
+                <span className="text-[10px] font-black text-primary bg-primary/10 px-4 py-1.5 rounded-full uppercase tracking-normal animate-in zoom-in-75">
                   {activeEvent.title}
                 </span>
               )}
-            </h3>
-            <p className="text-on-surface-variant text-sm font-medium">
-              Bạn đang xem dữ liệu ngày: <span className="text-primary font-black uppercase tracking-normal">
-                {activeEvent?.event_date ? new Date(activeEvent.event_date).toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' }) : "Chưa chọn ngày"}
-              </span>
+            </div>
+            <p className="text-slate-400 text-sm font-bold uppercase tracking-normal">
+              TRỤC OY: SỐ LƯỢNG | TRỤC OX: THỜI GIAN
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex bg-surface-container-highest rounded-full p-1 shadow-inner">
-              <button className="px-6 py-2 rounded-full text-sm font-bold bg-white shadow-sm text-primary">Giờ</button>
-              <button className="px-6 py-2 rounded-full text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">Ngày</button>
-              <button className="px-6 py-2 rounded-full text-sm font-medium text-on-surface-variant hover:bg-white/50 transition-colors">Tháng</button>
+          <div className="flex items-center gap-4">
+            <div className="flex bg-surface-container-highest/50 backdrop-blur-md rounded-full p-1.5 shadow-inner">
+              <button className="px-8 py-2.5 rounded-full text-xs font-black bg-white shadow-xl text-primary uppercase tracking-normal">Giờ</button>
+              <button className="px-8 py-2.5 rounded-full text-xs font-bold text-on-surface-variant hover:bg-white/50 transition-all uppercase tracking-normal">Ngày</button>
             </div>
             <button 
               onClick={onExport}
-              className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-bold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+              className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-full font-black text-xs uppercase tracking-[0.1em] hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 shadow-xl shadow-primary/20"
             >
-              <span className="material-symbols-outlined text-sm">download</span>
+              <Download size={16} />
               <span>Xuất Excel</span>
             </button>
           </div>
         </div>
 
-        {/* Chart Placeholder (Simulated) */}
-        <div className="relative bg-surface-container-lowest rounded-lg h-[450px] overflow-hidden flex flex-col border border-outline-variant/10 shadow-inner">
-          <div className="p-6 flex items-center justify-between border-b border-outline-variant/10">
-            <h4 className="font-bold text-on-surface uppercase text-sm tracking-wide">XÁC NHẬN CHECK-IN THEO THỜI GIAN</h4>
-            <div className="flex items-center gap-4">
+        {/* Real Chart (Calculated from checkin times) */}
+        <div className="relative bg-white rounded-[32px] h-[500px] overflow-hidden flex flex-col border border-outline-variant/10 shadow-2xl shadow-blue-900/5 group">
+          <div className="p-8 flex items-center justify-between border-b border-outline-variant/5">
+             <h4 className="font-black text-on-surface uppercase text-xs tracking-normal flex items-center gap-2">
+               <span className="material-symbols-outlined text-sm text-primary">timeline</span>
+               THỐNG KÊ THEO KHUNG GIỜ
+             </h4>
+            <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-primary"></span>
-                <span className="text-xs font-medium text-on-surface-variant">Check-in</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-primary shadow-lg shadow-primary/30"></span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-normal">Thành viên</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-secondary-container"></span>
-                <span className="text-xs font-medium text-on-surface-variant">Check-out</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-secondary-container opacity-50"></span>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-normal">Dự kiến</span>
               </div>
             </div>
           </div>
-          <div className="flex-1 p-8 flex items-end justify-between gap-4 bg-slate-50/30">
-            {[30, 45, 65, 85, 60, 40, 35, 55, 75, 40].map((h, i) => (
-              <div key={i} className="w-full bg-primary-fixed/20 rounded-t-lg relative group transition-all hover:bg-primary-fixed/40" style={{ height: `${h}%` }}>
-                <div className="absolute inset-x-2 bottom-0 bg-primary rounded-t-lg transition-all duration-700" style={{ height: `${h + 10}%` }}></div>
-                {i === 3 && (
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">Peak: 420</div>
-                )}
-              </div>
-            ))}
+          
+          <div className="flex-1 px-12 pt-16 pb-8 flex items-end justify-between gap-6 bg-gradient-to-b from-transparent to-slate-50/50">
+            {chartData.map((val, i) => {
+              const height = (val / maxVal) * 80 + 5 
+              return (
+                <div key={i} className="flex-1 bg-primary/5 rounded-t-2xl relative group transition-all hover:bg-primary/10" style={{ height: `100%` }}>
+                  {/* The actual data bar */}
+                  <div 
+                    className="absolute inset-x-2 bottom-0 bg-gradient-to-t from-primary to-primary-container rounded-t-2xl transition-all duration-1000 ease-out shadow-lg shadow-primary/10 group-hover:from-primary group-hover:to-secondary-container" 
+                    style={{ height: `${height}%` }}
+                  >
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] font-black py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 shadow-xl whitespace-nowrap">
+                      {val} LƯỢT
+                    </div>
+                  </div>
+                  
+                  {i === peakIndex && val > 0 && (
+                     <div className="absolute top-4 left-1/2 -translate-x-1/2 border border-primary/20 bg-primary/5 px-2 py-0.5 rounded text-[8px] font-black text-primary uppercase whitespace-nowrap">Peak</div>
+                  )}
+                </div>
+              )
+            })}
           </div>
-          <div className="p-4 px-8 flex justify-between border-t border-outline-variant/10 bg-white">
-            {["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"].map(t => (
-              <span key={t} className="text-[10px] font-bold text-slate-400">{t}</span>
+          
+          <div className="p-6 px-12 flex justify-between border-t border-outline-variant/5 bg-slate-50/30">
+            {["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"].map(t => (
+              <span key={t} className="text-[10px] font-black text-slate-400 tracking-normal">{t}</span>
             ))}
           </div>
         </div>
       </section>
 
       {/* Activity and Breakdown */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
-        <div className="lg:col-span-2 bg-surface-container-lowest rounded-lg p-8 shadow-sm border border-outline-variant/10">
-          <div className="flex items-center justify-between mb-8">
-            <h4 className="text-lg font-black text-on-surface tracking-normal uppercase">HOẠT ĐỘNG GẦN ĐÂY</h4>
-            <button className="text-sm font-bold text-slate-500 hover:text-primary transition-colors uppercase tracking-normal">Xem tất cả</button>
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 pb-16">
+        <div className="lg:col-span-2 bg-white rounded-[40px] p-10 shadow-xl shadow-blue-900/5 border border-outline-variant/10">
+          <div className="flex items-center justify-between mb-10">
+            <h4 className="text-xl font-black text-on-surface tracking-normal uppercase">Hoạt động mới nhất</h4>
+            <button className="text-xs font-black text-primary hover:bg-primary/5 px-4 py-2 rounded-full transition-all uppercase tracking-normal">Xem tất cả</button>
           </div>
           <div className="space-y-4">
             {recentCheckins.length === 0 ? (
-              <p className="text-center py-10 text-slate-400 italic">Chưa có hoạt động nào.</p>
+              <p className="text-center py-20 text-slate-300 italic font-medium uppercase tracking-normal text-xs">Chưa có hoạt động nào được ghi nhận.</p>
             ) : (
               recentCheckins.map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-lg bg-surface-container-low/50 hover:bg-surface-container-low transition-colors group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold">
+                <div key={i} className="flex items-center justify-between p-5 rounded-3xl bg-surface-container-low/30 hover:bg-surface-container-low transition-all group border border-transparent hover:border-outline-variant/10">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary font-black shadow-inner shadow-primary/5">
                       {item.title ? item.title.substring(0, 2).toUpperCase() : "..."}
                     </div>
                     <div>
-                      <p className="font-bold text-on-surface">{item.title}</p>
-                      <p className="text-xs text-on-surface-variant font-medium opacity-70">
-                        {item.unit || "N/A"} - MSSV: {item.student_id || "N/A"}
+                      <p className="font-black text-on-surface uppercase tracking-normal text-sm leading-none mb-2">{item.title}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-normal flex items-center gap-2">
+                        {item.unit || "N/A"} <span className="opacity-30">•</span> MSSV: {item.student_id || "N/A"}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-black text-primary">{item.checkin_time && new Date(item.checkin_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                    <p className="text-[10px] font-bold text-green-600 px-2 py-0.5 bg-green-50 rounded-full inline-block tracking-normal uppercase">SUCCESS</p>
+                    <p className="text-sm font-black text-primary mb-1">{item.checkin_time && new Date(item.checkin_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p className="text-[9px] font-black text-green-600 px-3 py-1 bg-green-50 rounded-full inline-block tracking-normal uppercase shadow-sm">SUCCESS</p>
                   </div>
                 </div>
               ))
@@ -166,33 +192,34 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
           </div>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-lg p-8 flex flex-col items-center justify-between text-center shadow-sm border border-outline-variant/10">
-          <h4 className="text-lg font-black text-on-surface tracking-normal mb-6 w-full text-left uppercase">PHÂN BỔ ĐẠI BIỂU</h4>
-          <div className="relative w-48 h-48 mb-6 animate-in zoom-in duration-700">
-            <div className="absolute inset-0 rounded-full border-[12px] border-primary border-r-transparent border-b-transparent rotate-45"></div>
-            <div className="absolute inset-2 rounded-full border-[12px] border-secondary-container border-l-transparent border-t-transparent -rotate-12"></div>
+        <div className="bg-white rounded-[40px] p-10 flex flex-col items-center justify-between text-center shadow-xl shadow-blue-900/5 border border-outline-variant/10">
+          <h4 className="text-xl font-black text-on-surface tracking-normal mb-8 w-full text-left uppercase">Phân bổ đại biểu</h4>
+          <div className="relative w-56 h-56 mb-10 animate-in zoom-in-75 duration-1000">
+             {/* Dynamic donut chart sim */}
+            <div className="absolute inset-0 rounded-full border-[16px] border-primary border-r-transparent border-b-transparent rotate-[30deg] shadow-xl shadow-primary/10"></div>
+            <div className="absolute inset-3 rounded-full border-[16px] border-secondary border-l-transparent border-t-transparent rotate-12 shadow-md shadow-secondary/10"></div>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-black text-on-surface">{stats?.totalGuests || 0}</span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-normal">TOTAL</span>
+              <span className="text-4xl font-black text-on-surface tracking-tight">{stats?.totalGuests || 0}</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">TOTAL</span>
             </div>
           </div>
-          <div className="space-y-4 w-full px-2">
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-normal">
-                <span className="text-on-surface-variant">Sinh viên</span>
+          <div className="space-y-6 w-full px-2">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-normal">
+                <span className="text-slate-500">Giảng viên / VIP</span>
                 <span className="text-primary">85%</span>
               </div>
-              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-primary w-[85%] rounded-full"></div>
+              <div className="w-full h-2 bg-slate-50 rounded-full overflow-hidden shadow-inner">
+                <div className="h-full bg-gradient-to-r from-primary to-primary-container w-[85%] rounded-full shadow-lg shadow-primary/20"></div>
               </div>
             </div>
-            <div className="space-y-1.5 pt-1">
-              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-normal">
-                <span className="text-on-surface-variant">Giảng viên / VIP</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-normal">
+                <span className="text-slate-500">Khách mời / SV</span>
                 <span className="text-secondary">15%</span>
               </div>
-              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <div className="h-full bg-secondary-container w-[15%] rounded-full"></div>
+              <div className="w-full h-2 bg-slate-50 rounded-full overflow-hidden shadow-inner">
+                <div className="h-full bg-gradient-to-r from-secondary to-secondary-container w-[15%] rounded-full shadow-lg shadow-secondary/20"></div>
               </div>
             </div>
           </div>

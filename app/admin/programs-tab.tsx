@@ -170,11 +170,17 @@ export function ProgramsTab() {
             key={event.id}
             onClick={() => setSelectedEventId(event.id)}
             className={cn(
-              "bg-surface-container-lowest rounded-lg p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden h-full flex flex-col border border-outline-variant/5",
-              selectedEventId === event.id ? "ring-2 ring-primary border-transparent" : "",
-              event.is_active ? "border-r-4 border-r-secondary" : ""
+              "bg-surface-container-lowest rounded-[32px] p-8 shadow-xl shadow-blue-900/5 hover:shadow-2xl transition-all duration-500 group cursor-pointer relative overflow-hidden h-full flex flex-col border border-outline-variant/5",
+              selectedEventId === event.id ? "ring-2 ring-primary border-transparent" : ""
             )}
           >
+            {/* Premium Accent Bar for Active Event */}
+            {event.is_active && (
+              <div className="absolute right-0 top-12 bottom-12 w-1.5 rounded-l-full bg-gradient-to-b from-secondary to-secondary-container shadow-[-4px_0_15px_-3px_rgba(255,109,0,0.4)] animate-pulse" />
+            )}
+            {!event.is_active && selectedEventId === event.id && (
+               <div className="absolute left-0 top-12 bottom-12 w-1.5 rounded-r-full bg-gradient-to-b from-primary to-primary-container shadow-[4px_0_15px_-3px_rgba(27,105,255,0.4)]" />
+            )}
             <div className="flex justify-between items-start mb-6">
               <div className={cn("p-3 rounded-full", event.is_active ? "bg-secondary/10 text-secondary" : "bg-primary/10 text-primary")}>
                 <span className="material-symbols-outlined text-xl">{event.is_active ? "sensors" : "event"}</span>
