@@ -106,26 +106,29 @@ export function StatsBar() {
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {cards.map((card) => {
         const Icon = card.icon
         return (
           <div
             key={card.label}
-            className={`flex items-center gap-3 rounded-xl border ${card.border} ${card.bg} px-4 py-3 shadow-sm transition-all`}
+            className={`group relative overflow-hidden rounded-[32px] bg-white p-6 shadow-sm transition-all hover:shadow-md`}
           >
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${card.iconBg}`}>
-              <Icon className={`h-5 w-5 ${card.color}`} />
-            </div>
-            <div className="min-w-0">
-              <div className={`text-2xl font-extrabold leading-none ${card.color}`}>
+            {/* Background Accent Blur */}
+            <div className={`absolute -top-10 -right-10 h-32 w-32 rounded-full opacity-20 blur-3xl ${card.iconBg}`} />
+            
+            <div className="flex flex-col items-center justify-center gap-2 text-center">
+              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm transition-transform group-hover:scale-105 ${card.iconBg} ${card.color}`}>
+                <Icon className="h-7 w-7" />
+              </div>
+              <div className={`mt-2 text-3xl font-black tracking-tight text-slate-900`}>
                 {loading ? (
-                  <span className="inline-block h-6 w-10 animate-pulse rounded bg-current opacity-20" />
+                  <span className="inline-block h-8 w-16 animate-pulse rounded bg-slate-100" />
                 ) : (
-                  card.value
+                  card.value.toLocaleString()
                 )}
               </div>
-              <div className="mt-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500 truncate">
+              <div className="text-[13px] font-bold text-slate-400">
                 {card.label}
               </div>
             </div>

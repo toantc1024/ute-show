@@ -10,16 +10,17 @@ import { cn } from "@/lib/utils"
 
 export default function Page() {
   return (
-    <main className="relative flex h-screen w-screen flex-col overflow-hidden bg-white text-slate-900 selection:bg-blue-200">
+    <main className="relative flex h-screen w-screen flex-col overflow-hidden bg-[#f0f4f8] text-slate-900 selection:bg-blue-200">
       <FlyingHearts />
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 opacity-60" />
       <AnimatedGridPattern
         numSquares={30}
-        maxOpacity={0.1}
+        maxOpacity={0.05}
         duration={3}
         repeatDelay={1}
         className={cn(
-          "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]",
-          "inset-0 h-full w-full skew-y-12 fill-black/5 stroke-black/5"
+          "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
+          "inset-0 h-full w-full skew-y-12 fill-blue-500/5 stroke-blue-500/5"
         )}
       />
 
