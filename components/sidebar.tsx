@@ -24,7 +24,7 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
     <aside className="h-screen w-64 fixed left-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-950 z-40 border-r border-outline-variant/10 shadow-premium">
       <div className="px-8 py-10">
         <h1 className="text-xl font-black tracking-normal uppercase flex items-center">
-          <span className="text-blue-800 dark:text-blue-400">UTE</span>
+          <span className="text-blue-800 dark:text-primary">UTE</span>
           <span className="text-secondary dark:text-secondary-fixed-dim ml-1">Check-in</span>
         </h1>
         <p className="text-xs font-bold text-slate-400 uppercase tracking-normal mt-1">Precision Pulse</p>

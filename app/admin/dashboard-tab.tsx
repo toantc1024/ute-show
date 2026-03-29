@@ -18,7 +18,7 @@ export function DashboardTab({ stats, recentCheckins, onExport }: DashboardTabPr
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Wrapped Banner */}
-      <section className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary via-tertiary to-secondary-container p-12 text-white shadow-2xl shadow-primary/20 group">
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group">
         <div className="relative z-10 max-w-2xl">
           <span className="inline-block px-4 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold tracking-normal uppercase mb-4">Annual Statistics</span>
           <h2 className="text-6xl font-black tracking-normal leading-tight mb-4 uppercase">

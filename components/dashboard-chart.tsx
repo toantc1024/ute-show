@@ -58,7 +58,7 @@ export function DashboardChart() {
   if (loading && data.length === 0) {
     return (
       <div className="flex h-[300px] w-full items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
       </div>
     )
   }

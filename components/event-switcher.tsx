@@ -12,13 +12,13 @@ export function EventSwitcher() {
 
   return (
     <div className="relative group mr-4">
-      <button className="flex items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50/50 px-3 py-1.5 transition-all hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-blue-600 shadow-sm shrink-0">
+      <button className="flex items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50/50 px-3 py-1.5 transition-all hover:bg-white hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+        <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-100 text-primary shadow-sm shrink-0">
           <Calendar className="h-3.5 w-3.5" />
         </div>
         <div className="text-left min-w-0 max-w-[150px] sm:max-w-[250px]">
           <div className="flex items-center gap-1.5">
-            <div className="text-[10px] font-bold text-blue-500 uppercase tracking-normal leading-none">
+            <div className="text-[10px] font-bold text-primary uppercase tracking-normal leading-none">
               Chương trình
             </div>
             {activeEvent?.is_active && (
@@ -46,7 +46,7 @@ export function EventSwitcher() {
               onClick={() => setSelectedEventId(event.id)}
               className={cn(
                 "flex w-full flex-col items-start rounded-lg px-3 py-2 text-left transition-all hover:bg-slate-50",
-                selectedEventId === event.id ? "bg-blue-50/50 text-blue-700 ring-1 ring-blue-100" : "text-slate-600"
+                selectedEventId === event.id ? "bg-blue-50/50 text-primary ring-1 ring-blue-100" : "text-slate-600"
               )}
             >
               <div className="flex w-full items-center justify-between">

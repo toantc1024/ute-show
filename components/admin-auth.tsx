@@ -83,7 +83,7 @@ export function AdminAuthGate({ children }: { children: React.ReactNode }) {
       >
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="rounded-full bg-blue-100 p-3">
-            <Lock className="h-6 w-6 text-blue-600" />
+            <Lock className="h-6 w-6 text-primary" />
           </div>
           <h2 className="text-xl font-bold text-slate-800">Trang Quản Trị</h2>
           <p className="text-sm text-slate-500">Nhập mật khẩu để tiếp tục</p>
@@ -107,7 +107,7 @@ export function AdminAuthGate({ children }: { children: React.ReactNode }) {
         )}
         <Button
           type="submit"
-          className="w-full bg-blue-600 font-semibold hover:bg-blue-700"
+          className="w-full bg-primary font-semibold hover:bg-primary"
         >
           Xác nhận
         </Button>

@@ -161,7 +161,7 @@ export function EventManager() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold text-slate-800 uppercase tracking-normal flex items-center gap-2">
-          <Settings className="h-5 w-5 text-blue-600" />
+          <Settings className="h-5 w-5 text-primary" />
           QUẢN LÝ CHƯƠNG TRÌNH
         </h2>
         <Button 
@@ -176,7 +176,7 @@ export function EventManager() {
             setIsAdding(!isAdding)
           }}
           variant={isAdding ? "ghost" : "default"}
-          className={cn("font-bold transition-all", isAdding ? "text-red-500 hover:bg-red-50" : "bg-blue-600")}
+          className={cn("font-bold transition-all", isAdding ? "text-red-500 hover:bg-red-50" : "bg-primary")}
         >
           {isAdding ? "Hủy" : <><Plus className="mr-2 h-4 w-4" /> Thêm mới</>}
         </Button>
@@ -198,7 +198,7 @@ export function EventManager() {
                   placeholder="Ví dụ: Đại hội Đại biểu Đoàn trường..." 
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="bg-white border-blue-200 focus:ring-blue-500 font-medium"
+                  className="bg-white border-blue-200 focus:ring-primary font-medium"
                 />
               </div>
               
@@ -241,7 +241,7 @@ export function EventManager() {
                 </div>
               </div>
               
-              <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 font-bold py-5 mt-2 shadow-md shadow-blue-200">
+              <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary font-bold py-5 mt-2 shadow-md shadow-blue-200">
                 {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (editingId ? "CẬP NHẬT THÔNG TIN" : "XÁC NHẬN TẠO")}
               </Button>
             </form>
@@ -256,12 +256,12 @@ export function EventManager() {
           events.map(event => (
             <Card key={event.id} className={cn(
               "group overflow-hidden transition-all duration-300 border shadow-sm",
-              selectedEventId === event.id ? "border-blue-400 bg-blue-50/40 ring-1 ring-blue-400/50 scale-[1.01]" : "border-slate-200 hover:border-blue-200 hover:bg-slate-50/50"
+              selectedEventId === event.id ? "border-primary bg-blue-50/40 ring-1 ring-primary/50 scale-[1.01]" : "border-slate-200 hover:border-blue-200 hover:bg-slate-50/50"
             )}>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4">
                 <div className="flex-1 min-w-0" onClick={() => setSelectedEventId(event.id)}>
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className={cn("text-base font-bold truncate", selectedEventId === event.id ? "text-blue-700" : "text-slate-800 hover:text-blue-600 transition-colors cursor-pointer")}>
+                    <h3 className={cn("text-base font-bold truncate", selectedEventId === event.id ? "text-primary" : "text-slate-800 hover:text-primary transition-colors cursor-pointer")}>
                       {event.title}
                     </h3>
                     {event.is_active && (
@@ -300,7 +300,7 @@ export function EventManager() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-8 w-8 text-blue-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    className="h-8 w-8 text-primary hover:bg-blue-50 hover:text-primary transition-colors"
                     onClick={() => startEdit(event)}
                   >
                     <Pencil className="h-4 w-4" />

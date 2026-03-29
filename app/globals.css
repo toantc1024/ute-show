@@ -14,10 +14,10 @@
     --popover: #ffffff;
     --popover-foreground: #191c1e;
 
-    --primary: #005f9c;
+    --primary: #1B69FF;
     --primary-foreground: #ffffff;
 
-    --secondary: #9f4200;
+    --secondary: #FF6D00;
     --secondary-foreground: #ffffff;
 
     --muted: #f2f4f7;
@@ -56,15 +56,15 @@
         }
     }
 
-    /* Stitch Custom Colors */
-    --color-primary: #005f9c;
-    --color-primary-container: #0079c4;
-    --color-primary-fixed: #d0e4ff;
+    /* Vibrant Colors based on UTE Check-in Logo */
+    --color-primary: #1B69FF;
+    --color-primary-container: #478DFF;
+    --color-primary-fixed: #D9E6FF;
     --color-on-primary: #ffffff;
     
-    --color-secondary: #9f4200;
-    --color-secondary-container: #fd6c00;
-    --color-secondary-fixed: #ffdbcb;
+    --color-secondary: #FF6D00;
+    --color-secondary-container: #FF8B33;
+    --color-secondary-fixed: #FFECD9;
     --color-on-secondary: #ffffff;
 
     --color-tertiary: #6c20f3;
