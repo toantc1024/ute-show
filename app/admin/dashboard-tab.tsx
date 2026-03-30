@@ -53,8 +53,8 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
-      {/* Wrapped Banner */}
-      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-secondary p-16 text-white shadow-2xl shadow-primary/20 group">
+      {/* Wrapped Banner with Stats */}
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group flex flex-col xl:flex-row xl:items-center justify-between gap-12">
         <div className="relative z-10 max-w-2xl">
           <span className="inline-block px-4 py-1.5 rounded-lg bg-white/20 backdrop-blur-md text-[10px] font-black tracking-[0.2em] uppercase mb-6 animate-pulse">UTE Check-in 2026</span>
           <div className="mb-6">
@@ -63,49 +63,33 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
               Hệ thống điểm danh YUTE
             </h2>
           </div>
-          <p className="text-xl text-white/80 font-medium leading-relaxed max-w-lg">
+          <p className="text-md text-white/80 font-medium leading-relaxed max-w-lg">
             Hệ thống quản lý sự kiện và điểm danh thông minh dành riêng cho cộng đồng HCMUTE.
           </p>
         </div>
+
+        {/* Stats inside Banner */}
+        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 xl:flex items-center gap-6 xl:gap-8 grow-0">
+          {[
+            { label: "Tổng", value: stats?.totalGuests || 0, icon: "groups", trend: "+12%" },
+            { label: "Đã Check-in", value: stats?.checkinCount || 0, icon: "check_circle", trend: `${stats?.totalGuests ? Math.round((stats?.checkinCount || 0) / (stats?.totalGuests||1)*100) : 0}%` },
+            { label: "Chưa tới", value: (stats?.totalGuests || 0) - (stats?.checkinCount || 0), icon: "pending", trend: "Remaining" },
+            { label: "Đại biểu mới", value: stats?.newGuestsToday || 0, icon: "person_add", trend: "+5" },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col xl:items-end gap-1 p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 shadow-lg min-w-[120px]">
+              <div className="flex items-center gap-2 xl:flex-row-reverse text-white/60">
+                <span className="material-symbols-outlined text-lg">{item.icon}</span>
+                <span className="text-[9px] font-black uppercase tracking-wider">{item.label}</span>
+              </div>
+              <div className="text-2xl font-black">{item.value}</div>
+              <div className="text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-white/20 inline-block">{item.trend}</div>
+            </div>
+          ))}
+        </div>
+
         {/* Abstract Decorative Shapes */}
         <div className="absolute -right-20 -top-20 w-[400px] h-[400px] bg-white/10 rounded-lg blur-[100px] group-hover:scale-110 transition-transform duration-1000"></div>
         <div className="absolute right-40 -bottom-10 w-[300px] h-[300px] bg-secondary/30 rounded-lg blur-[80px] group-hover:scale-125 transition-transform duration-1000"></div>
-      </section>
-
-      {/* Summary Cards Bento */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <StatCard 
-          label="Tổng đại biểu" 
-          value={stats?.totalGuests || 0} 
-          icon="groups" 
-          trend="+12%" 
-          trendColor="primary" 
-          accent="none"
-        />
-        <StatCard 
-          label="Đã Check-in" 
-          value={stats?.checkinCount || 0} 
-          icon="check_circle" 
-          trend={`${stats?.totalGuests ? Math.round((stats?.checkinCount || 0) / (stats?.totalGuests || 1) * 100) : 0}%`}
-          trendColor="primary" 
-          accent="left"
-        />
-        <StatCard 
-          label="Chưa Check-in" 
-          value={(stats?.totalGuests || 0) - (stats?.checkinCount || 0)} 
-          icon="pending" 
-          trend={`${stats?.totalGuests ? Math.round(((stats?.totalGuests || 0) - (stats?.checkinCount || 0)) / (stats?.totalGuests || 1) * 100) : 0}%`}
-          trendColor="secondary" 
-          accent="right"
-        />
-        <StatCard 
-          label="Đại biểu mới" 
-          value={stats?.newGuestsToday || 0} 
-          icon="person_add" 
-          trend="+5" 
-          trendColor="primary" 
-          accent="none"
-        />
       </section>
 
       {/* Main Data Section */}
