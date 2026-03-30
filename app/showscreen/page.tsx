@@ -67,27 +67,15 @@ export default function ShowScreenPage() {
 
   return (
     <div className="w-screen h-screen bg-[#f8fbff] flex flex-col overflow-hidden font-sans">
-      {/* 1. Marquee Section: Program name scrolling left to right */}
-      <div className="h-16 bg-primary overflow-hidden flex items-center relative z-20 shadow-lg">
-        <div className="whitespace-nowrap flex animate-marquee-reverse">
-          <span className="text-2xl font-black text-white uppercase tracking-widest px-8">
-            {marqueeText} • {marqueeText} • {marqueeText} • {marqueeText}
-          </span>
-          <span className="text-2xl font-black text-white uppercase tracking-widest px-8">
-            {marqueeText} • {marqueeText} • {marqueeText} • {marqueeText}
-          </span>
-        </div>
-      </div>
-
       {/* Main Container constrained to 1920x1080 if screen allows, else responsive */}
-      <div className="flex-1 flex flex-col max-w-[1920px] mx-auto w-full p-8 gap-8 overflow-hidden">
+      <div className="flex-1 flex flex-col max-w-[1920px] mx-auto w-full p-8 gap-8 overflow-hidden pt-12">
         {/* 2. Dashboard Tab Section (Banner) */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group flex items-center justify-between gap-12 shrink-0">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group flex items-center justify-between gap-12 shrink-0 h-[400px]">
           <div className="absolute right-[10%] -top-10 opacity-10 pointer-events-none group-hover:scale-110 group-hover:-rotate-6 transition-all duration-[5000ms] ease-in-out">
             <UserCheck className="w-[600px] h-[600px] text-white" strokeWidth={0.2} />
           </div>
 
-          <div className="relative z-10 max-w-3xl">
+          <div className="relative z-10 max-w-4xl flex-1 overflow-hidden">
             <span className="inline-block px-6 py-2 rounded-xl bg-white/20 backdrop-blur-xl text-xs font-black tracking-[0.3em] uppercase mb-8 border border-white/10 animate-pulse">
               UTE CHECK-IN LIVE DASHBOARD
             </span>
@@ -95,10 +83,20 @@ export default function ShowScreenPage() {
               <span className="text-sm font-black tracking-[0.2em] uppercase block mb-3 text-white/70">
                 CHƯƠNG TRÌNH ĐANG DIỄN RA
               </span>
-              <h2 className="text-5xl font-black tracking-tight uppercase leading-[1.1] [text-shadow:0_4px_12px_rgba(0,0,0,0.2)]">
-                {activeEvent?.title || "SỰ KIỆN CHƯA BẮT ĐẦU"}
-              </h2>
+              <div className="overflow-hidden whitespace-nowrap">
+                <div className="inline-block animate-marquee-text pr-20">
+                  <h2 className="text-7xl font-black tracking-tight uppercase leading-tight [text-shadow:0_4px_12px_rgba(0,0,0,0.2)] inline">
+                    {activeEvent?.title || "SỰ KIỆN CHƯA BẮT ĐẦU"}
+                  </h2>
+                </div>
+                <div className="inline-block animate-marquee-text pr-20">
+                  <h2 className="text-7xl font-black tracking-tight uppercase leading-tight [text-shadow:0_4px_12px_rgba(0,0,0,0.2)] inline">
+                    {activeEvent?.title || "SỰ KIỆN CHƯA BẮT ĐẦU"}
+                  </h2>
+                </div>
+              </div>
             </div>
+
             <div className="flex items-center gap-10">
                <div className="flex flex-col">
                   <span className="text-[10px] font-black uppercase text-white/50 tracking-widest">ĐỊA ĐIỂM</span>
@@ -235,12 +233,12 @@ export default function ShowScreenPage() {
       </div>
 
       <style jsx global>{`
-        @keyframes marquee-reverse {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(0); }
+        @keyframes marquee-text {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
         }
-        .animate-marquee-reverse {
-          animation: marquee-reverse 30s linear infinite;
+        .animate-marquee-text {
+          animation: marquee-text 20s linear infinite;
         }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
@@ -250,6 +248,7 @@ export default function ShowScreenPage() {
           scrollbar-width: none;
         }
       `}</style>
+
     </div>
   )
 }
