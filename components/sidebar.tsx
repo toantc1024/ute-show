@@ -147,6 +147,32 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-2 px-2 pb-8">
+        <div className="px-4 mb-2">
+           <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Interfaces</span>
+        </div>
+        
+        <a 
+          href="/showscreen" 
+          target="_blank"
+          className="px-6 py-3 flex items-center gap-3 rounded-xl transition-all hover:bg-primary/5 text-primary group border border-transparent hover:border-primary/10"
+        >
+          <span className="material-symbols-outlined">tv</span>
+          <span className="text-sm font-bold uppercase tracking-tight">Show Screen</span>
+          <span className="material-symbols-outlined text-xs opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">open_in_new</span>
+        </a>
+
+        <a 
+          href="/check" 
+          target="_blank"
+          className="px-6 py-3 flex items-center gap-3 rounded-xl transition-all hover:bg-secondary/5 text-secondary group border border-transparent hover:border-secondary/10"
+        >
+          <span className="material-symbols-outlined">person_search</span>
+          <span className="text-sm font-bold uppercase tracking-tight">Check Status</span>
+          <span className="material-symbols-outlined text-xs opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">open_in_new</span>
+        </a>
+
+        <div className="h-px bg-slate-100 dark:bg-slate-800 my-2 mx-4"></div>
+
         <button 
           onClick={() => onTabChange("quick-scan")}
           className={cn(
@@ -160,19 +186,20 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
           <span className="font-bold uppercase tracking-normal">Quick Scan</span>
         </button>
         
-        <button className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-left w-full">
-          <span className="material-symbols-outlined">help</span>
-          <span className="text-sm font-medium">Hỗ trợ</span>
+        <button className="text-slate-600 dark:text-slate-400 px-6 py-2 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-left w-full">
+          <span className="material-symbols-outlined text-sm">help</span>
+          <span className="text-xs font-medium">Hỗ trợ</span>
         </button>
         
         <button 
           onClick={onLogout}
-          className="text-slate-600 dark:text-slate-400 px-6 py-3 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-left w-full"
+          className="text-slate-600 dark:text-slate-400 px-6 py-2 flex items-center gap-3 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-all text-left w-full"
         >
-          <span className="material-symbols-outlined">logout</span>
-          <span className="text-sm font-medium">Đăng xuất</span>
+          <span className="material-symbols-outlined text-sm">logout</span>
+          <span className="text-xs font-medium">Đăng xuất</span>
         </button>
       </div>
+
     </aside>
   )
 }

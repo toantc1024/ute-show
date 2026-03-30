@@ -106,23 +106,35 @@ export default function ShowScreenPage() {
             </div>
           </div>
 
-          {/* Real-time stats */}
-          <div className="relative z-10 flex gap-8">
-            <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 min-w-[200px] shadow-2xl">
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/60 mb-2">ĐÃ CHECK-IN</span>
-              <div className="text-7xl font-black tabular-nums">{stats.checkinCount}</div>
-              <div className="mt-4 px-4 py-1.5 rounded-full bg-white text-primary text-[10px] font-black uppercase tracking-wider">
-                {stats.total ? Math.round((stats.checkinCount / stats.total) * 100) : 0}% COMPLETION
-              </div>
+          {/* Real-time stats & QR */}
+          <div className="relative z-10 flex gap-6 items-center">
+            <div className="flex flex-col items-center justify-center p-6 rounded-3xl bg-white text-on-surface shadow-2xl relative group/qr transition-all hover:scale-105">
+               <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-orange-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg shadow-orange-500/20 uppercase tracking-[0.2em] animate-bounce">
+                  KIỂM TRA CHECK-IN
+               </div>
+               <img 
+                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${typeof window !== 'undefined' ? encodeURIComponent(window.location.origin + '/check') : ''}`}
+                 alt="QR Code Check"
+                 className="w-32 h-32 rounded-lg"
+               />
+               <span className="text-[9px] font-black uppercase text-slate-500 mt-3 tracking-widest">QUÉT MÃ TRƯỚC VÀO</span>
             </div>
-            <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/5 min-w-[200px]">
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/40 mb-2">DỰ KIẾN</span>
-              <div className="text-6xl font-black text-white/60 tabular-nums">{stats.total}</div>
-              <div className="mt-4 px-4 py-1.5 rounded-full bg-white/10 text-white/60 text-[10px] font-black uppercase tracking-wider">
-                TOTAL GUESTS
+
+            <div className="flex gap-4">
+              <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 min-w-[180px] shadow-2xl">
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/60 mb-2">ĐÃ CHECK-IN</span>
+                <div className="text-6xl font-black tabular-nums">{stats.checkinCount}</div>
+                <div className="mt-4 px-4 py-1.5 rounded-full bg-white text-primary text-[10px] font-black uppercase tracking-wider">
+                  {stats.total ? Math.round((stats.checkinCount / stats.total) * 100) : 0}% COMPLETION
+                </div>
+              </div>
+              <div className="flex flex-col items-center justify-center p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/5 min-w-[180px]">
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/40 mb-2">DỰ KIẾN</span>
+                <div className="text-5xl font-black text-white/60 tabular-nums">{stats.total}</div>
               </div>
             </div>
           </div>
+
         </section>
 
         {/* 3. Real-time Check-in List Section */}
