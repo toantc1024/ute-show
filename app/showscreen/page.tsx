@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 
 export default function ShowScreenPage() {
   const { supabase } = useSupabase()
-  const { activeEvent } = useEvent()
+  const { activeEvent, selectedEventId } = useEvent()
   const [checkins, setCheckins] = useState<any[]>([])
   const [stats, setStats] = useState({
     total: 0,
@@ -22,13 +22,16 @@ export default function ShowScreenPage() {
     if (!supabase) return
 
     // Fetch stats
-    const { count: totalCount } = await supabase
-      .from("guests")
-      .select("*", { count: "exact", head: true })
+    let guestsQuery = supabase.from("guests").select("*", { count: "exact", head: true })
+    let checkinCountQuery = supabase.from("checkins").select("*", { count: "exact", head: true })
     
-    const { count: checkinCount } = await supabase
-      .from("checkins")
-      .select("*", { count: "exact", head: true })
+    if (selectedEventId) {
+      guestsQuery = guestsQuery.eq("event_id", selectedEventId)
+      checkinCountQuery = checkinCountQuery.eq("event_id", selectedEventId)
+    }
+
+    const { count: totalCount } = await guestsQuery
+    const { count: checkinCount } = await checkinCountQuery
 
     setStats({
       total: totalCount || 0,
@@ -36,11 +39,17 @@ export default function ShowScreenPage() {
     })
 
     // Fetch recent checkins
-    const { data } = await supabase
+    let recentQuery = supabase
       .from("checkins")
       .select("*")
       .order("created_at", { ascending: false })
       .limit(20)
+
+    if (selectedEventId) {
+      recentQuery = recentQuery.eq("event_id", selectedEventId)
+    }
+
+    const { data } = await recentQuery
 
     if (data) {
       setCheckins(data)
@@ -61,7 +70,7 @@ export default function ShowScreenPage() {
       .subscribe()
     
     return () => { supabase.removeChannel(channel) }
-  }, [supabase])
+  }, [supabase, selectedEventId])
 
   const marqueeText = activeEvent?.title || "Hệ thống điểm danh thông minh - Chào mừng quý đại biểu về tham dự chương trình"
 
