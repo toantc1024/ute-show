@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request: Request) {
   try {
-    const { event_id, checkin_ids } = await request.json()
+    const { event_id, checkin_ids, customSubject, customHtml } = await request.json()
 
     if (!event_id) {
       return NextResponse.json({ error: "Thiếu event_id" }, { status: 400 })
@@ -85,12 +85,21 @@ export async function POST(request: Request) {
     const emailPromises = uniqueRecipients.map(async (guest) => {
       const emailAddress = `${guest.student_id.trim()}@student.hcmute.edu.vn`
       
-      try {
-        await transporter.sendMail({
-          from: `"Ban Tổ Chức UTE" <${process.env.SMTP_USER}>`,
-          to: emailAddress,
-          subject: `Thư cảm ơn: Check-in thành công "${event.title}"`,
-          html: `
+      // Helper function to replace placeholders
+      const replacePlaceholders = (text: string) => {
+        return text
+          .replace(/{{name}}/g, guest.name || "")
+          .replace(/{{event_title}}/g, event.title || "")
+          .replace(/{{student_id}}/g, guest.student_id || "")
+      }
+
+      const finalSubject = customSubject 
+        ? replacePlaceholders(customSubject) 
+        : `Thư cảm ơn: Check-in thành công "${event.title}"`
+
+      const finalHtml = customHtml 
+        ? replacePlaceholders(customHtml) 
+        : `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
               <div style="text-align: center; margin-bottom: 20px;">
                 <h1 style="color: #0c4a6e; margin: 0;">XÁC NHẬN CHECK-IN</h1>
@@ -107,7 +116,14 @@ export async function POST(request: Request) {
                 Thư này được gửi theo cấu hình tự động. Vui lòng không trả lời thư.
               </p>
             </div>
-          `,
+          `
+
+      try {
+        await transporter.sendMail({
+          from: `"Ban Tổ Chức UTE" <${process.env.SMTP_USER}>`,
+          to: emailAddress,
+          subject: finalSubject,
+          html: finalHtml,
         })
         successCount++
         successfulIds.push(guest.id)

@@ -3,8 +3,11 @@
 import { useState, useEffect, useMemo } from "react"
 import { useSupabase } from "@/components/supabase-provider"
 import { useEvent } from "@/components/event-context"
-import { Loader2, Mail, CheckCircle2, Square, CheckSquare, Search } from "lucide-react"
+import { Loader2, Mail, CheckCircle2, Square, CheckSquare, Search, Settings2, ChevronDown, ChevronUp, Info, Eye } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
 import type { Database } from "@/lib/database.types"
 
 type CheckinRow = Database["public"]["Tables"]["checkins"]["Row"]
@@ -19,6 +22,34 @@ export function EmailsTab() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [isSending, setIsSending] = useState(false)
   const [filter, setFilter] = useState<"all" | "sent" | "unsent">("all")
+  
+  const [showEditor, setShowEditor] = useState(false)
+  const [customSubject, setCustomSubject] = useState("")
+  const [customHtml, setCustomHtml] = useState("")
+
+  useEffect(() => {
+    if (activeEvent) {
+      setCustomSubject(`Thư cảm ơn: Check-in thành công "${activeEvent.title}"`)
+      setCustomHtml(`
+<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h1 style="color: #0c4a6e; margin: 0;">XÁC NHẬN CHECK-IN</h1>
+    <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Hệ thống điểm danh YUTE</p>
+  </div>
+  
+  <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0284c7;">
+    <p>Chào <strong>{{name}}</strong>,</p>
+    <p>Cảm ơn bạn đã tham gia chương trình <strong>{{event_title}}</strong>.</p>
+    <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện lúc này.</p>
+  </div>
+  
+  <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 30px;">
+    Thư này được gửi theo cấu hình tự động. Vui lòng không trả lời thư.
+  </p>
+</div>
+      `.trim())
+    }
+  }, [activeEvent])
 
   const fetchCheckins = async () => {
     if (!supabase || !selectedEventId) {
@@ -114,7 +145,9 @@ export function EmailsTab() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           event_id: selectedEventId,
-          checkin_ids: idsToSend
+          checkin_ids: idsToSend,
+          customSubject: customSubject,
+          customHtml: customHtml
         })
       })
       const data = await res.json()
@@ -173,6 +206,104 @@ export function EmailsTab() {
             Gửi ALL ({checkins.filter(c => c.email_sent !== true).length} unsent)
           </button>
         </div>
+      </div>
+      
+      {/* Email Editor Section */}
+      <div className="bg-white rounded-2xl shadow-xl shadow-blue-900/5 border border-outline-variant/5 overflow-hidden transition-all duration-300">
+        <button 
+          onClick={() => setShowEditor(!showEditor)}
+          className="w-full flex items-center justify-between p-6 hover:bg-slate-50 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
+              <Settings2 size={20} />
+            </div>
+            <div className="text-left">
+              <h3 className="font-black text-slate-800 uppercase tracking-tight text-sm">Cấu hình nội dung thư</h3>
+              <p className="text-slate-500 text-xs font-medium">Tùy chỉnh tiêu đề và nội dung Email gửi cho sinh viên.</p>
+            </div>
+          </div>
+          {showEditor ? <ChevronUp size={20} className="text-slate-400" /> : <ChevronDown size={20} className="text-slate-400" />}
+        </button>
+        
+        {showEditor && (
+          <div className="p-6 pt-0 border-t border-slate-50 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="subject" className="text-xs font-black uppercase tracking-widest text-slate-500">Tiêu đề Email</Label>
+                  <Input 
+                    id="subject"
+                    value={customSubject}
+                    onChange={(e) => setCustomSubject(e.target.value)}
+                    placeholder="Nhập tiêu đề email..."
+                    className="h-11 font-medium"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="content" className="text-xs font-black uppercase tracking-widest text-slate-500">Nội dung (HTML)</Label>
+                    <div className="group relative">
+                      <Info size={14} className="text-slate-400 cursor-help" />
+                      <div className="absolute bottom-full right-0 mb-2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        <p className="font-bold mb-1 underline">Biến hỗ trợ:</p>
+                        <ul className="space-y-1">
+                          <li><code className="bg-slate-700 px-1 rounded">{"{{name}}"}</code>: Tên sinh viên</li>
+                          <li><code className="bg-slate-700 px-1 rounded">{"{{event_title}}"}</code>: Tên chương trình</li>
+                          <li><code className="bg-slate-700 px-1 rounded">{"{{student_id}}"}</code>: MSSV</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <Textarea 
+                    id="content"
+                    value={customHtml}
+                    onChange={(e) => setCustomHtml(e.target.value)}
+                    placeholder="Nhập nội dung HTML..."
+                    className="min-h-[300px] font-mono text-sm leading-relaxed"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <Label className="text-xs font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                  <Eye size={14} /> Xem trước giao diện
+                </Label>
+                <div className="border border-slate-100 rounded-xl overflow-hidden bg-slate-50/30 h-[calc(100%-2rem)] min-h-[400px]">
+                  <div className="bg-white p-4 border-b border-slate-100 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-400" />
+                      <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                      <div className="w-2 h-2 rounded-full bg-green-400" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Preview</span>
+                  </div>
+                  <div className="p-4 overflow-auto max-h-[500px]">
+                    <div className="text-xs font-bold text-slate-400 mb-2 pb-2 border-b border-slate-100">
+                      Subject: <span className="text-slate-600">
+                        {customSubject
+                          .replace(/{{name}}/g, "Nguyễn Văn A")
+                          .replace(/{{event_title}}/g, activeEvent?.title || "Tên Sự Kiện")
+                          .replace(/{{student_id}}/g, "21110xxx")
+                        }
+                      </span>
+                    </div>
+                    <div 
+                      className="bg-white rounded-lg shadow-sm"
+                      dangerouslySetInnerHTML={{ 
+                        __html: customHtml
+                          .replace(/{{name}}/g, "Nguyễn Văn A")
+                          .replace(/{{event_title}}/g, activeEvent?.title || "Tên Sự Kiện")
+                          .replace(/{{student_id}}/g, "21110xxx")
+                      }} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="bg-white rounded-2xl shadow-xl shadow-blue-900/5 border border-outline-variant/5 overflow-hidden">
