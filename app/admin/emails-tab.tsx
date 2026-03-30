@@ -40,7 +40,7 @@ export function EmailsTab() {
   <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0284c7;">
     <p>Chào <strong>{{name}}</strong>,</p>
     <p>Cảm ơn bạn đã tham gia chương trình <strong>{{event_title}}</strong>.</p>
-    <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện lúc này.</p>
+    <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện lúc <strong>{{checkin_time}}</strong>.</p>
   </div>
   
   <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 30px;">
@@ -252,6 +252,7 @@ export function EmailsTab() {
                           <li><code className="bg-slate-700 px-1 rounded">{"{{name}}"}</code>: Tên sinh viên</li>
                           <li><code className="bg-slate-700 px-1 rounded">{"{{event_title}}"}</code>: Tên chương trình</li>
                           <li><code className="bg-slate-700 px-1 rounded">{"{{student_id}}"}</code>: MSSV</li>
+                          <li><code className="bg-slate-700 px-1 rounded">{"{{checkin_time}}"}</code>: Thời gian check-in</li>
                         </ul>
                       </div>
                     </div>
@@ -286,6 +287,7 @@ export function EmailsTab() {
                           .replace(/{{name}}/g, "Nguyễn Văn A")
                           .replace(/{{event_title}}/g, activeEvent?.title || "Tên Sự Kiện")
                           .replace(/{{student_id}}/g, "21110xxx")
+                          .replace(/{{checkin_time}}/g, new Date().toLocaleString('vi-VN'))
                         }
                       </span>
                     </div>
@@ -296,6 +298,7 @@ export function EmailsTab() {
                           .replace(/{{name}}/g, "Nguyễn Văn A")
                           .replace(/{{event_title}}/g, activeEvent?.title || "Tên Sự Kiện")
                           .replace(/{{student_id}}/g, "21110xxx")
+                          .replace(/{{checkin_time}}/g, new Date().toLocaleString('vi-VN'))
                       }} 
                     />
                   </div>

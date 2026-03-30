@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
     let query = supabaseAdmin
       .from("checkins")
-      .select("id, name, student_id, email_sent")
+      .select("id, name, student_id, email_sent, created_at")
       .eq("event_id", event_id)
       .not("student_id", "is", null)
 
@@ -87,10 +87,21 @@ export async function POST(request: Request) {
       
       // Helper function to replace placeholders
       const replacePlaceholders = (text: string) => {
+        const checkinDate = new Date(guest.created_at)
+        const formattedTime = checkinDate.toLocaleString('vi-VN', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        })
+
         return text
           .replace(/{{name}}/g, guest.name || "")
           .replace(/{{event_title}}/g, event.title || "")
           .replace(/{{student_id}}/g, guest.student_id || "")
+          .replace(/{{checkin_time}}/g, formattedTime)
       }
 
       const finalSubject = customSubject 
@@ -107,9 +118,9 @@ export async function POST(request: Request) {
               </div>
               
               <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0284c7;">
-                <p>Chào <strong>${guest.name}</strong>,</p>
-                <p>Cảm ơn bạn đã tham gia chương trình <strong>${event.title}</strong>.</p>
-                <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện lúc này.</p>
+                <p>Chào <strong>{{name}}</strong>,</p>
+                <p>Cảm ơn bạn đã tham gia chương trình <strong>{{event_title}}</strong>.</p>
+                <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện lúc <strong>{{checkin_time}}</strong>.</p>
               </div>
               
               <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 30px;">
