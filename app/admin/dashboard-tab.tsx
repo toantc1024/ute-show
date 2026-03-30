@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import { StatCard } from "@/components/stat-card"
 import { useEvent } from "@/components/event-context"
-import { Download, ChevronRight, Mail, Loader2, QrCode } from "lucide-react"
+import { Download, ChevronRight, Mail, Loader2, QrCode, UserCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface DashboardTabProps {
@@ -54,9 +54,9 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group flex flex-col xl:flex-row xl:items-center justify-between gap-12 transition-all duration-500">
-        {/* Decorative Background Icon (Lucide SVG for better visibility) */}
+        {/* Decorative Background Icon (UserCheck SVG for check-in theme) */}
         <div className="absolute right-[20%] -top-20 opacity-20 pointer-events-none group-hover:scale-110 group-hover:-rotate-6 transition-all duration-[3000ms] ease-in-out">
-          <QrCode className="w-[450px] h-[450px] text-white/30" strokeWidth={0.3} />
+          <UserCheck className="w-[450px] h-[450px] text-white/30" strokeWidth={0.3} />
         </div>
 
         <div className="relative z-10 max-w-2xl">
