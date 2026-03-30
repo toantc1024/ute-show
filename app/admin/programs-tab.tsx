@@ -85,7 +85,7 @@ export function ProgramsTab() {
           <div className="max-w-xl">
             <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-white text-[10px] font-bold mb-4 tracking-normal uppercase">REAL-TIME MONITOR</span>
             <h3 className="text-4xl font-extrabold text-white mb-2 leading-tight tracking-normal uppercase">Hoạt động đang diễn ra</h3>
-            <p className="text-white/80 font-medium">Theo dõi và quản lý các sự kiện điểm danh trong khuôn viên trường đại học.</p>
+            <p className="text-white/80 font-medium">Theo dõi và quản lý các sự kiện điểm danh trong khuôn viên trường đại học Công nghệ Kỹ thuật TP. HCM.</p>
           </div>
           <div className="flex gap-4 sm:gap-6">
             <div className="glass-card p-6 rounded-lg text-primary text-center min-w-[140px] shadow-lg border border-white/20">

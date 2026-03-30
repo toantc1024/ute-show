@@ -60,11 +60,11 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           <div className="mb-6">
             <span className="text-[10px] font-black tracking-[0.2em] uppercase block mb-2 text-white/60">Chào mừng bạn đến với</span>
             <h2 className="text-5xl lg:text-6xl font-black tracking-tight uppercase leading-tight">
-              Hệ thống điểm danh YUTE
+              Hệ thống\nđiểm danh YUTE
             </h2>
           </div>
           <p className="text-md text-white/80 font-medium leading-relaxed max-w-lg">
-            Hệ thống quản lý sự kiện và điểm danh thông minh dành riêng cho cộng đồng HCMUTE.
+            Hệ thống quản lý sự kiện và điểm danh thông minh dành riêng cho YHCMUTE.
           </p>
         </div>
 
