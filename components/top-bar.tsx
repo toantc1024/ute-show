@@ -34,6 +34,19 @@ export function TopBar({
     return d === filterDate;
   });
 
+  // Sync date picker when selected event changes (from other sources too)
+  React.useEffect(() => {
+    if (selectedEventId) {
+      const selectedEvent = events.find(e => e.id === selectedEventId);
+      if (selectedEvent?.event_date) {
+        const d = new Date(selectedEvent.event_date).toISOString().split('T')[0];
+        if (d !== filterDate) {
+          onFilterDateChange(d);
+        }
+      }
+    }
+  }, [selectedEventId, events]);
+
   return (
     <header className="sticky top-0 w-full z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm shadow-blue-900/5 px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
       <div className="flex items-center gap-4 shrink-0">
@@ -57,7 +70,10 @@ export function TopBar({
             onChange={(e) => onFilterDateChange(e.target.value)}
           />
           {filterDate && (
-             <button onClick={() => onFilterDateChange("")} className="ml-2 text-slate-400 hover:text-slate-600">
+             <button onClick={() => {
+               onFilterDateChange("");
+               // If we clear date, keep current event if possible, or just stay
+             }} className="ml-2 text-slate-400 hover:text-slate-600">
                <span className="material-symbols-outlined text-sm">close</span>
              </button>
           )}
@@ -69,15 +85,23 @@ export function TopBar({
           <select 
             className="bg-transparent border-none focus:ring-0 text-[10px] font-black uppercase text-slate-600 cursor-pointer outline-none w-full truncate pr-4"
             value={selectedEventId || ""}
-            onChange={(e) => setSelectedEventId(e.target.value)}
+            onChange={(e) => {
+              const id = e.target.value;
+              setSelectedEventId(id);
+              const ev = events.find(x => x.id === id);
+              if (ev?.event_date) {
+                const d = new Date(ev.event_date).toISOString().split('T')[0];
+                onFilterDateChange(d);
+              }
+            }}
           >
-            <option value="" disabled>CHỌN CHƯƠNG TRÌNH</option>
+            <option value="" disabled>CHỌN CHƯƠNG TRÌNH {filterDate ? `[${format(new Date(filterDate), "dd/MM")}]` : ""}</option>
             {filteredEvents.map(event => (
               <option key={event.id} value={event.id}>
-                {event.event_date ? `[${format(new Date(event.event_date), "dd/MM")}] ` : ""}{event.title}
+                {event.title}
               </option>
             ))}
-            {filteredEvents.length === 0 && <option disabled>KHÔNG CÓ DỮ LIỆU</option>}
+            {filteredEvents.length === 0 && <option disabled>KHÔNG CÓ DỰ LIỆU</option>}
           </select>
         </div>
 
