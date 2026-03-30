@@ -15,6 +15,7 @@ export default function ShowScreenPage() {
     total: 0,
     checkinCount: 0
   })
+  const [qrUrl, setQrUrl] = useState("")
 
   // Fetch stats and checkins
   const fetchData = async () => {
@@ -47,6 +48,11 @@ export default function ShowScreenPage() {
   }
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = `${window.location.origin}/check`
+      setQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`)
+    }
+
     fetchData()
     // Subscribe to real-time changes
     const channel = supabase
@@ -112,11 +118,17 @@ export default function ShowScreenPage() {
                <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-orange-500 text-white text-[10px] font-bold px-4 py-1.5 rounded-full shadow-lg shadow-orange-500/20 uppercase tracking-[0.2em] animate-bounce">
                   KIỂM TRA CHECK-IN
                </div>
-               <img 
-                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${typeof window !== 'undefined' ? encodeURIComponent(window.location.origin + '/check') : ''}`}
-                 alt="QR Code Check"
-                 className="w-32 h-32 rounded-lg"
-               />
+               {qrUrl ? (
+                 <img 
+                   src={qrUrl}
+                   alt="QR Code Check"
+                   className="w-32 h-32 rounded-lg"
+                 />
+               ) : (
+                 <div className="w-32 h-32 bg-slate-100 animate-pulse rounded-lg flex items-center justify-center">
+                    <span className="text-[8px] text-slate-400">Loading...</span>
+                 </div>
+               )}
                <span className="text-[9px] font-black uppercase text-slate-500 mt-3 tracking-widest">QUÉT MÃ TRƯỚC VÀO</span>
             </div>
 
