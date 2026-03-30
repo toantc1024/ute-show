@@ -60,7 +60,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           <div className="mb-6">
             <span className="text-[10px] font-black tracking-[0.2em] uppercase block mb-2 text-white/60">Chào mừng bạn đến với</span>
             <h2 className="text-5xl lg:text-6xl font-black tracking-tight uppercase leading-tight">
-              Hệ thống\nđiểm danh YUTE
+              Hệ thống <br /> điểm danh YUTE
             </h2>
           </div>
           <p className="text-md text-white/80 font-medium leading-relaxed max-w-lg">
