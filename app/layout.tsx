@@ -1,11 +1,12 @@
-import { Geist_Mono, Space_Grotesk } from "next/font/google"
+import { Geist_Mono, Space_Grotesk, Outfit } from "next/font/google"
 import "./globals.css"
 import { SupabaseProvider } from "@/components/supabase-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 import { EventProvider } from "@/components/event-context"
 import { cn } from "@/lib/utils"
 
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin", "vietnamese"], variable: "--font-sans" })
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" })
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin", "vietnamese"], variable: "--font-space-grotesk" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -29,7 +30,8 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "bg-background min-h-screen font-sans antialiased text-on-surface",
+          "bg-background min-h-screen antialiased text-on-surface font-sans",
+          outfit.variable,
           spaceGrotesk.variable,
           fontMono.variable
         )}
