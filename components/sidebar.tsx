@@ -3,7 +3,7 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 
-export type TabType = "dashboard" | "programs" | "checkin" | "not-checkedin" | "import"
+export type TabType = "dashboard" | "programs" | "checkin" | "not-checkedin" | "import" | "quick-scan"
 
 interface SidebarProps {
   activeTab: TabType
@@ -56,7 +56,15 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-2 px-2 pb-8">
-        <button className="bg-primary text-on-primary rounded-lg px-6 py-4 mb-4 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+        <button 
+          onClick={() => onTabChange("quick-scan")}
+          className={cn(
+            "rounded-lg px-6 py-4 mb-4 flex items-center justify-center gap-2 shadow-lg transition-all",
+            activeTab === "quick-scan" 
+              ? "bg-blue-200 text-blue-900 shadow-blue-900/40 scale-[1.02] ring-2 ring-primary ring-offset-2 dark:bg-primary-container dark:text-primary" 
+              : "bg-primary text-on-primary shadow-primary/20 hover:scale-[1.02] active:scale-95"
+          )}
+        >
           <span className="material-symbols-outlined">qr_code_scanner</span>
           <span className="font-bold uppercase tracking-normal">Quick Scan</span>
         </button>

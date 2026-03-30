@@ -9,6 +9,7 @@ import { TopBar } from "@/components/top-bar"
 import { DashboardTab } from "./dashboard-tab"
 import { ProgramsTab } from "./programs-tab"
 import { NotCheckedInTab } from "./not-checkedin-tab"
+import { QuickScanTab } from "./quick-scan-tab"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
 import { NotCheckedInList } from "@/components/not-checkedin-list"
@@ -233,6 +234,10 @@ function AdminContent() {
               <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <CSVImport />
               </div>
+            )}
+            
+            {activeTab === "quick-scan" && (
+              <QuickScanTab />
             )}
           </div>
         </main>
