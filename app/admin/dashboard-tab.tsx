@@ -55,7 +55,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
       <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-secondary p-12 text-white shadow-2xl shadow-primary/20 group flex flex-col xl:flex-row xl:items-center justify-between gap-12 transition-all duration-500">
         {/* Decorative Background Icon */}
-        <div className="absolute right-[30%] -top-20 opacity-10 pointer-events-none group-hover:scale-110 group-hover:-rotate-6 transition-all duration-[3000ms] ease-in-out">
+        <div className="absolute right-[25%] -top-20 opacity-20 pointer-events-none group-hover:scale-110 group-hover:-rotate-6 transition-all duration-[3000ms] ease-in-out">
           <span className="material-symbols-outlined text-[320px] font-thin text-white">qr_code_scanner</span>
         </div>
 
@@ -63,7 +63,7 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
           <span className="inline-block px-4 py-1.5 rounded-lg bg-white/20 backdrop-blur-md text-[10px] font-black tracking-[0.2em] uppercase mb-6 animate-pulse">UTE Check-in 2026</span>
           <div className="mb-6">
             <span className="text-[10px] font-black tracking-[0.2em] uppercase block mb-2 text-white/60">Chào mừng bạn đến với</span>
-            <h2 className="text-5xl lg:text-7xl font-black tracking-tight uppercase leading-[0.9]">
+            <h2 className="text-3xl font-black tracking-tight uppercase leading-tight">
               Hệ thống <br /> điểm danh YUTE
             </h2>
           </div>
