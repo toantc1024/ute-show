@@ -27,8 +27,8 @@ export function ProgramsTab() {
     if (!title.trim()) return
     setLoading(true)
     try {
-      const res = await fetch("/api/events", {
-        method:editingId ? "PATCH" : "POST",
+      const res = await fetch(editingId ? `/api/events/${editingId}` : "/api/events", {
+        method: editingId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           title: title.trim(), 
