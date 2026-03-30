@@ -1,7 +1,9 @@
 "use client"
 
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { useSupabase } from "./supabase-provider"
+import { useEvent } from "./event-context"
 import { ProjectStepProgress } from "./project-step-progress"
 
 export type TabType = "dashboard" | "programs" | "checkin" | "not-checkedin" | "import" | "quick-scan" | "emails"
@@ -13,13 +15,89 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
-  const navItems: { id: TabType; label: string; icon: string }[] = [
+  const { supabase } = useSupabase()
+  const { activeEvent, selectedEventId } = useEvent()
+  
+  const [counts, setCounts] = useState({
+    guests: 0,
+    sent: 0,
+    unsent: 0,
+    totalCheckins: 0
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!selectedEventId) return
+      
+      const { count: guestsCount } = await supabase
+        .from("guests")
+        .select("*", { count: "exact", head: true })
+        .eq("event_id", selectedEventId)
+
+      const { data: checkinData } = await supabase
+        .from("checkins")
+        .select("student_id, email_sent")
+        .eq("event_id", selectedEventId)
+
+      if (checkinData) {
+        const checkins = (checkinData as any[])
+        const emailsToBeSent = checkins.filter(c => c.student_id && c.student_id.trim().length >= 8)
+        const sent = emailsToBeSent.filter(c => c.email_sent === true).length
+        const total = checkins.length
+        
+        setCounts({
+          guests: guestsCount || 0,
+          sent,
+          unsent: emailsToBeSent.length - sent,
+          totalCheckins: total
+        })
+      }
+    }
+
+    fetchData()
+    const channel = supabase
+      .channel("sidebar_stats")
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, () => fetchData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "checkins" }, () => fetchData())
+      .subscribe()
+    
+    return () => { supabase.removeChannel(channel) }
+  }, [supabase, selectedEventId])
+
+  const getStatusForStep = (step: 1 | 2 | 3): "pending" | "ongoing" | "completed" => {
+    if (!activeEvent) return "pending"
+    const now = new Date()
+    const checkinStart = activeEvent.checkin_start ? new Date(activeEvent.checkin_start) : null
+    const checkinEnd = activeEvent.checkin_end ? new Date(activeEvent.checkin_end) : null
+
+    if (step === 1) {
+      if (counts.guests > 0) return "completed"
+      if (checkinStart && now < checkinStart) return "ongoing"
+      return "pending"
+    }
+    if (step === 2) {
+      if (checkinEnd && now > checkinEnd) return "completed"
+      if (checkinStart && checkinEnd && now >= checkinStart && now <= checkinEnd) return "ongoing"
+      return "pending"
+    }
+    if (step === 3) {
+      if (checkinEnd && now > checkinEnd) {
+        const totalEmails = counts.sent + counts.unsent
+        if (totalEmails > 0 && counts.unsent === 0) return "completed"
+        return "ongoing"
+      }
+      return "pending"
+    }
+    return "pending"
+  }
+
+  const navItems: { id: TabType; label: string; icon: string; step?: 1 | 2 | 3 }[] = [
     { id: "dashboard", label: "Dashboard", icon: "dashboard" },
     { id: "programs", label: "Chương trình", icon: "calendar_month" },
-    { id: "checkin", label: "Check-in", icon: "how_to_reg" },
+    { id: "import", label: "Nhập dữ liệu", icon: "cloud_upload", step: 1 },
+    { id: "checkin", label: "Check-in", icon: "how_to_reg", step: 2 },
     { id: "not-checkedin", label: "Chưa Check-in", icon: "person_off" },
-    { id: "import", label: "Nhập dữ liệu", icon: "cloud_upload" },
-    { id: "emails", label: "Gửi Email", icon: "mail" },
+    { id: "emails", label: "Gửi Email", icon: "mail", step: 3 },
   ]
 
   return (
@@ -56,9 +134,21 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
             >
               {item.icon}
             </span>
-            <span className={cn("text-sm", activeTab === item.id ? "font-bold" : "font-medium")}>
-              {item.label}
-            </span>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                {item.step && (
+                  <div className={cn(
+                    "w-2 h-2 rounded-full",
+                    getStatusForStep(item.step) === "completed" && "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]",
+                    getStatusForStep(item.step) === "ongoing" && "bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.4)]",
+                    getStatusForStep(item.step) === "pending" && "bg-slate-300 dark:bg-slate-700"
+                  )} />
+                )}
+                <span className={cn("text-sm", activeTab === item.id ? "font-bold" : "font-medium")}>
+                  {item.step ? `${item.step}/ ` : ""}{item.label}
+                </span>
+              </div>
+            </div>
           </button>
         ))}
       </nav>
