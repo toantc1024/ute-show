@@ -1,3 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Momo+Trust+Display&family=Roboto:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&display=swap');
+
+.syncopate-regular {
+  font-family: "Syncopate", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.syncopate-bold {
+  font-family: "Syncopate", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.josefin-sans-tech {
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.momo-trust-display-regular {
+  font-family: "Momo Trust Display", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.roboto-standard {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -88,12 +123,12 @@
 body {
     background-color: var(--color-background);
     color: var(--color-on-surface);
-    font-family: var(--font-sans), sans-serif;
+    font-family: "Josefin Sans", sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6, .font-heading {
-    font-family: var(--font-sans), sans-serif;
-    letter-spacing: -0.02em;
+h1, h2, h3, h4, .font-heading {
+    font-family: "Syncopate", sans-serif;
+    letter-spacing: -0.01em;
 }
 
 .glass-card {
