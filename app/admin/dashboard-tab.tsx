@@ -1,9 +1,9 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { StatCard } from "@/components/stat-card"
 import { useEvent } from "@/components/event-context"
-import { Download, ChevronRight } from "lucide-react"
+import { Download, ChevronRight, Mail, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface DashboardTabProps {
@@ -14,8 +14,39 @@ interface DashboardTabProps {
 }
 
 export function DashboardTab({ stats, recentCheckins, chartData, onExport }: DashboardTabProps) {
-  const { activeEvent } = useEvent()
+  const { activeEvent, selectedEventId } = useEvent()
+  const [isSendingMail, setIsSendingMail] = useState(false)
   
+  const handleSendEmails = async () => {
+    if (!selectedEventId) {
+      alert("Vui lòng chọn sự kiện trước!")
+      return
+    }
+    if (!confirm(`Bạn có chắc muốn gửi email Cảm ơn / Xác nhận đến đại biểu đã check-in không?\n\n(Chức năng này thường được thực hiện sau khi sự kiện hoặc thời gian check-in đã kết thúc)`)) {
+      return
+    }
+
+    setIsSendingMail(true)
+    try {
+      const res = await fetch("/api/send-thankyou", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event_id: selectedEventId })
+      })
+      const data = await res.json()
+      
+      if (res.ok) {
+        alert("Thành công: " + (data.message || "Đã gửi email."))
+      } else {
+        alert("Lỗi: " + (data.error || "Gửi email thất bại"))
+      }
+    } catch (e: any) {
+      alert("Đã xảy ra lỗi hệ thống: " + (e.message || ""))
+    } finally {
+      setIsSendingMail(false)
+    }
+  }
+
   const { counts, labels } = chartData
   const maxVal = counts.length > 0 ? Math.max(...counts, 1) : 1
   const peakIndex = counts.length > 0 ? counts.indexOf(Math.max(...counts)) : -1
@@ -94,6 +125,14 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <button 
+              onClick={handleSendEmails}
+              disabled={isSendingMail}
+              className="flex items-center gap-3 px-8 py-4 bg-orange-500 text-white rounded-lg font-black text-xs uppercase tracking-[0.1em] hover:bg-orange-600 transition-all active:scale-95 shadow-xl shadow-orange-500/20 disabled:opacity-50"
+            >
+              {isSendingMail ? <Loader2 size={16} className="animate-spin" /> : <Mail size={16} />}
+              <span>Gửi Email {isSendingMail ? '...' : ''}</span>
+            </button>
             <button 
               onClick={onExport}
               className="flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-lg font-black text-xs uppercase tracking-[0.1em] hover:shadow-2xl hover:shadow-primary/40 transition-all active:scale-95 shadow-xl shadow-primary/20"
