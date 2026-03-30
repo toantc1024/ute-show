@@ -7,12 +7,10 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// Configure SMTP transport
-// You should add these environment variables to your .env.local file
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
   port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
+  secure: process.env.SMTP_SECURE === "true",
   auth: {
     user: process.env.SMTP_USER, 
     pass: process.env.SMTP_PASS, 
@@ -21,13 +19,12 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request: Request) {
   try {
-    const { event_id } = await request.json()
+    const { event_id, checkin_ids } = await request.json()
 
     if (!event_id) {
       return NextResponse.json({ error: "Thiếu event_id" }, { status: 400 })
     }
 
-    // 1. Get the event details to include in the email
     const { data: event, error: eventError } = await supabaseAdmin
       .from("events")
       .select("*")
@@ -38,20 +35,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Không tìm thấy chương trình" }, { status: 404 })
     }
 
-    // 2. Get all check-ins for this event
-    const { data: checkins, error: checkinsError } = await supabaseAdmin
+    let query = supabaseAdmin
       .from("checkins")
-      .select("name, student_id")
+      .select("id, name, student_id, email_sent")
       .eq("event_id", event_id)
+      .not("student_id", "is", null)
 
-    if (checkinsError || !checkins || checkins.length === 0) {
-      return NextResponse.json({ error: "Chưa có ai check-in bộ môn này." }, { status: 400 })
+    if (checkin_ids && Array.isArray(checkin_ids) && checkin_ids.length > 0) {
+      query = query.in("id", checkin_ids)
     }
 
-    // 3. Filter only those with student_id (to send to UTE student emails)
+    const { data: checkins, error: checkinsError } = await query
+
+    if (checkinsError || !checkins || checkins.length === 0) {
+      return NextResponse.json({ error: "Không tìm thấy đại biểu hợp lệ để gửi thư." }, { status: 400 })
+    }
+
     const validRecipients = checkins.filter(c => c.student_id && c.student_id.trim().length >= 8)
     
-    // De-duplicate in case of multiple check-ins
+    // De-duplicate based on student_id to avoid sending multiple emails to the same person
     const uniqueRecipientsMap = new Map()
     for (const r of validRecipients) {
         uniqueRecipientsMap.set(r.student_id, r)
@@ -59,29 +61,29 @@ export async function POST(request: Request) {
     const uniqueRecipients = Array.from(uniqueRecipientsMap.values())
 
     if (uniqueRecipients.length === 0) {
-       return NextResponse.json({ error: "Không tìm thấy đại biểu nào có mã định danh / MSSV hợp lệ để gửi email." }, { status: 400 })
+       return NextResponse.json({ error: "Không có đại biểu nào có MSSV hợp lệ." }, { status: 400 })
     }
 
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      // Return a simulated success response if SMTP is not configured yet
-      // This allows the UI button to work for demonstration
-      console.warn("SMTP credentials not configured. Simulating email send to", uniqueRecipients.length, "recipients")
+      console.warn("SMTP credentials not configured. Simulating.")
+      
+      // Update them to sent=true anyway for UX simulation demonstration
+      const idsToMarkSent = uniqueRecipients.map(r => r.id)
+      await supabaseAdmin.from("checkins").update({ email_sent: true }).in("id", idsToMarkSent)
+      
       return NextResponse.json({ 
         success: true, 
-        message: `Đã giả lập gửi thành công ${uniqueRecipients.length} email. (Vui lòng cấu hình SMTP_USER và SMTP_PASS trong .env.local để gửi thật)`,
+        message: `[GIẢ LẬP] Đã gửi thành công ${uniqueRecipients.length} thư. Vui lòng cấu hình SMTP_USER và SMTP_PASS trong .env.local để gửi thật.`,
         count: uniqueRecipients.length
       })
     }
 
-    // 4. Send emails
     let successCount = 0
     let failCount = 0
+    const successfulIds: string[] = []
 
-    // Send emails simultaneously (consider batching for very large lists to avoid rate limits)
     const emailPromises = uniqueRecipients.map(async (guest) => {
-      // Assuming HCMUTE student email format: student_id@student.hcmute.edu.vn
-      // Adjust if you use a different format or domain
-      const emailAddress = `${guest.student_id}@student.hcmute.edu.vn`
+      const emailAddress = `${guest.student_id.trim()}@student.hcmute.edu.vn`
       
       try {
         await transporter.sendMail({
@@ -98,16 +100,17 @@ export async function POST(request: Request) {
               <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0284c7;">
                 <p>Chào <strong>${guest.name}</strong>,</p>
                 <p>Cảm ơn bạn đã tham gia chương trình <strong>${event.title}</strong>.</p>
-                <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện.</p>
+                <p>Hệ thống đã ghi nhận bạn check-in thành công vào sự kiện lúc này.</p>
               </div>
               
               <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 30px;">
-                Thư này được gửi tự động. Vui lòng không trả lời thư.
+                Thư này được gửi theo cấu hình tự động. Vui lòng không trả lời thư.
               </p>
             </div>
           `,
         })
         successCount++
+        successfulIds.push(guest.id)
       } catch (err) {
         console.error(`Error sending email to ${emailAddress}:`, err)
         failCount++
@@ -116,11 +119,16 @@ export async function POST(request: Request) {
 
     await Promise.allSettled(emailPromises)
 
+    // Mark successful ones in DB
+    if (successfulIds.length > 0) {
+      await supabaseAdmin.from("checkins").update({ email_sent: true }).in("id", successfulIds)
+    }
+
     return NextResponse.json({ 
       success: true, 
       count: successCount, 
       failed: failCount,
-      message: `Đã gửi thành công ${successCount} emails.` + (failCount > 0 ? ` (Lỗi ${failCount})` : "")
+      message: `Đã gửi phần hoàn thiện. Thành công: ${successCount}, Lỗi: ${failCount}`
     })
     
   } catch (err: any) {

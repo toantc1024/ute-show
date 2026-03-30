@@ -78,6 +78,7 @@ export interface Database {
           don_vi: string
           event_id: string | null
           student_id: string | null
+          email_sent: boolean | null
           created_at: string
         }
         Insert: {
@@ -87,6 +88,7 @@ export interface Database {
           don_vi: string
           event_id?: string | null
           student_id?: string | null
+          email_sent?: boolean | null
           created_at?: string
         }
         Update: {
@@ -96,6 +98,7 @@ export interface Database {
           don_vi?: string
           event_id?: string | null
           student_id?: string | null
+          email_sent?: boolean | null
           created_at?: string
         }
       }

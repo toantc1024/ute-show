@@ -3,7 +3,7 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 
-export type TabType = "dashboard" | "programs" | "checkin" | "not-checkedin" | "import" | "quick-scan"
+export type TabType = "dashboard" | "programs" | "checkin" | "not-checkedin" | "import" | "quick-scan" | "emails"
 
 interface SidebarProps {
   activeTab: TabType
@@ -18,6 +18,7 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
     { id: "checkin", label: "Check-in", icon: "how_to_reg" },
     { id: "not-checkedin", label: "Chưa Check-in", icon: "person_off" },
     { id: "import", label: "Nhập dữ liệu", icon: "cloud_upload" },
+    { id: "emails", label: "Gửi Email", icon: "mail" },
   ]
 
   return (

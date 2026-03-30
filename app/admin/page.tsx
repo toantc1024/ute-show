@@ -10,6 +10,7 @@ import { DashboardTab } from "./dashboard-tab"
 import { ProgramsTab } from "./programs-tab"
 import { NotCheckedInTab } from "./not-checkedin-tab"
 import { QuickScanTab } from "./quick-scan-tab"
+import { EmailsTab } from "./emails-tab"
 import { CheckinForm } from "@/components/checkin-form"
 import { CheckinList } from "@/components/checkin-list"
 import { NotCheckedInList } from "@/components/not-checkedin-list"
@@ -160,6 +161,8 @@ function AdminContent() {
       case "checkin": return "Hệ thống Check-in"
       case "not-checkedin": return "Chưa Check-in"
       case "import": return "Nhập dữ liệu"
+      case "quick-scan": return "Quét mã vạch"
+      case "emails": return "Chiến dịch Email"
       default: return "Admin Panel"
     }
   }
@@ -238,6 +241,12 @@ function AdminContent() {
             
             {activeTab === "quick-scan" && (
               <QuickScanTab />
+            )}
+            
+            {activeTab === "emails" && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <EmailsTab />
+              </div>
             )}
           </div>
         </main>
