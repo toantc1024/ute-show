@@ -57,10 +57,12 @@ export function DashboardTab({ stats, recentCheckins, chartData, onExport }: Das
       <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-secondary p-16 text-white shadow-2xl shadow-primary/20 group">
         <div className="relative z-10 max-w-2xl">
           <span className="inline-block px-4 py-1.5 rounded-lg bg-white/20 backdrop-blur-md text-[10px] font-black tracking-[0.2em] uppercase mb-6 animate-pulse">UTE Check-in 2026</span>
-          <h2 className="text-7xl font-black tracking-normal leading-none mb-6">
-            Chào mừng bạn đến với<br />
-            Hệ thống điểm danh YUTE
-          </h2>
+          <div className="mb-6">
+            <span className="text-[10px] font-black tracking-[0.2em] uppercase block mb-2 text-white/60">Chào mừng bạn đến với</span>
+            <h2 className="text-5xl lg:text-6xl font-black tracking-tight uppercase leading-tight">
+              Hệ thống điểm danh YUTE
+            </h2>
+          </div>
           <p className="text-xl text-white/80 font-medium leading-relaxed max-w-lg">
             Hệ thống quản lý sự kiện và điểm danh thông minh dành riêng cho cộng đồng HCMUTE.
           </p>

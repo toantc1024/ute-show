@@ -4,6 +4,7 @@ import React from "react"
 import { useEvent } from "./event-context"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import { HeaderStepProgress } from "./header-step-progress"
 
 interface TopBarProps {
   title: string
@@ -37,6 +38,7 @@ export function TopBar({
     <header className="sticky top-0 w-full z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm shadow-blue-900/5 px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
       <div className="flex items-center gap-4 shrink-0">
         <h2 className="text-lg font-bold text-on-surface uppercase tracking-normal whitespace-nowrap">{title}</h2>
+        {title === "Dashboard Overview" && <HeaderStepProgress />}
         {contextStats && (
           <div className="px-3 py-1 bg-primary/10 rounded-lg animate-in fade-in slide-in-from-left-2 grow-0 hidden sm:block">
             <span className="text-xs font-bold text-primary tracking-normal uppercase">{contextStats}</span>
