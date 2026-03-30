@@ -2,6 +2,7 @@
 
 import React from "react"
 import { cn } from "@/lib/utils"
+import { ProjectStepProgress } from "./project-step-progress"
 
 export type TabType = "dashboard" | "programs" | "checkin" | "not-checkedin" | "import" | "quick-scan" | "emails"
 
@@ -29,6 +30,12 @@ export function Sidebar({ activeTab, onTabChange, onLogout }: SidebarProps) {
           <span className="text-secondary dark:text-secondary-fixed-dim ml-1">Check-in</span>
         </h1>
         <p className="text-xs font-bold text-slate-400 uppercase tracking-normal mt-1">Precision Pulse</p>
+      </div>
+
+      <div className="px-4 mb-4">
+        <div className="bg-white/50 dark:bg-slate-900/50 rounded-2xl border border-outline-variant/5 p-1 transition-all hover:bg-white/80 dark:hover:bg-slate-900/80 shadow-sm">
+          <ProjectStepProgress />
+        </div>
       </div>
 
       <nav className="flex flex-col gap-2 px-2">
